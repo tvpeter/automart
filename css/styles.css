@@ -56,7 +56,21 @@ header a:hover {
 /** showcase */
 #showcase {
   min-height: 400px;
-  background: url("../images/bgg.jpg") no-repeat 0;
+  background: url("../images/bgt.jpg") no-repeat 0;
   background-size: 100%;
   color: #ffffff;
+}
+#showcase h1 {
+  font-size: 40px;
+}
+#showcase p {
+  font-size: 18px;
+  line-height: 2;
+}
+
+/* quick search */
+
+#quick-search .container {
+  border: #334433 1px solid;
+  min-height: 200px;
 }

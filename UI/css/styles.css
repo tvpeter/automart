@@ -1,0 +1,133 @@
+body {
+  font: 15px/1.8 "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/** global containers **/
+.container {
+  width: 88%;
+  margin: auto;
+  overflow: hidden;
+}
+/** header */
+header {
+  min-height: 60px;
+  background-color: #ffffff;
+  color: #000000;
+  padding-top: 30px;
+  border-bottom: #DB2D2E 1px solid;
+}
+header a {
+  text-decoration: none;
+  color: #000000;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+header li {
+  float: left;
+  display: inline;
+  padding: 0 20px 0 20px;
+}
+header nav {
+  float: right;
+  margin-top: 10px;
+}
+header #brand {
+  float: left;
+}
+header #brand h1 {
+  margin: 0;
+}
+header .highlight,
+header .current a {
+  color: #DB2D2E;
+  font-weight: bold;
+}
+header a:hover {
+  color: #DB2D2E;
+}
+
+/** showcase */
+#showcase {
+  min-height: 400px;
+  background: url("../images/bgt.jpg") no-repeat 0;
+  background-size: 100%;
+  color: #ffffff;
+}
+#showcase h1 {
+  font-size: 40px;
+}
+#showcase p {
+  font-size: 18px;
+  line-height: 2;
+}
+
+#services {
+  margin-top: 20px;
+}
+
+#services .box {
+  width: 28%;
+  float: left;
+  text-align: center;
+  margin: 15px;
+  padding: 10px;
+  border-top: #DB2D2E 3px solid;
+  background-color: #FBFBFB;
+}
+#box h3{
+  margin: 0;
+  padding: 0;
+}
+.box span{
+  font-weight: bold;
+  font-size: 40px;
+}
+
+/** about us*/
+
+#box1{
+  float: left;
+  text-align: left;
+  width: 60%;
+  margin-left: 10px;
+}
+#box1 h1{
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 30px;
+}
+#box2{
+  float: left;
+  width: 20%;
+}
+#box2 img{
+  width: 100%;
+  height: auto;
+}
+
+/**footer **/
+footer{
+  background-color: #4C5165;
+  color: #ffffff;
+}
+footer p {
+  float: left;
+}
+footer ul {
+  padding: 15px;
+  float: right;
+}
+footer ul li{
+  display: inline;
+}
+footer ul li a{
+  text-decoration: none;
+  color: #ffffff;
+}

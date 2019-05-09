@@ -315,7 +315,8 @@ nav li {
 .login-grid {
   width: 55%;
   float: left;
-  margin: 0.5em;
+  margin: 0 0.5em;
+  margin-left: 0;
 }
 .login-grid div {
   padding: 0.5em;
@@ -349,6 +350,9 @@ nav li {
   .login-right {
     float: none;
     width: 92%;
+  }
+  .login-grid {
+    width: 90%;
   }
 
   .mid-grid-right {

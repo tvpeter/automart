@@ -273,10 +273,6 @@ nav li {
   border-top: 1px solid #eee;
 }
 
-/*---//login----*/
-/*---register----*/
-/*---//register----*/
-
 .register-top-grid span,
 .register-bottom-grid span {
   color: #08080b;
@@ -288,6 +284,7 @@ nav li {
 }
 
 .register-top-grid span label,
+.login-grid span label,
 .register-bottom-grid span label {
   color: #e45d5d;
   height: 10px;
@@ -298,6 +295,7 @@ nav li {
 }
 
 .register-top-grid input[type="text"],
+.login-grid input[type="text"],
 .register-bottom-grid input[type="text"] {
   border: 1px solid #eee;
   outline-color: #e45d5d;
@@ -314,7 +312,15 @@ nav li {
   margin: 0.5em;
 }
 
-#register-form input[type="submit"] {
+.login-grid {
+  width: 55%;
+  float: left;
+  margin: 0.5em;
+}
+.login-grid div {
+  padding: 0.5em;
+}
+.register-form input[type="submit"] {
   background: #e45d5d;
   color: #fff;
   font-size: 0.8em;
@@ -327,7 +333,7 @@ nav li {
   text-transform: uppercase;
   float: left;
 }
-#register-form input[type="submit"]:hover {
+.register-form input[type="submit"]:hover {
   background: #1c1c20;
 }
 

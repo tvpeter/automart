@@ -70,7 +70,7 @@ a {
 }
 .txt-rt {
   text-align: right;
-} /* text align right */
+}
 .txt-lt {
   text-align: left;
 } /* text align left */
@@ -142,6 +142,9 @@ nav li {
   float: left;
   padding-right: 50px;
   text-transform: uppercase;
+}
+nav li a {
+  color: #1c1c20;
 }
 
 .top-header-right ul li {

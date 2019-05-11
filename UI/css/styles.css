@@ -80,10 +80,6 @@ nav li a:hover {
   color: #e45d5d;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
 a {
   text-decoration: none;
 }
@@ -180,7 +176,9 @@ body {
 .mid-grid-left {
   float: left;
   width: 26%;
-  padding-top: 1.3em;
+  margin-left: 0;
+  padding-left: 0;
+  padding-top: 0.7em;
 }
 .mid-grid-right {
   float: right;
@@ -201,18 +199,20 @@ body {
 .mid-grid-right input[type="text"]:focus {
   width: 100%;
 }
-.mid-grid-left p {
+.mid-grid-right p {
+  padding-top: 1em;
   color: #a5a5a5;
+  text-align: right;
 }
 /** logo */
-.logo span {
-  width: 131px;
-  height: 60px;
-  display: inline-block;
-  background: url(../images/logo.png) no-repeat;
-}
+
 .logo {
   position: relative;
+  width: 131px;
+  height: 60px;
+  margin-left: 0;
+  display: inline-block;
+  background: url(../images/logo.png) no-repeat;
 }
 
 /* Content */
@@ -493,6 +493,10 @@ body {
 }
 .table button {
   cursor: pointer;
+}
+.table caption {
+  text-transform: uppercase;
+  font-weight: bold;
 }
 /*---start-footer----*/
 .footer {

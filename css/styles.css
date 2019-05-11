@@ -194,11 +194,9 @@ body {
   padding: 0.8em 0;
   font-size: 1em;
   color: #a5a5a5;
-  width: 85%;
-}
-.mid-grid-right input[type="text"]:focus {
   width: 100%;
 }
+
 .mid-grid-right p {
   padding-top: 1em;
   color: #a5a5a5;
@@ -498,6 +496,7 @@ body {
   text-transform: uppercase;
   font-weight: bold;
 }
+
 /*---start-footer----*/
 .footer {
   background: #a9a9a9;
@@ -561,5 +560,11 @@ body {
     width: 100%;
     float: none;
     clear: both;
+  }
+  .col-25,
+  .col-75,
+  .container input[type="submit"] {
+    width: 100%;
+    margin-top: 0;
   }
 }

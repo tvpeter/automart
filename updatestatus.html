@@ -58,75 +58,57 @@
 	
   <div class="content">
 			<div class="wrap">
-                  <table class="table">
-                        <caption>All Posted Ads</caption>
-                        <thead>
-                            <tr>
-                                <th>SN</th>
-                                <th>Ad ID</th>
-                                <th >Name</th>
-                                <th >State</th>
-                                <th >Status</th>
-                                <th>Update</th>
-                                <th>Transaction Id</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr >
-                                <td>1</td>
-                                <td>#12d8aud7ed8</td>
-                                <td>BMW X6, 2018</td>
-                                <td>Used</td>
-                                <td>Sold</td>
-                                <td><button disabled>Change</button></td>
-                            </tr>
-                            <tr >
-                                <td>2</td>
-                                <td>#38d7ahdid83</td>
-                                <td>Peugeot 407, 2.7 Hdi </td>
-                                <td>New</td>
-                                <td>Available</td>
-                                <td><button>Change</button></td>
 
-                            </tr>
-                            <tr >
-                                    <td>3</td>
-                                    <td>#12d8aud7ed8</td>
-                                    <td>BMW X6, 2018</td>
-                                    <td>Used</td>
-                                    <td>Sold</td>
-                                <td><button disabled>Change</button></td>
-
-                                </tr>
-                                <tr >
-                                    <td>4</td>
-                                    <td>#38d7ahdid83</td>
-                                    <td>Peugeot 407, 2.7 Hdi </td>
-                                    <td>New</td>
-                                    <td>Available</td>
-                                <td><button >Change</button></td>
-
-                                </tr>
-
-                                <tr >
-                                        <td>5</td>
-                                        <td>#12d8aud7ed8</td>
-                                        <td>BMW X6, 2018</td>
-                                        <td>Used</td>
-                                        <td>Sold</td>
-                                <td><button disabled>Change</button></td>
-
-                                    </tr>
-                                    <tr >
-                                        <td>6</td>
-                                        <td>#38d7ahdid83</td>
-                                        <td>Peugeot 407, 2.7 Hdi </td>
-                                        <td>New</td>
-                                        <td>Available</td>
-                                <td><button>Change</button></td>
-
-                                    </tr>
-                    </table>
+<div class="container">
+    <form action="">
+    <div class="row">
+      <div class="col-25">
+        <label for="email">Buyer Email</label>
+      </div>
+      <div class="col-75">
+        <input type="email" id="email" name="email" placeholder="Buyer email..">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="email">Buyer's Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="bname" name="bname" placeholder="Buyer name ..">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="price">Price</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="price" name="price" placeholder="Price..">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="status">Status</label>
+      </div>
+      <div class="col-75">
+        <select id="status" name="status">
+          <option value="sold" selected disabled>Sold</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="subject">Review</label>
+      </div>
+      <div class="col-75">
+        <textarea id="review" name="review" placeholder="Write your review and suggestions here .." style="height:200px"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <input type="submit" value="Submit">
+    </div>
+    </form>
+  </div>
+                 
                     </div>
 				<div class="clear"> </div>
       

@@ -464,6 +464,36 @@ body {
   font-weight: bold;
 }
 
+/* view all ads */
+.table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table td,
+.table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.table th {
+  padding-top: 12px 0;
+  text-align: left;
+  background-color: #a9a9a9;
+  color: white;
+}
+.table button {
+  cursor: pointer;
+}
 /*---start-footer----*/
 .footer {
   background: #a9a9a9;

@@ -138,7 +138,7 @@ body {
   font-size: 0.8em;
 }
 .top-header {
-  background: #a9a9a9;
+  background: #000000;
 }
 .top-header-center {
   float: left;
@@ -468,7 +468,9 @@ body {
   border-collapse: collapse;
   width: 100%;
 }
-
+.table a {
+  color: #000;
+}
 .table td,
 .table th {
   border: 1px solid #ddd;
@@ -510,6 +512,7 @@ body {
 .container textarea {
   width: 100%;
   padding: 12px;
+  font-size: 0.8em;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
@@ -557,7 +560,7 @@ body {
 
 /*---start-footer----*/
 .footer {
-  background: #a9a9a9;
+  background: #000000;
   padding: 1em;
 }
 .footer-left {

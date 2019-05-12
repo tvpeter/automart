@@ -88,10 +88,10 @@ a {
 }
 .txt-lt {
   text-align: left;
-} /* text align left */
+}
 .txt-center {
   text-align: center;
-} /* text align center */
+}
 .float-rt {
   float: right;
 }
@@ -418,9 +418,6 @@ body {
 }
 .vehicle-more-details p {
   padding-top: 0.7em;
-}
-.vehicle-more-details span {
-  float: right;
 }
 .share ul {
   padding: 1em 0;

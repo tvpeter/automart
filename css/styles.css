@@ -138,7 +138,7 @@ body {
   font-size: 0.8em;
 }
 .top-header {
-  background: #000000;
+  background: #555555;
 }
 .top-header-center {
   float: left;
@@ -558,9 +558,13 @@ body {
   clear: both;
 }
 
+.row p {
+  font-size: 0.8em;
+  padding: 0.8em;
+}
 /*---start-footer----*/
 .footer {
-  background: #000000;
+  background: #555555;
   padding: 1em;
 }
 .footer-left {

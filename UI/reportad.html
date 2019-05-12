@@ -21,8 +21,7 @@
 		  
           <div class="top-header-right">
             <ul>
-              <li><a href="login.html">Login</a><span> </span></li>
-              <li><a href="register.html">Register</a></li>
+              <li><a href="details.html">Logout</a></li>
             </ul>
           </div>
           <div class="clear"></div>
@@ -36,9 +35,8 @@
 							<a class="logo" href="index.html"><span> </span></a>
           </div>
           <div class="mid-grid-right">
-							<form>
-									<input type="text" placeholder="Search..." />
-								</form>
+                <p>Logged in as John Doe</p>
+
           </div>
           <div class="clear"></div>
         </div>
@@ -51,44 +49,78 @@
 				<div class="wrap" >
 					<ul class="details-head">
 						<li><a href="#">Home</a> <span>::</span></li>
-						<li class="active-page"><a href="#">Details Page</a></li>
+						<li class="active-page"><a href="#">Ad Report Page</a></li>
 						<div class="clear"> </div>
 					</ul>
 					<!-- Details -->
 				<div class="details-left" >
 					<div class="details-left-img" >
 									<img src="images/products/bmwx6d.jpg" />
-							<div class="txt-center"><button class="pl-white">Buy Now</button></div>
 							<div class="clear"> </div>
 
 					</div>
 					<div class="details-left-info" >
 						<h1>Manufacturer, model name</h1>
-						<div class="vehicle-info">
-						<p>N14.56</p>
-						<p>State: <span>New</span></p>
-						</div>
 						<p class="vehicle-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
 						<div class="vehicle-more-details">
-							<p>Production Year:<span class="float-rt"> 2019</span></p>
-							<p>Seller Details <span class="float-rt"><a href="">Seller</a></span></p>
-							<p>Report this Vehicle <span id="flag" class="float-rt"><a href="">&#9872;</a></span></p>
-							<ul class="share">
-								<h3>Share On</h3>
-								<ul>
-									<li><a class="share-face" href="#"><span> </span> </a></li>
-									<li><a class="share-twitter" href="#"><span> </span> </a></li>
-									<div class="clear"> </div>
-								</ul>
-							</ul>
+							<p>Production Year: 2019<span class="float-rt"> Vehicle State: New</span></p>
+                            <p>Seller Mobile: 09093829384  <span class="float-rt">Location: Lagos, Nigeria.</span>
+                            </p>
+							
 						</div>
-					</div>
+                    </div>
+                    
 					<div class="clear"> </div>
 				</div>
 				
-			</div>
+            </div>
+            
 		
-			<div class="clear"> </div>
+            <div class="clear"> </div>
+            <div class="wrap">
+            <hr>
+
+<div class="container">
+        <form action="">
+        <div class="row">
+         <h3 class="txt-center">ADD REPORT FORM</h3>
+         <p class="txt-center">Kindly be detailed as much as possible and attach any evidence you may have. Do note that, you may be contacted by our Representative for further details.</p>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="reason">This Vehicle is:</label>
+          </div>
+          <div class="col-75">
+                <select id="status" name="status">
+                        <option value="stolen">Stolen</option>
+                        <option value="notnew">Not New</option>
+                        <option value="damaged">Damaged</option>
+
+                      </select>          </div>
+        </div>
+       
+        <div class="row">
+          <div class="col-25">
+            <label for="description">Description</label>
+          </div>
+          <div class="col-75">
+                <textarea id="description" name="description" placeholder="Write a detailed report here .." style="height:200px"></textarea>
+          </div>
+        </div>
+        <div class="row">
+                <div class="col-25">
+                  <label for="evidence">Evidence</label>
+                </div>
+                <div class="col-75">
+                    <input type="file" name="evidence">
+                </div>
+              </div>
+        <div class="row">
+          <input type="submit" value="Report">
+        </div>
+        </form>
+      </div>
+            </div>
 			</div>
 		</div>
 

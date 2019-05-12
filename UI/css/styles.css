@@ -80,10 +80,6 @@ nav li a:hover {
   color: #e45d5d;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
 a {
   text-decoration: none;
 }
@@ -180,7 +176,9 @@ body {
 .mid-grid-left {
   float: left;
   width: 26%;
-  padding-top: 1.3em;
+  margin-left: 0;
+  padding-left: 0;
+  padding-top: 0.7em;
 }
 .mid-grid-right {
   float: right;
@@ -196,23 +194,23 @@ body {
   padding: 0.8em 0;
   font-size: 1em;
   color: #a5a5a5;
-  width: 85%;
-}
-.mid-grid-right input[type="text"]:focus {
   width: 100%;
 }
-.mid-grid-left p {
+
+.mid-grid-right p {
+  padding-top: 1em;
   color: #a5a5a5;
+  text-align: right;
 }
 /** logo */
-.logo span {
-  width: 131px;
-  height: 60px;
-  display: inline-block;
-  background: url(../images/logo.png) no-repeat;
-}
+
 .logo {
   position: relative;
+  width: 131px;
+  height: 60px;
+  margin-left: 0;
+  display: inline-block;
+  background: url(../images/logo.png) no-repeat;
 }
 
 /* Content */
@@ -464,6 +462,99 @@ body {
   font-weight: bold;
 }
 
+/* view all ads */
+.table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table td,
+.table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.table th {
+  padding-top: 12px 0;
+  text-align: left;
+  background-color: #a9a9a9;
+  color: white;
+}
+.table button {
+  cursor: pointer;
+}
+.table caption {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+/*-- Sold item page*/
+*.container {
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #fafafa;
+  padding: 20px;
+}
+
+.container input[type="text"],
+.container input[type="email"],
+.container select,
+.container textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  outline-color: #e45d5d;
+}
+
+.container label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.container input[type="submit"] {
+  background-color: #696969;
+  color: white;
+  padding: 1em 2em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  margin: 1em 1.2em 0 0;
+}
+
+.container input[type="submit"]:hover {
+  background-color: #a5a5a5;
+}
+
+.col-25 {
+  float: left;
+  width: 20%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 /*---start-footer----*/
 .footer {
   background: #a9a9a9;
@@ -527,5 +618,11 @@ body {
     width: 100%;
     float: none;
     clear: both;
+  }
+  .col-25,
+  .col-75,
+  .container input[type="submit"] {
+    width: 100%;
+    margin-top: 0;
   }
 }

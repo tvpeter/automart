@@ -47,12 +47,12 @@
         <div class="wrap">
           <nav>
             <ul>
-                <li><a href="createad.html">Create Ad</a></li>
-                <li><a href="#">Edit Ad</a></li>
-                <li><a href="userads.html">My Ads</a></li>
-                <li><a href="#">Sales</a></li>
-                <li><a href="#">Edit Profile</a></li>
-                <li><a href="#">Receipts</a></li>
+
+                    <li><a href="userads.html">All Users</a></li>
+                    <li><a href="view.html">All Ads</a></li>
+                    <li><a href="">All Transactions</a></li>
+                    <li><a href="notifications.html" class="active">Notifications</a></li>
+                    <li><a href="#">Edit Profile</a></li>
           </ul>
           </nav>
         </div>
@@ -65,42 +65,80 @@
 <div class="container">
     <form action="">
     <div class="row">
-      <h3>UPDATE AD STATUS</h3>
+      <h3 class="txt-center">FOR YOUR ATTENTION</h3>
       <div class="col-25">
-        <label for="email">Buyer Email</label>
+        <label>Reported By</label>
       </div>
-      <div class="col-75">
-        <input type="email" id="email" name="email" placeholder="Buyer email..">
+      <div class="col-75 white">
+        <a href="userprofile.html">
+          <span>Name: John Doe</span>
+          <span>Email: example@email.com</span>
+          <span>Contact: 08939389394</span>
+        </a>
       </div>
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="email">Buyer's Name</label>
+        <label>Reported User</label>
       </div>
-      <div class="col-75">
-        <input type="text" id="bname" name="bname" placeholder="Buyer name ..">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="status">Status</label>
-      </div>
-      <div class="col-75">
-        <select id="status" name="status">
-          <option value="sold" selected disabled>Sold</option>
-        </select>
+      <div class="col-75 white">
+          <a href="userprofile.html">
+              <span>Name: John Tommsin</span>
+              <span>Email: contact@tom.com</span>
+              <span>Contact: 09083938483</span>
+            </a>
       </div>
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="subject">Review</label>
+        <label>Status</label>
       </div>
-      <div class="col-75">
-        <textarea id="review" name="review" placeholder="Write your review and suggestions here .." style="height:200px"></textarea>
+      <div class="col-75 white">
+          <a href="details.html">
+              <span>#78dhd8373834</span>
+            </a>
       </div>
     </div>
     <div class="row">
-      <input type="submit" value="Submit">
+        <div class="col-25">
+          <label>Date</label>
+        </div>
+        <div class="col-75 white">
+            <a href="">
+                <span>12/05/2019</span>
+              </a>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="subject">Details</label>
+      </div>
+      <div class="col-75 white">
+          <a href="">
+              <span>
+
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in ipsum vel mauris consectetur finibus. Nullam ut orci eget magna vulputate bibendum. Sed nisi nisl, rhoncus in turpis eu, luctus lacinia orci. Praesent eu elementum elit, non fringilla leo. Morbi a condimentum sapien. Nunc eget aliquet lectus. Nam sed felis risus. Mauris pulvinar tristique tellus quis fermentum. Sed vel purus non orci dictum lacinia nec ac turpis.
+
+              </span>
+            </a>
+
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+          <label>Files</label>
+        </div>
+        <div class="col-75 white">
+            <a href="">
+                <span style="font-size: 2em"> &#8362;</span>
+              </a>
+        </div>
+      </div>
+
+    <div class="row">
+          <input type="submit" value="Mark as Treated">
+      <a href="notifications.html">Back
+      </a>
     </div>
     </form>
   </div>

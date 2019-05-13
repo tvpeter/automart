@@ -142,7 +142,7 @@ body {
 }
 .top-header-center {
   float: left;
-  width: 80%;
+  width: 70%;
   padding: 1em;
 }
 .top-header-right {
@@ -153,7 +153,8 @@ body {
 .header {
   border-bottom: #eee 1px solid;
 }
-.top-header-right ul li {
+.top-header-right ul li,
+.top-header-right p {
   display: inline-block;
   padding: 0.2em;
 }
@@ -171,6 +172,13 @@ body {
   color: #fff;
   font-size: 0.7em;
   text-transform: uppercase;
+}
+.top-header-right p {
+  color: #d3d3d3;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-style: italic;
 }
 /*----start-mid-head---*/
 .mid-grid-left {
@@ -197,11 +205,6 @@ body {
   width: 100%;
 }
 
-.mid-grid-right p {
-  padding-top: 1em;
-  color: #a5a5a5;
-  text-align: right;
-}
 /** logo */
 
 .logo {

@@ -357,6 +357,9 @@ body {
 .details-head li.active-page a {
   color: #e45d5d;
 }
+.active {
+  color: #e45d5d;
+}
 .details-page {
   padding: 0;
 }

@@ -147,6 +147,9 @@ body {
   width: 70%;
   margin: 0 auto;
 }
+.wrap table {
+  overflow-x: auto;
+}
 #info {
   color: #ffffff;
   font-size: 0.8em;
@@ -568,7 +571,8 @@ body {
   display: inline-block;
 }
 
-.container input[type="submit"] {
+.container input[type="submit"],
+.btn {
   background-color: #696969;
   color: white;
   padding: 1em 2em;
@@ -858,6 +862,31 @@ body {
   vertical-align: middle;
 }
 
+/* modal dialog */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 30%;
+  top: 20%;
+  height: 160px;
+  width: 500px;
+  overflow: auto;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+.modal hr {
+  border: #e45d5d 1px solid;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.modal h4 {
+  text-align: center;
+  font-weight: 400;
+  color: #555555;
+}
+
 @media only screen and (max-width: 768px) {
   .wrap {
     width: 80%;
@@ -931,5 +960,17 @@ body {
   }
   .flex-row {
     flex-direction: column-reverse;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 150px;
+    width: 100%;
+    overflow: auto;
+    background-color: #f2f2f2;
+    border-radius: 5px;
   }
 }

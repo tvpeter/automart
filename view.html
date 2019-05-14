@@ -83,7 +83,7 @@
                                     <td>Available</td>
                                     <td>12/03/2019</td>
                                     <td><a href="">#837dh7da7h3ahd</a></td>
-                                    <td><button>Deactivate</button></td>
+                                    <td><button id="confirm">Deactivate</button></td>
                                 </tr>
                                 <tr >
                                         <td>1</td>
@@ -186,4 +186,19 @@
         <div class="clear"></div>
       </div>
     </div>
+
+    <!-- Modal content -->
+    <div class="modal">
+        <div class="content">
+          <h4></h4>
+          <hr />
+          <button class="btn" id="yes">Yes</button>
+          <button class="btn" id="no">No</button>
+        </div>
+      </div>
+      <script src="./js/script.js"></script>
+      <script>
+        const msg = "deactivate this ad";
+        confirmAction("confirm", msg);
+      </script>
 </html>

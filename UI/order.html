@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AutoMart | Create Ad</title>
+    <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="header">
+		<!-- start of top header-->
+      <div class="top-header">
+        <div class="wrap">
+          <div class="top-header-center">
+            <div class="top-header-center-alert-right">
+              <div class="txt-center">
+                    <span id="info">Your #1 Automobile Market Place.</span>
+              </div>
+            </div>
+            <div class="clear"></div>
+		  </div>
+		  
+          <div class="top-header-right">
+            <ul>
+              <p>Hello, John Doe</p>
+              <li><a href="index.html">Logout</a></li>
+            </ul>
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+      <!----start-mid-head---->
+      <div class="mid-header">
+          <div class="wrap">
+            <div class="mid-grid-left">
+              <a class="logo" href="index.html"></a>
+            </div>
+            <div class="mid-grid-right">
+                <form>
+                    <input type="text" placeholder="Search..." />
+                  </form>
+            </div>
+            <div class="clear"></div>
+          </div>
+        </div>
+
+         <div class="header-bottom">
+        <div class="wrap">
+          <nav>
+            <ul>
+                <li><a href="createad.html">Create Ad</a></li>
+                <li><a href="userads.html">My Ads</a></li>
+                <li><a href="#">Sales</a></li>
+                <li><a href="#">Edit Profile</a></li>
+                <li><a href="#">Invoices</a></li>
+          </ul>
+          </nav>
+        </div>
+      </div> 
+	</div>
+	
+  <div class="content">
+      <div class="wrap">
+            <h3>ORDER SUMMARY</h3>
+          <table id="table">
+              <thead>
+                  <th>SN</th>
+                  <th>Item No.</th>
+                  <th>Vehicle</th>
+                  <th>Name</th>
+                  <th>State</th>
+                  <th>Owner Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+              </thead>
+              <tbody>
+                  <td>1</td>
+                  <td>#1837382jd23w</td>
+                  <td>
+                      <img src="./images/products/bmwx6.jpg" alt="vehicle" width="150">
+                  </td>
+                  <td> BMW X6, 2018 </td>
+                  <td>Used</td>
+                  <td>Tyonum Peter</td>
+                  <td>example@email.com</td>
+                  <td>09039283928</td>
+              </tbody>
+          </table>
+
+      </div>
+			<div class="wrap">
+      <p id="note">Before making payment, do confirm the state of the vehicle, test and be satisfied.</p>
+                              <div class="container">
+                                <form action="">
+                                
+                                  <div class="flex-row">
+                                    <div class="flex-col-50">
+                                      <h3>BILLING ADDRESS</h3>
+                                      <label for="fname"> Full Name</label>
+                                      <input type="text" id="fname" name="firstname" placeholder="Tyonum Peter">
+                                      <label for="email">Email</label>
+                                      <input type="text" id="email" name="email" placeholder="john@example.com">
+                                      <label for="adr">Address</label>
+                                      <input type="text" id="adr" name="address" placeholder="16 Akanbi Street">
+                                      <label for="city">City</label>
+                                      <input type="text" id="city" name="city" placeholder="Lagos">
+                          
+                                      <div class="flex-row">
+                                        <div class="flex-col-50">
+                                          <label for="state">State</label>
+                                          <input type="text" id="state" name="state" placeholder="Lagos">
+                                        </div>
+                                      </div>
+                                  <input type="submit" value="Continue to checkout">
+
+                                    </div>
+                          
+                                    <div class="flex-col-50">
+                                      <h3>PAYMENT</h3>
+                                      <label for="fname">Accepted Cards</label>
+                                      <div class="cards">
+                                        <img src="./images/paystack.png" alt="">
+                                      </div>
+                                      <label for="cname">Name on Card</label>
+                                      <input type="text" id="cname" name="cardname" placeholder="John More Doe">
+                                      <label for="ccnum">Credit card number</label>
+                                      <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                                      <label for="expmonth">Exp Month</label>
+                                      <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                                      <div class="flex-row">
+                                        <div class="flex-col-50">
+                                          <label for="expyear">Exp Year</label>
+                                          <input type="text" id="expyear" name="expyear" placeholder="2018">
+                                        </div>
+                                        <div class="flex-col-50">
+                                          <label for="cvv">CVV</label>
+                                          <input type="text" id="cvv" name="cvv" placeholder="352">
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                    
+                                    
+                                  </div>
+                                </form>
+                              </div>
+                            
+                    </div>
+				<div class="clear"> </div>
+      
+		</div>
+    
+    <!---- start-bottom-grid---->
+    <div class="bottom-grids">
+      <div class="bottom-top-grids">
+        <div class="wrap">
+          <div class="bottom-bottom-grid">
+            <h6>Knowledge Base</h6>
+            <p>Know what it requires to Sell on Automart</p>
+            <a class="learn-more" href="#">Read here</a>
+          </div>
+          <div class="bottom-bottom-grid">
+            <h6>Return Policy</h6>
+            <p>Find out the terms for return policy.</p>
+            <a class="learn-more" href="#">Read here</a>
+          </div>
+          <div class="bottom-bottom-grid last-bottom-bottom-grid">
+            <h6>Contact Support Team</h6>
+            <p>Do you need assistance?.</p>
+            <a class="learn-more" href="#">Contact us here</a>
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+<!--End of bottom grid-->
+
+    <div class="footer">
+      <div class="wrap">
+        <div class="footer-left">
+          <ul>
+            <li><a href="#">Terms of Use</a> <span> </span></li>
+            <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+            <li><a href="#">Cookie Settings</a></li>
+            <div class="clear"></div>
+          </ul>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+</html>

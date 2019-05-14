@@ -176,13 +176,20 @@ body {
   padding: 0.2em;
 }
 
-.top-header-right ul li:first-child span {
+.top-header-right ul li:not(last-child) span {
   height: 13px;
   width: 1px;
   background: #fff;
   display: inline-block;
   margin: 0 0.5em 0 0.6em;
   vertical-align: middle;
+}
+
+.top-header-right a:hover {
+  padding: 8px 12px;
+  border-radius: 15px;
+  background: #fff;
+  color: #000;
 }
 
 .top-header-right ul li a {
@@ -887,6 +894,104 @@ body {
   color: #555555;
 }
 
+/* index page */
+#welcome {
+  min-height: 500px;
+  width: 100%;
+  background-color: #f2f2f2;
+  position: relative;
+}
+.headmsg {
+  width: 60%;
+  height: auto;
+}
+#welcome h2 {
+  padding-top: 10%;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  color: #000000;
+  font-weight: 700;
+  float: left;
+  font-size: 2em;
+  font-style: italic;
+  margin-bottom: 0;
+}
+#welcome p {
+  padding-top: 0.8em;
+  font-size: 1em;
+  font-weight: 100;
+  font-style: italic;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  float: left;
+  line-height: 2em;
+}
+
+.services {
+  background-color: #ffffff;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 10;
+  margin-top: -250px;
+  height: 310px;
+  position: relative;
+  border-radius: 5px;
+  border-bottom: 2px #000000 solid;
+}
+.service {
+  width: 28%;
+  float: left;
+  margin-right: 2%;
+  margin-left: 2%;
+  margin-top: 40px;
+}
+.service h3 {
+  font-weight: 400;
+  font-family: "Courier New", Courier, monospace;
+  color: #000;
+  padding: 12px 0;
+  font-size: 1.5em;
+  text-transform: capitalize;
+}
+.service p {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-size: 0.9em;
+  line-height: 1.5;
+  text-align: justify;
+}
+.service div {
+  font-weight: 900;
+  font-size: 2em;
+  text-align: center;
+  padding: 0 auto;
+}
+.our-story {
+  width: 100%;
+  position: relative;
+  min-height: 200px;
+}
+.about {
+  width: 30%;
+  margin-left: 0;
+  margin-right: 20px;
+  position: relative;
+  font-size: 1.2em;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  line-height: 1.8em;
+  float: left;
+  font-style: oblique;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+.story {
+  width: 60%;
+  float: left;
+  line-height: 1.6em;
+  font-family: "Times New Roman", Times, serif;
+}
+
 @media only screen and (max-width: 768px) {
   .wrap {
     width: 80%;
@@ -972,5 +1077,18 @@ body {
     overflow: auto;
     background-color: #f2f2f2;
     border-radius: 5px;
+  }
+  .services {
+    height: 750px;
+    overflow: auto;
+  }
+  .our-story {
+    height: 350px;
+  }
+  .headmsg,
+  .service {
+    width: 90%;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
   }
 }

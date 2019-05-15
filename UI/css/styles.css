@@ -97,12 +97,7 @@ nav li a:hover {
 a {
   text-decoration: none;
 }
-.txt-rt {
-  text-align: right;
-}
-.txt-lt {
-  text-align: left;
-}
+
 .txt-center {
   text-align: center;
 }
@@ -115,18 +110,7 @@ a {
 .clear {
   clear: both;
 }
-.pos-relative {
-  position: relative;
-}
-.pos-absolute {
-  position: absolute;
-}
-.vertical-base {
-  vertical-align: baseline;
-}
-.vertical-top {
-  vertical-align: top;
-}
+
 nav.vertical ul li {
   display: block;
 }
@@ -320,7 +304,6 @@ body {
   border: 1px solid #eee;
   outline-color: #e45d5d;
   width: 96%;
-  height: 30px;
   font-size: 1em;
   padding: 0.5em;
   font-family: "Open Sans", sans-serif;
@@ -538,16 +521,14 @@ body {
 .container textarea {
   width: 100%;
   padding: 12px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   border: 1px solid #ccc;
   border-radius: 3px;
   margin-bottom: 10px;
   resize: vertical;
   outline-color: #e45d5d;
 }
-.container select {
-  height: 35px;
-}
+
 
 .container label {
   padding: 12px 12px 12px 0;

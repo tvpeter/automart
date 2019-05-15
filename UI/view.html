@@ -36,7 +36,7 @@
             </div>
             <div class="mid-grid-right">
                 <form>
-                    <input type="text" placeholder="Search..." />
+                    <input type="text" placeholder="Search..."  class="search"/>
                   </form>
             </div>
             <div class="clear"></div>
@@ -69,6 +69,7 @@
                   name="search"
                   placeholder="Search table"
                   class="search"
+                  id="search"
                 />
               </div>
                     <table class="table">
@@ -158,14 +159,7 @@
       
 		</div>
     
-    <script src="./js/script.js"></script>
-    <script>
-    const search = document.querySelector(".search");
-    const table = document.querySelector(".table");
-    search.addEventListener('keyup', ()=> {
-      filterTable(table);
-    });
-    </script>
+    
     <!---- start-bottom-grid---->
     <div class="bottom-grids">
       <div class="bottom-top-grids">
@@ -206,6 +200,7 @@
     </div>
 
     <!-- Modal content -->
+    <script src="./js/script.js"></script>
     <div class="modal">
         <div class="content">
           <h4></h4>
@@ -214,9 +209,14 @@
           <button class="btn" id="no">No</button>
         </div>
       </div>
-      <script src="./js/script.js"></script>
       <script>
         const msg = "deactivate this ad";
         confirmAction("confirm", msg);
+        // search 
+      const search = document.querySelector("#search");
+      const table = document.querySelector(".table");
+      search.addEventListener('keyup', ()=> {
+        filterTable(table);
+      });
       </script>
 </html>

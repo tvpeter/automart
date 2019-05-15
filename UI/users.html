@@ -36,7 +36,7 @@
           </div>
           <div class="mid-grid-right">
             <form>
-              <input type="text" placeholder="Search..." />
+              <input type="text" placeholder="Search..." class="search" />
             </form>
           </div>
           <div class="clear"></div>
@@ -71,6 +71,7 @@
             name="search"
             placeholder="Search table"
             class="search"
+            id="search"
           />
         </div>
         <table class="table">
@@ -156,7 +157,7 @@
 
     <script src="./js/script.js"></script>
     <script>
-      const search = document.querySelector(".search");
+      const search = document.querySelector("#search");
       const table = document.querySelector(".table");
       search.addEventListener("keyup", () => {
         filterTable(table);

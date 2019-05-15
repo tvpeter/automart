@@ -218,7 +218,8 @@ body {
   padding: 0.5em 0 1em 0;
 }
 
-.mid-grid-right input[type="text"] {
+.mid-grid-right input[type="text"],
+.search {
   border: none;
   border-bottom: 1px solid #08080b;
   font-family: "Open Sans", sans-serif;
@@ -543,10 +544,11 @@ body {
 .table button {
   cursor: pointer;
 }
-.table caption {
+.caption {
   text-transform: uppercase;
   font-weight: bold;
 }
+
 /*-- Sold item page*/
 *.container {
   box-sizing: border-box;

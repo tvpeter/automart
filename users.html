@@ -62,10 +62,18 @@
 
     <div class="content">
       <div class="wrap">
+        <div style="width:70%">
+          <h3 class="txt-center caption">ALL REGISTERED USERS</h3>
+        </div>
+        <div class="float-rt" style="width:30%;">
+          <input
+            type="text"
+            name="search"
+            placeholder="Search table"
+            class="search"
+          />
+        </div>
         <table class="table">
-          <caption>
-            All Registered Users
-          </caption>
           <thead>
             <tr>
               <th>SN</th>
@@ -81,19 +89,19 @@
           <tbody>
             <tr>
               <td>1</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
-              <td>+2348938302393</td>
+              <td><a href="">#39238ADEER</a></td>
+              <td>Teahn Doe</td>
+              <td>example@gmail.com</td>
+              <td>+382938403494</td>
               <td>12/03/2019</td>
               <td>Active</td>
               <td><button id="confirm">Disable</button></td>
             </tr>
             <tr>
               <td>2</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
+              <td><a href="">#393024934D3DH</a></td>
+              <td>James Allen</td>
+              <td>alenjames@gmail.com</td>
               <td>+2348938302393</td>
               <td>12/03/2019</td>
               <td>Disabled</td>
@@ -101,10 +109,10 @@
             </tr>
             <tr>
               <td>3</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
-              <td>+2348938302393</td>
+              <td><a href="">#283723823A93</a></td>
+              <td>Kenneth Parse</td>
+              <td>kenthdehp@gmail.com</td>
+              <td>+20293293843</td>
               <td>12/03/2019</td>
               <td>Active</td>
               <td><button>Disable</button></td>
@@ -132,10 +140,10 @@
             </tr>
             <tr>
               <td>6</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
-              <td>+2348938302393</td>
+              <td><a href="">#294938D39DD3</a></td>
+              <td>Tyonum Peter</td>
+              <td>tyonump@gmail.com</td>
+              <td>+23493837382</td>
               <td>12/03/2019</td>
               <td>Active</td>
               <td><button>Disable</button></td>
@@ -146,6 +154,14 @@
       <div class="clear"></div>
     </div>
 
+    <script src="./js/script.js"></script>
+    <script>
+      const search = document.querySelector(".search");
+      const table = document.querySelector(".table");
+      search.addEventListener("keyup", () => {
+        filterTable(table);
+      });
+    </script>
     <!---- start-bottom-grid---->
     <div class="bottom-grids">
       <div class="bottom-top-grids">

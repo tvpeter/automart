@@ -60,8 +60,18 @@
 	
   <div class="content">
 			<div class="wrap">
+          <div style="width:70%">
+              <h3 class="txt-center caption">ALL POSTED ADS</h3>
+            </div>
+              <div  class="float-rt" style="width:30%;">
+                  <input
+                  type="text"
+                  name="search"
+                  placeholder="Search table"
+                  class="search"
+                />
+              </div>
                     <table class="table">
-                            <caption>All Posted Ads</caption>
                             <thead>
                                 <tr>
                                     <th>SN</th>
@@ -77,56 +87,56 @@
                             <tbody>
                                 <tr >
                                     <td>1</td>
-                                    <td><a href="details.html">#12d8aud7ed8</a></td>
+                                    <td><a href="details.html">#45SJ9EHDJ</a></td>
                                     <td>BMW X6, 2018</td>
                                     <td>Used</td>
                                     <td>Available</td>
                                     <td>12/03/2019</td>
-                                    <td><a href="">#837dh7da7h3ahd</a></td>
+                                    <td><a href="">#939D8S8DJD</a></td>
                                     <td><button id="confirm">Deactivate</button></td>
                                 </tr>
                                 <tr >
                                         <td>1</td>
-                                        <td><a href="details.html">#12d8aud7ed8</a></td>
+                                        <td><a href="details.html">#9S9XYDISH12</a></td>
                                         <td>BMW X6, 2018</td>
                                         <td>Used</td>
                                         <td>Sold</td>
                                         <td>12/03/2019</td>
-                                        <td><a href="">#837dh7da7h3ahd</a></td>
+                                        <td><a href="">#8373DH3AGD3</a></td>
                                         <td><button>Deactivate</button></td>
                                 </tr>
                                 <tr >
                                         <td>1</td>
-                                        <td><a href="details.html">#12d8aud7ed8</a></td>
+                                        <td><a href="details.html">#938DAH34K390</a></td>
                                         <td>BMW X6, 2018</td>
                                         <td>Used</td>
                                         <td>Available</td>
                                         <td>12/03/2019</td>
-                                        <td><a href="">#837dh7da7h3ahd</a></td>
+                                        <td><a href="">#83ID3DUADG3</a></td>
                                         <td><button>Deactivate</button></td>
     
     
                                     </tr>
                                     <tr >
                                             <td>1</td>
-                                            <td><a href="details.html">#12d8aud7ed8</a></td>
+                                            <td><a href="details.html">#34DID2S3455</a></td>
                                             <td>BMW X6, 2018</td>
                                             <td>Used</td>
                                             <td>Available</td>
                                             <td>12/03/2019</td>
-                                            <td><a href="">#837dh7da7h3ahd</a></td>
+                                            <td><a href="">#HD383948493D</a></td>
                                             <td><button>Deactivate</button></td>
     
                                     </tr>
     
                                     <tr >
                                             <td>1</td>
-                                            <td><a href="details.html">#12d8aud7ed8</a></td>
+                                            <td><a href="details.html">#39D8383193DA</a></td>
                                             <td>BMW X6, 2018</td>
                                     <td>Used</td>
                                     <td>Sold</td>
                                     <td>12/03/2019</td>
-                                    <td><a href="">#837dh7da7h3ahd</a></td>
+                                    <td><a href="">#839D3Y34SAO</a></td>
                                     <td><button>Deactivate</button></td>
     
                                         </tr>
@@ -148,6 +158,14 @@
       
 		</div>
     
+    <script src="./js/script.js"></script>
+    <script>
+    const search = document.querySelector(".search");
+    const table = document.querySelector(".table");
+    search.addEventListener('keyup', ()=> {
+      filterTable(table);
+    });
+    </script>
     <!---- start-bottom-grid---->
     <div class="bottom-grids">
       <div class="bottom-top-grids">

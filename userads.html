@@ -61,8 +61,20 @@
   <div class="content">
 			<div class="wrap">
           <div style="overflow-x:auto;">
+            <div style="width:70%">
+              <h3 class="txt-center caption">All My Posted Ads</h3>
+            </div>
+              <div  class="float-rt" style="width:30%;">
+                  <input
+                  type="text"
+                  name="search"
+                  placeholder="Search table"
+                  class="search"
+                />
+              </div>
+                        
+          
               <table class="table">
-                        <caption>All My Posted Ads</caption>
                         <thead>
                             <tr>
                                 <th>SN</th>
@@ -139,8 +151,16 @@
                     </div>
                     </div>
 				<div class="clear"> </div>
-      
     </div>
+
+<script src="./js/script.js"></script>
+<script>
+const search = document.querySelector(".search");
+const table = document.querySelector(".table");
+search.addEventListener('keyup', ()=> {
+  filterTable(table);
+});
+</script>
     <!---- start-bottom-grid---->
     <div class="bottom-grids">
       <div class="bottom-top-grids">

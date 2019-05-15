@@ -22,3 +22,26 @@ function confirmAction(btn, msg) {
     modal.style.display = "none";
   });
 }
+
+function filterTable(table) {
+  let status;
+  const filter = search.value.toUpperCase();
+  const tr = table.getElementsByTagName("tr");
+
+  for (let i = 0; i < tr.length; i++) {
+    let td = tr[i].getElementsByTagName("td");
+    for (let j = 0; j < td.length; j++) {
+      if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+        status = true;
+      }
+    }
+    if (status) {
+      tr[i].style.display = "";
+      status = false;
+    } else {
+      if (tr[i] !== tr[0]) {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}

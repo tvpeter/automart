@@ -60,8 +60,18 @@
 	
   <div class="content">
 			<div class="wrap">
+          <div style="width:70%">
+              <h3 class="txt-center caption">NOTIFICATIONS AND THEIR STATUS</h3>
+            </div>
+              <div  class="float-rt" style="width:30%;">
+                  <input
+                  type="text"
+                  name="search"
+                  placeholder="Search table"
+                  class="search"
+                />
+              </div>
                     <table class="table">
-                            <caption>NOTIFICATIONS AND THEIR STATUS</caption>
                             <thead>
                                 <tr>
                                     <th>SN</th>
@@ -77,27 +87,27 @@
                                 <tr >
                                     <td>6</td>
                                     <td><a href="readnotification.html">7X6XY7637E</a></td>
-                                    <td><a href="">67aAh783723</a></td>
-                                    <td><a href="">903d83d9hdk</a></td>
-                                    <td><a href="details.html">#12d8aud7ed8</a></td>
+                                    <td><a href="">7836DH337</a></td>
+                                    <td><a href="">347DH3A9D</a></td>
+                                    <td><a href="details.html">#284SU23DA3</a></td>
                                     <td>12/03/2019</td>
                                     <td>Pending</td>
                                 </tr>
                                 <tr >
                                         <td>5</td>
-                                        <td><a href="readnotification.html">7X6XY7637E</a></td>
-                                        <td><a href="">67aAh783723</a></td>
-                                        <td><a href="">903d83d9hdk</a></td>
-                                        <td><a href="">#12d8aud7ed8</a></td>
+                                        <td><a href="readnotification.html">903SU2ADB</a></td>
+                                        <td><a href="">34DAJ3D82U</a></td>
+                                        <td><a href="">23A2DADB32</a></td>
+                                        <td><a href="">#92D8A7DH3</a></td>
                                         <td>12/03/2019</td>
                                         <td>Pending</td>
                                 </tr>
                                 <tr >
                                         <td>4</td>
-                                        <td><a href="readnotification.html">7X6XY7637E</a></td>
-                                        <td><a href="">67aAh783723</a></td>
-                                        <td><a href="">903d83d9hdk</a></td>
-                                        <td><a href="">#12d8aud7ed8</a></td>
+                                        <td><a href="readnotification.html">938HSDJ34S</a></td>
+                                        <td><a href="">893DHA8DA</a></td>
+                                        <td><a href="">I3D8SUD99</a></td>
+                                        <td><a href="">#K23837DWH</a></td>
 
                                         <td>12/03/2019</td>
                                         <td>Pending</td>
@@ -106,10 +116,10 @@
                                     </tr>
                                     <tr >
                                             <td>3</td>
-                                            <td><a href="readnotification.html">7X6XY7637E</a></td>
-                                            <td><a href="">67aAh783723</a></td>
-                                            <td><a href="">903d83d9hdk</a></td>
-                                            <td><a href="">#12d8aud7ed8</a></td>
+                                            <td><a href="readnotification.html">9UA37DYA2</a></td>
+                                            <td><a href="">DH233S23</a></td>
+                                            <td><a href="">34SA2313</a></td>
+                                            <td><a href="">#8UD7UDAS</a></td>
 
                                             <td>12/03/2019</td>
                                             <td>Pending</td>
@@ -118,10 +128,10 @@
     
                                     <tr >
                                             <td>2</td>
-                                            <td><a href="readnotification.html">7X6XY7637E</a></td>
-                                            <td><a href="">67aAh783723</a></td>
-                                            <td><a href="">903d83d9hdk</a></td>
-                                            <td><a href="">#12d8aud7ed8</a></td>
+                                            <td><a href="readnotification.html">93827DH3A</a></td>
+                                            <td><a href="">A37D3YD23</a></td>
+                                            <td><a href="">342AHDNXE</a></td>
+                                            <td><a href="">#83U73YWU2</a></td>
 
                                             <td>12/03/2019</td>
                                             <td>Treated</td>
@@ -144,6 +154,16 @@
       
         </div>
     
+
+        <script src="./js/script.js"></script>
+        <script>
+        const search = document.querySelector(".search");
+        const table = document.querySelector(".table");
+        search.addEventListener('keyup', ()=> {
+          filterTable(table);
+        });
+        </script>
+        
     <!---- start-bottom-grid---->
     <div class="bottom-grids">
       <div class="bottom-top-grids">
@@ -182,4 +202,6 @@
         <div class="clear"></div>
       </div>
     </div>
+
+
 </html>

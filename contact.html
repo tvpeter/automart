@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AutoMart | Login</title>
+    <title>AutoMart | Product Details</title>
     <link href="./css/styles.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
@@ -28,61 +28,59 @@
           </div>
           <div class="clear"></div>
         </div>
-      </div>
+			</div>
+			
       <!----start-mid-head---->
       <div class="mid-header">
-          <div class="wrap">
-            <div class="mid-grid-left">
-                <a class="logo" href="index.html"><span> </span></a>
-            </div>
-            <div class="mid-grid-right">
-                <form>
-                    <input type="text" placeholder="Search..." class="search"/>
-                  </form>
-            </div>
-            <div class="clear"></div>
+        <div class="wrap">
+          <div class="mid-grid-left">
+							<a class="logo" href="index.html"><span> </span></a>
           </div>
+          <div class="mid-grid-right">
+							<form>
+									<input type="text" placeholder="Search..."  class="search"/>
+								</form>
+          </div>
+          <div class="clear"></div>
         </div>
-      
+      </div>
 	</div>
 	
-    
   <div class="content">
 			<div class="wrap">
-
 <div class="container">
-    <form action="">
-    <div class="row txt-center">
-      <h1>Login</h1>
-    </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="email">Email</label>
+  <h1 class="txt-center">Contact Us</h1>
+  <form action="">
+    <div class="">
+      <div>
+        <span>Name</span>
+        <input type="text" name="name" required/>
       </div>
-      <div class="col-75">
-        <input type="email" name="email">
-      </div>
+       
+        <div>
+            <span>Email</span>
+            <input type="email" name="email" required />
+          </div>
+        <div>
+            <span>Phone</span>
+            <input type="text" name="phone" required/>
+          </div> 
+          <p>
+            <span>Message</span>
+            <textarea name="mssg" cols="32" rows="10" required></textarea>
+          </p>
+      
     </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="price">Password</label>
+    <input type="submit" value="Send"  class="btn"/>
+    <div class="clear"></div>
+  </form>
+</div>
       </div>
-      <div class="col-75">
-        <input type="password" id="password" name="Password">
-      </div>
-    </div>
-    <div class="row">
-      <input type="submit" value="Login" class="btn">
-    </div>
-    </form>
-  </div>
-                 
-                    </div>
 				<div class="clear"> </div>
       
 		</div>
     
-  
+   
      <!---- footer---->
      <div class="bottom-cols">
       <div class="wrap">
@@ -115,5 +113,4 @@
         <div class="clear"></div>
       </div>
     </footer>
-  </html>
-  
+</html>

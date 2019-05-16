@@ -11,19 +11,12 @@ h5,
 h6,
 p,
 a,
-em,
 img,
-small,
-strike,
-strong,
-sub,
-sup,
 ol,
 nav ul,
 nav li,
 form,
 label,
-legend,
 table,
 tbody,
 tfoot,
@@ -31,8 +24,6 @@ thead,
 tr,
 th,
 td,
-article,
-aside,
 footer,
 header,
 menu,
@@ -78,9 +69,10 @@ nav {
   min-height: 30px;
   color: #000000;
 }
+
 nav li {
   float: left;
-  padding-right: 50px;
+  padding-right: 30px;
   text-transform: uppercase;
 }
 nav li a {
@@ -111,12 +103,6 @@ a {
   clear: both;
 }
 
-nav.vertical ul li {
-  display: block;
-}
-nav.horizontal ul li {
-  display: inline-block;
-}
 img {
   max-width: 100%;
 }
@@ -201,6 +187,7 @@ body {
   font-family: "Open Sans", sans-serif;
   outline: none;
   padding: 0.8em 0;
+  background: #fff;
   font-size: 1em;
   color: #a5a5a5;
   width: 100%;
@@ -911,6 +898,7 @@ body {
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 2em;
   z-index: 10;
   margin-top: -250px;
   height: 310px;
@@ -949,6 +937,7 @@ body {
   width: 100%;
   position: relative;
   min-height: 200px;
+  margin-bottom: 2em;
 }
 .about {
   width: 30%;
@@ -973,7 +962,7 @@ body {
 
 @media only screen and (max-width: 768px) {
   .wrap {
-    width: 80%;
+    width: 90%;
   }
   .login-left {
     float: none;
@@ -1055,16 +1044,24 @@ body {
     border-radius: 5px;
   }
   .services {
-    height: 750px;
-    overflow: auto;
+    height: 900px;
   }
   .our-story {
     height: 350px;
+    margin-bottom: 1.5em;
   }
   .headmsg,
   .service {
     width: 90%;
     margin-bottom: 5px;
     padding-bottom: 5px;
+  }
+
+  nav li {
+    padding-right: 10px;
+    text-transform: uppercase;
+  }
+  nav li a {
+    font-size: 0.8em;
   }
 }

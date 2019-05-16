@@ -20,10 +20,13 @@
           </div>
 
           <div class="top-header-right">
-            <ul>
-              <p>Hello, John T.</p>
-              <li><a href="index.html">Logout</a></li>
-            </ul>
+            <span>Hello, John</span>
+            <li class="dropdown">
+              <div class="links">
+                <a href="index.html">Logout</a>
+                <a href="profile.html">Profile</a>
+              </div>
+            </li>
           </div>
           <div class="clear"></div>
         </div>
@@ -49,11 +52,8 @@
             <ul>
               <li><a href="users.html" class="active">All Users</a></li>
               <li><a href="view.html">All Ads</a></li>
-              <li><a href="">All Transactions</a></li>
-              <li>
-                <a href="notifications.html">Notifications</a>
-              </li>
-              <li><a href="#">Edit Profile</a></li>
+              <li><a href="transactions.html">All Transactions</a></li>
+              <li><a href="notifications.html">Notifications</a></li>
             </ul>
           </nav>
         </div>
@@ -62,10 +62,8 @@
 
     <div class="content">
       <div class="wrap">
-        <div style="width:70%">
-          <h3 class="txt-center caption">ALL REGISTERED USERS</h3>
-        </div>
-        <div class="float-rt" style="width:30%;">
+        <div class="resize-table">
+          <h3 class="txt-center">ALL REGISTERED USERS</h3>
           <input
             type="text"
             name="search"
@@ -73,84 +71,84 @@
             class="search"
             id="search"
           />
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Date Registered</th>
-              <th>Status</th>
-              <th>Disable</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td><a href="">#39238ADEER</a></td>
-              <td>Teahn Doe</td>
-              <td>example@gmail.com</td>
-              <td>+382938403494</td>
-              <td>12/03/2019</td>
-              <td>Active</td>
-              <td><button id="confirm">Disable</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><a href="">#393024934D3DH</a></td>
-              <td>James Allen</td>
-              <td>alenjames@gmail.com</td>
-              <td>+2348938302393</td>
-              <td>12/03/2019</td>
-              <td>Disabled</td>
-              <td><button disabled>Disable</button></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td><a href="">#283723823A93</a></td>
-              <td>Kenneth Parse</td>
-              <td>kenthdehp@gmail.com</td>
-              <td>+20293293843</td>
-              <td>12/03/2019</td>
-              <td>Active</td>
-              <td><button>Disable</button></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
-              <td>+2348938302393</td>
-              <td>12/03/2019</td>
-              <td>Disabled</td>
-              <td><button disabled>Disable</button></td>
-            </tr>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date Registered</th>
+                <th>Status</th>
+                <th>Disable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><a href="">#39238ADEER</a></td>
+                <td>Teahn Doe</td>
+                <td>example@gmail.com</td>
+                <td>+382938403494</td>
+                <td>12/03/2019</td>
+                <td>Active</td>
+                <td><button id="confirm">Disable</button></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><a href="">#393024934D3DH</a></td>
+                <td>James Allen</td>
+                <td>alenjames@gmail.com</td>
+                <td>+2348938302393</td>
+                <td>12/03/2019</td>
+                <td>Disabled</td>
+                <td><button disabled>Disable</button></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><a href="">#283723823A93</a></td>
+                <td>Kenneth Parse</td>
+                <td>kenthdehp@gmail.com</td>
+                <td>+20293293843</td>
+                <td>12/03/2019</td>
+                <td>Active</td>
+                <td><button>Disable</button></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><a href="">#12d8aud7ed8</a></td>
+                <td>John Doe</td>
+                <td>johndoe@gmail.com</td>
+                <td>+2348938302393</td>
+                <td>12/03/2019</td>
+                <td>Disabled</td>
+                <td><button disabled>Disable</button></td>
+              </tr>
 
-            <tr>
-              <td>5</td>
-              <td><a href="">#12d8aud7ed8</a></td>
-              <td>John Doe</td>
-              <td>johndoe@gmail.com</td>
-              <td>+2348938302393</td>
-              <td>12/03/2019</td>
-              <td>Active</td>
-              <td><button>Disable</button></td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td><a href="">#294938D39DD3</a></td>
-              <td>Tyonum Peter</td>
-              <td>tyonump@gmail.com</td>
-              <td>+23493837382</td>
-              <td>12/03/2019</td>
-              <td>Active</td>
-              <td><button>Disable</button></td>
-            </tr>
-          </tbody>
-        </table>
+              <tr>
+                <td>5</td>
+                <td><a href="">#12d8aud7ed8</a></td>
+                <td>John Doe</td>
+                <td>johndoe@gmail.com</td>
+                <td>+2348938302393</td>
+                <td>12/03/2019</td>
+                <td>Active</td>
+                <td><button>Disable</button></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><a href="">#294938D39DD3</a></td>
+                <td>Tyonum Peter</td>
+                <td>tyonump@gmail.com</td>
+                <td>+23493837382</td>
+                <td>12/03/2019</td>
+                <td>Active</td>
+                <td><button>Disable</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="clear"></div>
     </div>
@@ -163,44 +161,41 @@
         filterTable(table);
       });
     </script>
-    <!---- start-bottom-grid---->
-    <div class="bottom-grids">
-      <div class="bottom-top-grids">
-        <div class="wrap">
-          <div class="bottom-bottom-grid">
-            <h6>Knowledge Base</h6>
-            <p>Know what it requires to Sell on Automart</p>
-            <a class="learn-more" href="#">Read here</a>
-          </div>
-          <div class="bottom-bottom-grid">
-            <h6>Return Policy</h6>
-            <p>Find out the terms for return policy.</p>
-            <a class="learn-more" href="#">Read here</a>
-          </div>
-          <div class="bottom-bottom-grid last-bottom-bottom-grid">
-            <h6>Contact Support Team</h6>
-            <p>Do you need assistance?.</p>
-            <a class="learn-more" href="#">Contact us here</a>
-          </div>
-          <div class="clear"></div>
+    <!---- footer---->
+    <div class="bottom-cols">
+      <div class="wrap">
+        <div class="bottom-col">
+          <h6>Terms of Use</h6>
+          <a href="#">Read here</a>
         </div>
+        <div class="bottom-col">
+          <h6>Return Policy</h6>
+          <a href="#">Read here</a>
+        </div>
+        <div class="bottom-col">
+          <h6>Contact Support Team</h6>
+          <a href="#">Contact us here</a>
+        </div>
+        <div class="clear"></div>
       </div>
     </div>
-    <!--End of bottom grid-->
+    <!--End of upper footer -->
 
-    <div class="footer">
+    <footer class="footer">
       <div class="wrap">
         <div class="footer-left">
           <ul>
-            <li><a href="#">Terms of Use</a> <span> </span></li>
-            <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+            <li>
+              <a href="#">Privacy & Cookie Policy</a>
+              <span class="sep"> </span>
+            </li>
             <li><a href="#">Cookie Settings</a></li>
             <div class="clear"></div>
           </ul>
         </div>
         <div class="clear"></div>
       </div>
-    </div>
+    </footer>
 
     <!-- End of footer -->
 

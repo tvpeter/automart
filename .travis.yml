@@ -1,4 +1,12 @@
-language: html
+language: node_js
+node_js:
+  - "node"
+script:
+  # run generator
+  - npx eleventy
+  # create .nojekyll files
+  # We are telling GitHub to not process this branch using jekyll
+  - touch .nojekyll
 deploy:
   provider: pages
   skip_cleanup: true

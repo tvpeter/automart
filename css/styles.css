@@ -1060,6 +1060,12 @@ body {
     background-color: #f1f3f4;
     border-radius: 5px;
   }
+
+  .top-header-right a:hover {
+    padding: 8px 12px;
+    background: #fff;
+    color: #000;
+  }
   .services {
     width: 100%;
   }

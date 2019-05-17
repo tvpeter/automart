@@ -43,5 +43,6 @@ Below are the views for each category of user.
 - Search for data tables
 - popup action confirmation
 - image change
+- Modal for password reset on [login](https://tvpeter.github.io/automart/users.html) page.
 
-_Thanks for checking_
+_Thanks for checking, you feedback is appreciated_

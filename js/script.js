@@ -59,3 +59,32 @@ function switchImage(imgId) {
     }
   }
 }
+
+function passwordReset() {
+  const modal = document.querySelector(`.modal`);
+  modal.style.display = "block";
+
+  let email = document.getElementById("useremail");
+  const subm = document.getElementById("submitForm");
+  const cancel = document.getElementById("cancel");
+
+  subm.addEventListener("click", () => {
+    email = email.value;
+    if (emailIsValid(email)) {
+      alert(`Password reset mail has been sent to ${email}`);
+      return (modal.style.display = "none");
+    }
+
+    alert(`Supply a valid email address`);
+    return (modal.style.display = "none");
+  });
+
+  cancel.addEventListener("click", () => {
+    alert(`Ok good`);
+    return (modal.style.display = "none");
+  });
+}
+
+function emailIsValid(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}

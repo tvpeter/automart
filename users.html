@@ -154,14 +154,6 @@
       <div class="clear"></div>
     </div>
 
-    <script src="./js/script.js"></script>
-    <script>
-      const search = document.querySelector("#search");
-      const table = document.querySelector(".table");
-      search.addEventListener("keyup", () => {
-        filterTable(table);
-      });
-    </script>
     <!---- footer---->
     <div class="bottom-cols">
       <div class="wrap">
@@ -206,6 +198,14 @@
     </div>
     <script src="./js/script.js"></script>
     <script>
+      //search table
+      const search = document.querySelector("#search");
+      const table = document.querySelector(".table");
+      search.addEventListener("keyup", () => {
+        filterTable(table);
+      });
+
+      // Confirm disable user
       const msg = "disable this user";
       confirmAction("confirm", msg);
     </script>

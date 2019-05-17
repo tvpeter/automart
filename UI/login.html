@@ -46,9 +46,9 @@
           </div>
         </div>
       
-	</div>
+  </div>
+  
 	
-    
   <div class="content">
 			<div class="wrap">
 <div class="container">
@@ -76,44 +76,65 @@
       <input type="submit" value="Login" class="btn">
     </div>
     </form>
-  </div>
-                 
-                    </div>
+    Forgot password? <button id="passwordReset">Recover</button>
+  </div> 
+    </div>
 				<div class="clear"> </div>
-      
 		</div>
     
   
-     <!---- footer---->
-     <div class="bottom-cols">
-      <div class="wrap">
-        <div class="bottom-col">
-          <h6>Terms of Use</h6>
-          <a href="#">Read here</a>
+      <!---- footer---->
+      <div class="bottom-cols">
+          <div class="wrap">
+            <div class="bottom-col">
+              <h6>Terms of Use</h6>
+              <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+              <h6>Return Policy</h6>
+              <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+              <h6>Contact Support Team</h6>
+              <a href="#">Contact us here</a>
+            </div>
+            <div class="clear"></div>
+          </div>
         </div>
-        <div class="bottom-col">
-          <h6>Return Policy</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Contact Support Team</h6>
-          <a href="contact.html">Contact us here</a>
-        </div>
-        <div class="clear"></div>
-      </div>
-    </div>
-    <!--End of upper footer -->
+        <!--End of upper footer -->
+    
+        <footer class="footer">
+          <div class="wrap">
+            <div class="footer-left">
+              <ul>
+                <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
+                <li><a href="#">Cookie Settings</a></li>
+              </ul>
+            </div>
+            <div class="clear"></div>
+          </div>
+        </footer>
 
-    <footer class="footer">
-      <div class="wrap">
-        <div class="footer-left">
-          <ul>
-            <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
-            <li><a href="#">Cookie Settings</a></li>
-          </ul>
+
+    <div class="modal">
+        <div class="content">
+          <h4>Password Reset Form</h4>
+          <hr>
+            <label for="email">Email</label>
+            <input type="email" name="emmail" id="useremail" required placeholder="Supply your registered email address">
+            <br> 
+            <button class="btn" id="submitForm">Submit</button>
+              <button class="btn" id="cancel">Cancel</button>
         </div>
-        <div class="clear"></div>
       </div>
-    </footer>
+
+   <script src="./js/script.js"></script>
+    <script>
+      //password reset request
+      const passwordRes = document.querySelector("#passwordReset");
+      passwordRes.addEventListener("click", ()=>{
+        passwordReset();
+      });
+    </script>
   </html>
   

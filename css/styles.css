@@ -298,7 +298,7 @@ body {
   padding: 1em;
   width: 10em;
   border: #c0c0c0 2px solid;
-  margin-top: 0%;
+  margin-bottom: 1em;
   font-weight: 700;
   font-size: 0.8em;
   cursor: pointer;
@@ -309,6 +309,22 @@ body {
   color: #ffffff;
   background-color: #000000;
   border: none;
+}
+.product-images {
+  margin: 0.1em 0.5em 2em 0;
+}
+.imgslide {
+  display: none;
+}
+.current {
+  display: block;
+}
+.thumbnail {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.thumbnail:hover {
+  opacity: unset;
 }
 
 .vehicle-detail-info {

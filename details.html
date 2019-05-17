@@ -61,7 +61,18 @@
     <div class="wrap">
       <div class="row">
   <div class="col-45">
-      <img src="images/products/bmwx6d.jpg" />
+      <img src="images/products/bmwx6d.jpg" class="imgslide current" alt=""/>
+      <img src="images/products/bmwx6.jpg" alt="" class="imgslide">
+
+      <div class="product-images">
+        <div class="col-45">
+          <img src="images/products/bmwx6d.jpg" alt="" class="thumbnail" id="img1">
+        </div>
+        <div class="col-45">
+            <img src="images/products/bmwx6.jpg" alt="" class="thumbnail" id="img2">
+        </div>
+        <div class="clear"></div>
+      </div>
       <div class="txt-center"><a href="order.html">
         <button class="pl-white">Buy Now</button></a></div>
   </div>
@@ -87,6 +98,19 @@
   </div>
 </div>
   </div>
+
+<script>
+  const  img1 = document.getElementById("img1");
+  const img2 = document.getElementById("img2");
+
+  img2.addEventListener("click", ()=> {
+    switchImage("img2");
+});
+  img1.addEventListener("click", ()=>{
+    switchImage("img1");
+  });
+</script>
+<script src="./js/script.js"></script>
 
   <div class="wrap">
     <h3>Related Products</h3>

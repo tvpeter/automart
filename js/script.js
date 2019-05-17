@@ -45,3 +45,17 @@ function filterTable(table) {
     }
   }
 }
+
+const displayImages = document.querySelectorAll(".imgslide");
+function switchImage(imgId) {
+  const imgIndex = parseInt(imgId.charAt(imgId.length - 1)) - 1;
+  if (imgIndex < 0) {
+    imgIndex = 0;
+  }
+  displayImages[imgIndex].classList.add("current");
+  for (let i = 0; i < displayImages.length; i++) {
+    if (i !== imgIndex) {
+      displayImages[i].classList.remove("current");
+    }
+  }
+}

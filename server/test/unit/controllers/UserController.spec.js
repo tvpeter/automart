@@ -21,6 +21,14 @@ describe('User controller', () => {
     done();
   });
   describe('User create', () => {
+    it('should return error if password and its confirmation does not match', (done) => {
+      data.password_confirmation = 'password';
+      chai.request(server).post('/api/v1/users').send(data).end((req, res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+    });
     it('should return error if all required fields are not supplied', (done) => {
       data.email = '';
       chai.request(server).post('/api/v1/users').send(data).end((req, res) => {
@@ -42,6 +50,5 @@ describe('User controller', () => {
         done();
       });
     });
-
   });
 });

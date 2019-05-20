@@ -1,0 +1,41 @@
+{
+  "name": "automart",
+  "version": "1.0.0",
+  "description": "'Automobile online marketplace'",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "mocha test/ --recursive --require babel-register",
+    "build": "babel src --out-dir build",
+    "prebuild": "rm -rf build",
+    "prestart": "npm run lint && npm run build",
+    "start": "babel-node build/index.js",
+    "lint": "eslint src/**"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tvpeter/automart.git"
+  },
+  "author": "'Tyonum Peter'",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tvpeter/automart/issues"
+  },
+  "homepage": "https://github.com/tvpeter/automart#readme",
+  "dependencies": {
+    "chai-http": "4.3.0",
+    "express": "4.17.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.4",
+    "@babel/node": "7.2.2",
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "babel-register": "6.26.0",
+    "babel-watch": "7.0.0",
+    "chai": "4.2.0",
+    "eslint": "5.16.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.17.2",
+    "mocha": "6.1.4"
+  }
+}

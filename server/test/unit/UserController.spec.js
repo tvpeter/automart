@@ -107,4 +107,24 @@ describe('User create', () => {
       done();
     });
   });
+
+  it('should return error if last name or first name or email is more than 30 characters', (done) => {
+    const data = {
+      email: 'justhnodhmdjdjhdkeh@akehdgdhekdhdimdhkshs.com',
+      first_name: 'Anthonia',
+      last_name: 'Tyonum',
+      password: 'password',
+      address: 'my address',
+      phone: '08137277480',
+      account_number: '2081769837',
+      bank: 'UBA',
+      password_confirmation: 'password',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(400);
+      expect(res.body.error).to.have.property('last_name');
+      expect(res.body.message).to.eq('Name or email is too long');
+      done();
+    });
+  });
 });

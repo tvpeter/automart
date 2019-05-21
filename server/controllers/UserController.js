@@ -88,6 +88,19 @@ const User = {
     const users = UserModel.getAllUsers();
     return res.status(200).send(users);
   },
+  signIn(req, res) {
+    const error = {};
+
+    if (!req.body.email || !req.body.password) {
+      error.email = 'Invalid login credentials';
+      return res.status(400).send({
+        message: error.email,
+        status: 'error',
+        error,
+      });
+    }
+    return 'it worked';
+  },
 };
 
 export default User;

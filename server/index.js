@@ -7,6 +7,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post('/api/v1/users', User.create);
 app.get('/api/v1/users', User.getAll);
+app.post('/api/v1/auth', User.signIn);
 app.get('/api/v1/', (req, res) => res.status(200).send('Hello world'));
 
 const port = process.env.PORT || 4000;

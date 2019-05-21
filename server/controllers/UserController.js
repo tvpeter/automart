@@ -81,6 +81,7 @@ const User = {
       address: user.address,
       account_number: user.account_number,
       bank: user.bank,
+      isAdmin: user.isAdmin,
     });
   },
   getAll(req, res) {

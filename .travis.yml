@@ -4,3 +4,10 @@ node_js:
   - 11
   - 10
   - 9
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+scripts:
+  - npm run test

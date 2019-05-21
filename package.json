@@ -4,12 +4,13 @@
   "description": "'Automobile online marketplace'",
   "main": "build/index.js",
   "scripts": {
-    "test": "nyc mocha server/test/ --recursive --require babel-register",
+    "test": "nyc --require babel-core/register mocha server/test/unit/**.spec.js --exit -w",
     "build": "babel server --out-dir server/build --ignore test/",
     "prebuild": "rm -rf server/build",
     "prestart": "npm run lint && npm run build",
     "start": "babel-node server/build/index.js",
-    "lint": "eslint server"
+    "lint": "eslint server",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov "
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/tvpeter/automart#readme",
   "dependencies": {
+    "env2": "2.2.2",
     "express": "4.17.0"
   },
   "devDependencies": {
@@ -40,5 +42,10 @@
     "mocha": "6.1.4",
     "mocha-lcov-reporter": "1.3.0",
     "nyc": "14.1.1"
+  },
+  "nyc": {
+    "exclude": [
+      "**/test/**"
+    ]
   }
 }

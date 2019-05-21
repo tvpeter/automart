@@ -25,25 +25,6 @@ describe('User create', () => {
     });
   });
 
-  it('should return error if invalid email address is supplied', (done) => {
-    const data = {
-      email: 'peter.gmail.com',
-      first_name: 'Anthonia',
-      password: 'password',
-      address: 'my address',
-      phone: '08137277480',
-      account_number: '2081769837',
-      bank: 'UBA',
-      password_confirmation: 'password',
-    };
-    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
-      expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Invalid / empty email supplied');
-      expect(res.body.error).to.have.property('email');
-      done();
-    });
-  });
-
   it('should return error if all required fields are not supplied', (done) => {
     const data = {
       email: 'peter@gmail.com',
@@ -83,6 +64,26 @@ describe('User create', () => {
           expect(res.body).to.have.property(key).equal(data[key]);
         }
       });
+      done();
+    });
+  });
+
+
+  it('should return error if invalid email address is supplied', (done) => {
+    const data = {
+      email: 'peter.gmail.com',
+      first_name: 'Anthonia',
+      password: 'password',
+      address: 'my address',
+      phone: '08137277480',
+      account_number: '2081769837',
+      bank: 'UBA',
+      password_confirmation: 'password',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(400);
+      expect(res.body.message).to.eq('Invalid / empty email supplied');
+      expect(res.body.error).to.have.property('email');
       done();
     });
   });

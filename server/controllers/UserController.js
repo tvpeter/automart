@@ -14,6 +14,15 @@ const User = {
         error,
       });
     }
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
+    if (!email) {
+      error.email = 'Invalid / empty email supplied';
+      return res.status(400).send({
+        status: error,
+        message: error.email,
+        error,
+      });
+    }
 
     if (
       !req.body.email

@@ -8,7 +8,7 @@
     "build": "babel server --out-dir server/build --ignore test/",
     "prebuild": "rm -rf server/build",
     "prestart": "npm run lint && npm run build",
-    "start": "babel-node build/index.js",
+    "start": "babel-node server/build/index.js",
     "lint": "eslint server"
   },
   "repository": {

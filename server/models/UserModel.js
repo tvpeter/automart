@@ -26,6 +26,14 @@ class UserModel {
     this.users.push(newUser);
     return newUser;
   }
+
+  findByProperty(ppty, value) {
+    return this.users.find(user => user[ppty] === value);
+  }
+
+  getAllUsers() {
+    return this.users;
+  }
 }
 
 export default new UserModel();

@@ -1,10 +1,35 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../../index';
+import UserModel from '../../models/UserModel';
 
 const { expect } = chai;
 chai.use(chaiHttp);
 describe('User create', () => {
+  it('should return a new user with the supplied properties', (done) => {
+    const data = {
+      email: 'proff@gmail.com',
+      first_name: 'Anthonia',
+      last_name: 'Tyonum',
+      password: 'password',
+      password_confirmation: 'password',
+      address: 'my address',
+      phone: '09023928389',
+      account_number: '2081769837',
+      bank: 'UBA',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      const keys = Object.keys(data);
+      keys.forEach((key) => {
+        if (key !== 'password' && key !== 'password_confirmation') {
+          expect(res.body).to.have.property(key).equal(data[key]);
+        }
+      });
+      expect(res.status).to.eq(201);
+      done();
+    });
+  });
+
   it('should return error if password and its confirmation does not match', (done) => {
     const data = {
       email: 'peter@gmail.com',
@@ -43,31 +68,6 @@ describe('User create', () => {
       done();
     });
   });
-
-  it('should return a new user with the supplied properties', (done) => {
-    const data = {
-      email: 'peter@gmail.com',
-      first_name: 'Anthonia',
-      last_name: 'Tyonum',
-      password: 'password',
-      password_confirmation: 'password',
-      address: 'my address',
-      phone: '08137277480',
-      account_number: '2081769837',
-      bank: 'UBA',
-    };
-    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
-      expect(res.status).to.eq(201);
-      const keys = Object.keys(data);
-      keys.forEach((key) => {
-        if (key !== 'password' && key !== 'password_confirmation') {
-          expect(res.body).to.have.property(key).equal(data[key]);
-        }
-      });
-      done();
-    });
-  });
-
 
   it('should return error if invalid email address is supplied', (done) => {
     const data = {
@@ -124,6 +124,38 @@ describe('User create', () => {
       expect(res.status).to.eq(400);
       expect(res.body.error).to.have.property('last_name');
       expect(res.body.message).to.eq('Name or email is too long');
+      done();
+    });
+  });
+  it('should return error if user email or phone has been used', (done) => {
+    UserModel.create(
+      {
+        email: 'peter@gmail.com',
+        first_name: 'Anthonia',
+        last_name: 'Tyonum',
+        password: 'password',
+        address: 'my address',
+        phone: '09029382393',
+        account_number: '2081769837',
+        bank: 'UBA',
+        password_confirmation: 'password',
+      },
+    );
+    const data = {
+      email: 'peter@gmail.com',
+      first_name: 'Anthonia',
+      last_name: 'Tyonum',
+      password: 'password',
+      address: 'my address',
+      phone: '08137277480',
+      account_number: '2081769837',
+      bank: 'UBA',
+      password_confirmation: 'password',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(400);
+      expect(res.body.error).to.have.property('phone');
+      expect(res.body.message).to.eq('User with given email or phone already exist');
       done();
     });
   });

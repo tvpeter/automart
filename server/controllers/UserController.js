@@ -18,7 +18,7 @@ const User = {
     if (!email) {
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
-        status: error,
+        status: 'error',
         message: error.email,
         error,
       });
@@ -59,6 +59,17 @@ const User = {
         error,
       });
     }
+    const checkEmailInDb = UserModel.findByProperty('email', req.body.email);
+    const checkPhoneInDb = UserModel.findByProperty('phone', req.body.phone);
+
+    if (checkEmailInDb || checkPhoneInDb) {
+      error.phone = 'User with given email or phone already exist';
+      return res.status(400).send({
+        message: error.phone,
+        status: 'error',
+        error,
+      });
+    }
     const user = UserModel.create(req.body);
     return res.status(201).send({
       status: 'success',
@@ -71,6 +82,10 @@ const User = {
       account_number: user.account_number,
       bank: user.bank,
     });
+  },
+  getAll(req, res) {
+    const users = UserModel.getAllUsers();
+    return res.status(200).send(users);
   },
 };
 

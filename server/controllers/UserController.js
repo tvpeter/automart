@@ -50,6 +50,15 @@ const User = {
         error,
       });
     }
+    if (req.body.email.length >= 30 || req.body.first_name.length >= 30
+      || req.body.last_name.length >= 30) {
+      error.last_name = 'Name or email is too long';
+      return res.status(400).send({
+        message: error.last_name,
+        status: 'error',
+        error,
+      });
+    }
     const user = UserModel.create(req.body);
     return res.status(201).send(user);
   },

@@ -60,7 +60,7 @@ describe('User create', () => {
       expect(res.status).to.eq(201);
       const keys = Object.keys(data);
       keys.forEach((key) => {
-        if (key !== 'password_confirmation') {
+        if (key !== 'password' && key !== 'password_confirmation') {
           expect(res.body).to.have.property(key).equal(data[key]);
         }
       });

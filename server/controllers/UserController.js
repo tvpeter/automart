@@ -60,7 +60,17 @@ const User = {
       });
     }
     const user = UserModel.create(req.body);
-    return res.status(201).send(user);
+    return res.status(201).send({
+      status: 'success',
+      id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      phone: user.phone,
+      address: user.address,
+      account_number: user.account_number,
+      bank: user.bank,
+    });
   },
 };
 

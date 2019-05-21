@@ -99,6 +99,16 @@ const User = {
         error,
       });
     }
+    const user = UserModel.findByProperty('email', req.body.email);
+    if (!user) {
+      error.id = 'Invalid login credentials';
+      return res.status(404).send({
+        message: error.id,
+        status: 'error',
+        error,
+      });
+    }
+
     return 'it worked';
   },
 };

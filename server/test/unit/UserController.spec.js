@@ -87,4 +87,23 @@ describe('User create', () => {
       done();
     });
   });
+
+  it('should return error if length of password is less than 6 characters', (done) => {
+    const data = {
+      email: 'peter@gmail.com',
+      first_name: 'Anthonia',
+      password: 'pass',
+      address: 'my address',
+      phone: '08137277480',
+      account_number: '2081769837',
+      bank: 'UBA',
+      password_confirmation: 'pass',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(400);
+      expect(res.body.message).to.eq('Password is too short');
+      expect(res.body.error).to.have.property('password');
+      done();
+    });
+  });
 });

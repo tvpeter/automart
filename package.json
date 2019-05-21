@@ -4,7 +4,7 @@
   "description": "'Automobile online marketplace'",
   "main": "build/index.js",
   "scripts": {
-    "test": "nyc --require babel-core/register mocha server/test/unit/**.spec.js --exit -w",
+    "test": "nyc --require babel-core/register mocha server/test/unit/**.spec.js --exit",
     "build": "babel server --out-dir server/build --ignore test/",
     "prebuild": "rm -rf server/build",
     "prestart": "npm run lint && npm run build",

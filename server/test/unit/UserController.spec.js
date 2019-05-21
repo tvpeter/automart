@@ -92,6 +92,7 @@ describe('User create', () => {
     const data = {
       email: 'peter@gmail.com',
       first_name: 'Anthonia',
+      last_name: 'Tyonum',
       password: 'pass',
       address: 'my address',
       phone: '08137277480',
@@ -101,8 +102,8 @@ describe('User create', () => {
     };
     chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Password is too short');
       expect(res.body.error).to.have.property('password');
+      expect(res.body.message).to.eq('Password is too short');
       done();
     });
   });

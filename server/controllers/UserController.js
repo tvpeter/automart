@@ -41,6 +41,15 @@ const User = {
         error,
       });
     }
+
+    if (req.body.password.length < 6) {
+      error.password = 'Password is too short';
+      return res.status(400).send({
+        message: error.password,
+        status: 'error',
+        error,
+      });
+    }
     const user = UserModel.create(req.body);
     return res.status(201).send(user);
   },

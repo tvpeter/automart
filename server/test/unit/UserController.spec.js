@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../../../src/index';
+import server from '../../index';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -19,11 +19,30 @@ describe('User create', () => {
     };
     chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
       expect(res.status).to.eq(400);
-      expect(res.body).to.have.property('message');
+      expect(res.body.message).to.eq('Password and confirmation does not match');
+      expect(res.body.error).to.have.property('password');
       done();
     });
   });
 
+  it('should return error if invalid email address is supplied', (done) => {
+    const data = {
+      email: 'peter.gmail.com',
+      first_name: 'Anthonia',
+      password: 'password',
+      address: 'my address',
+      phone: '08137277480',
+      account_number: '2081769837',
+      bank: 'UBA',
+      password_confirmation: 'password',
+    };
+    chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(400);
+      expect(res.body.message).to.eq('Invalid / empty email supplied');
+      expect(res.body.error).to.have.property('email');
+      done();
+    });
+  });
 
   it('should return error if all required fields are not supplied', (done) => {
     const data = {
@@ -38,7 +57,8 @@ describe('User create', () => {
     };
     chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
       expect(res.status).to.eq(400);
-      expect(res.body).to.have.property('message');
+      expect(res.body.message).to.eq('Fill all required fields');
+      expect(res.body.error).to.have.property('message');
       done();
     });
   });

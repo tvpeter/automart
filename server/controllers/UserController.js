@@ -5,9 +5,16 @@ const User = {
    * returns user object
    */
   create(req, res) {
+    const error = {};
     if (req.body.password !== req.body.password_confirmation) {
-      return res.status(400).send({ message: 'Password does not match' });
+      error.password = 'Password and confirmation does not match';
+      return res.status(400).send({
+        status: 'error',
+        message: error.password,
+        error,
+      });
     }
+
     if (
       !req.body.email
       || !req.body.first_name
@@ -18,7 +25,12 @@ const User = {
       || !req.body.account_number
       || !req.body.bank
     ) {
-      return res.status(400).send({ message: 'Fill all required fields' });
+      error.message = 'Fill all required fields';
+      return res.status(400).send({
+        message: error.message,
+        status: 'error',
+        error,
+      });
     }
     const user = UserModel.create(req.body);
     return res.status(201).send(user);

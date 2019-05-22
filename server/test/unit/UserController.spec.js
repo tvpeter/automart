@@ -200,5 +200,31 @@ describe('User', () => {
         done();
       });
     });
+
+    it('should return error 404 if password is incorrect for given email', (done) => {
+      UserModel.create(
+        {
+          email: 'peter@gmail.com',
+          first_name: 'Anthonia',
+          last_name: 'Tyonum',
+          password: 'password',
+          address: 'my address',
+          phone: '09029382393',
+          account_number: '2081769837',
+          bank: 'UBA',
+          password_confirmation: 'password',
+        },
+      );
+      const data = {
+        email: 'peter@gmail.com',
+        password: 'pasword',
+      };
+      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.error).to.have.property('password');
+        expect(res.body.message).to.eq('Wrong username/password');
+        done();
+      });
+    });
   });
 });

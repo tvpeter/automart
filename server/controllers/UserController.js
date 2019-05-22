@@ -108,7 +108,6 @@ const User = {
         error,
       });
     }
-
     return 'it worked';
   },
 };

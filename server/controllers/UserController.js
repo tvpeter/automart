@@ -6,7 +6,7 @@ const User = {
    */
   create(req, res) {
     const error = {};
-    if (req.body.password !== req.body.password_confirmation) {
+    if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       error.password = 'Password and confirmation does not match';
       return res.status(400).send({
         status: 'error',
@@ -14,8 +14,8 @@ const User = {
         error,
       });
     }
-    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
-    if (!email) {
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
+    if (!validEmail) {
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
         status: 'error',
@@ -132,6 +132,7 @@ const User = {
       isAdmin: user.isAdmin,
     });
   },
+
 };
 
 export default User;

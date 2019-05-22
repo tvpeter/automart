@@ -4,6 +4,8 @@ import server from '../../index';
 import UserModel from '../../models/UserModel';
 
 const { expect } = chai;
+const signupUrl = '/api/v1/auth/signup';
+const loginUrl = '/api/v1/auth/signin';
 chai.use(chaiHttp);
 describe('User', () => {
   describe('User create', () => {
@@ -19,7 +21,7 @@ describe('User', () => {
         account_number: '2081769837',
         bank: 'UBA',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         const keys = Object.keys(data);
         keys.forEach((key) => {
           if (key !== 'password' && key !== 'password_confirmation') {
@@ -43,7 +45,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'password',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Password and confirmation does not match');
         expect(res.body.error).to.have.property('password');
@@ -62,7 +64,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'password',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Fill all required fields');
         expect(res.body.error).to.have.property('message');
@@ -81,7 +83,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'password',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid / empty email supplied');
         expect(res.body.error).to.have.property('email');
@@ -101,7 +103,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'pass',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Password is too short');
@@ -121,7 +123,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'password',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.error).to.have.property('last_name');
         expect(res.body.message).to.eq('Name or email is too long');
@@ -153,7 +155,7 @@ describe('User', () => {
         bank: 'UBA',
         password_confirmation: 'password',
       };
-      chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.error).to.have.property('phone');
         expect(res.body.message).to.eq('User with given email or phone already exist');
@@ -167,7 +169,7 @@ describe('User', () => {
         email: 'johndoe@google.dev',
         password: '',
       };
-      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.error).to.have.property('email');
         expect(res.body.message).to.eq('Invalid login credentials');
@@ -193,7 +195,7 @@ describe('User', () => {
         email: 'johndoe@gmail.com',
         password: 'password',
       };
-      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.status).to.eq(404);
         expect(res.body.error).to.have.property('id');
         expect(res.body.message).to.eq('Invalid login credentials');
@@ -219,7 +221,7 @@ describe('User', () => {
         email: 'peter@gmail.com',
         password: 'pasword',
       };
-      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
         expect(res.status).to.eq(401);
@@ -242,7 +244,7 @@ describe('User', () => {
         email: 'peter@gmail.com',
         password: 'password',
       };
-      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.cookie('User-auth');
         expect(res.body).to.have.property('token');
@@ -267,7 +269,7 @@ describe('User', () => {
         email: 'johndoe@gmail.com',
         password: 'password',
       };
-      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res).to.have.cookie('admin-auth');
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('token');

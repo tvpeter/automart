@@ -1,5 +1,6 @@
 import UserModel from '../models/UserModel';
 import { hashPassword } from '../lib/encrypt';
+import validEmail from '../lib/validateEmail';
 
 const User = {
   /*
@@ -17,8 +18,7 @@ const User = {
         error,
       });
     }
-    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
-    if (!email) {
+    if (!validEmail(req.body.email)) {
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
         status: 'error',

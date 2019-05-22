@@ -116,8 +116,16 @@ const User = {
         error,
       });
     }
-
-    return 'it worked';
+    const token = user.phone + Date.now();
+    if (!user.isAdmin) {
+      res.cookie('User-auth', token, { httpOnly: true });
+      return res.status(200).send({
+        status: 'success',
+        token,
+        isAdmin: user.isAdmin,
+      });
+    }
+    return 'isadmin';
   },
 };
 

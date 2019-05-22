@@ -245,6 +245,7 @@ describe('User', () => {
       chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.cookie('User-auth');
+        expect(res.body).to.have.property('token');
         done();
       });
     });

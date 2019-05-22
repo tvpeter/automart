@@ -249,5 +249,30 @@ describe('User', () => {
         done();
       });
     });
+
+    it('should return admin-auth cookie if user is admin', (done) => {
+      UserModel.create({
+        email: 'peter@gmail.com',
+        first_name: 'Anthonia',
+        last_name: 'Tyonum',
+        password: 'password',
+        address: 'my address',
+        phone: '09029382393',
+        account_number: '2081769837',
+        bank: 'UBA',
+        password_confirmation: 'password',
+        isAdmin: true,
+      });
+      const data = {
+        email: 'peter@gmail.com',
+        password: 'password',
+      };
+      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+        expect(res.status).to.eq(200);
+        expect(res).to.have.cookie('admin-auth');
+        expect(res.body).to.have.property('token');
+        done();
+      });
+    });
   });
 });

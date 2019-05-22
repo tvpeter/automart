@@ -201,7 +201,7 @@ describe('User', () => {
       });
     });
 
-    it('should return error 404 if password is incorrect for given email', (done) => {
+    it('should return error 401 if password is incorrect for given email', (done) => {
       UserModel.create(
         {
           email: 'peter@gmail.com',
@@ -222,7 +222,29 @@ describe('User', () => {
       chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
-        expect(res.status).to.eq(404);
+        expect(res.status).to.eq(401);
+        done();
+      });
+    });
+    it('should return user-auth cookie if user is not admin', (done) => {
+      UserModel.create({
+        email: 'peter@gmail.com',
+        first_name: 'Anthonia',
+        last_name: 'Tyonum',
+        password: 'password',
+        address: 'my address',
+        phone: '09029382393',
+        account_number: '2081769837',
+        bank: 'UBA',
+        password_confirmation: 'password',
+      });
+      const data = {
+        email: 'peter@gmail.com',
+        password: 'password',
+      };
+      chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
+        expect(res.status).to.eq(200);
+        expect(res).to.have.cookie('User-auth');
         done();
       });
     });

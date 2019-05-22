@@ -1,12 +1,15 @@
 import UserModel from '../models/UserModel';
+import { hashPassword } from '../lib/encrypt';
 
 const User = {
   /*
-   * returns user object
+  * @description - creates a new user
+   * @params {object}
+   * @returns {object}
    */
   create(req, res) {
     const error = {};
-    if (req.body.password !== req.body.password_confirmation) {
+    if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       error.password = 'Password and confirmation does not match';
       return res.status(400).send({
         status: 'error',
@@ -70,6 +73,9 @@ const User = {
         error,
       });
     }
+
+    req.body.password = hashPassword(req.body.password);
+
     const user = UserModel.create(req.body);
     return res.status(201).send({
       status: 'success',

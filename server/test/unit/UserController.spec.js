@@ -252,7 +252,7 @@ describe('User', () => {
 
     it('should return admin-auth cookie if user is admin', (done) => {
       UserModel.create({
-        email: 'peter@gmail.com',
+        email: 'johndoe@gmail.com',
         first_name: 'Anthonia',
         last_name: 'Tyonum',
         password: 'password',
@@ -264,12 +264,12 @@ describe('User', () => {
         isAdmin: true,
       });
       const data = {
-        email: 'peter@gmail.com',
+        email: 'johndoe@gmail.com',
         password: 'password',
       };
       chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
-        expect(res.status).to.eq(200);
         expect(res).to.have.cookie('admin-auth');
+        expect(res.status).to.eq(200);
         expect(res.body).to.have.property('token');
         done();
       });

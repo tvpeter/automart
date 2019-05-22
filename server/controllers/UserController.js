@@ -125,7 +125,12 @@ const User = {
         isAdmin: user.isAdmin,
       });
     }
-    return 'isadmin';
+    res.cookie('admin-auth', token, { httpOnly: true });
+    return res.status(200).send({
+      status: 'success',
+      token,
+      isAdmin: user.isAdmin,
+    });
   },
 };
 

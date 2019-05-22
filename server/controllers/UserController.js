@@ -1,8 +1,13 @@
 import UserModel from '../models/UserModel';
+import { hashPassword } from '../lib/encrypt';
+import validEmail from '../lib/validateEmail';
+import generateToken from '../lib/generateToken';
 
 const User = {
   /*
-   * returns user object
+  * @description - creates a new user
+   * @params {object}
+   * @returns {object}
    */
   create(req, res) {
     const error = {};
@@ -14,8 +19,9 @@ const User = {
         error,
       });
     }
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
-    if (!validEmail) {
+
+    if (!validEmail(req.body.email)) {
+
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
         status: 'error',
@@ -70,9 +76,15 @@ const User = {
         error,
       });
     }
+
+    req.body.password = hashPassword(req.body.password);
+
     const user = UserModel.create(req.body);
-    return res.status(201).send({
+    const token = generateToken(user.id, user.isAdmin);
+
+    return res.status(201).header('x-auth', token).send({
       status: 'success',
+      token,
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,

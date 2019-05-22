@@ -29,6 +29,7 @@ describe('User', () => {
           }
         });
         expect(res.status).to.eq(201);
+        expect(res).to.have.header('x-auth');
         done();
       });
     });

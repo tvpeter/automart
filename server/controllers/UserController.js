@@ -6,7 +6,7 @@ const User = {
    */
   create(req, res) {
     const error = {};
-    if (req.body.password !== req.body.password_confirmation) {
+    if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       error.password = 'Password and confirmation does not match';
       return res.status(400).send({
         status: 'error',
@@ -14,8 +14,8 @@ const User = {
         error,
       });
     }
-    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
-    if (!email) {
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email);
+    if (!validEmail) {
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
         status: 'error',
@@ -88,6 +88,51 @@ const User = {
     const users = UserModel.getAllUsers();
     return res.status(200).send(users);
   },
+  signIn(req, res) {
+    const error = {};
+
+    if (!req.body.email || !req.body.password) {
+      error.email = 'Invalid login credentials';
+      return res.status(400).send({
+        message: error.email,
+        status: 'error',
+        error,
+      });
+    }
+    const user = UserModel.findByProperty('email', req.body.email);
+    if (!user) {
+      error.id = 'Invalid login credentials';
+      return res.status(404).send({
+        message: error.id,
+        status: 'error',
+        error,
+      });
+    }
+    if (user.password !== req.body.password) {
+      error.password = 'Wrong username/password';
+      return res.status(401).send({
+        message: error.password,
+        status: 'error',
+        error,
+      });
+    }
+    const token = user.phone + Date.now();
+    if (!user.isAdmin) {
+      res.cookie('User-auth', token, { httpOnly: true });
+      return res.status(200).send({
+        status: 'success',
+        token,
+        isAdmin: user.isAdmin,
+      });
+    }
+    res.cookie('admin-auth', token, { httpOnly: true });
+    return res.status(200).send({
+      status: 'success',
+      token,
+      isAdmin: user.isAdmin,
+    });
+  },
+
 };
 
 export default User;

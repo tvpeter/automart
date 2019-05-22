@@ -6,7 +6,7 @@ import UserModel from '../../models/UserModel';
 const { expect } = chai;
 chai.use(chaiHttp);
 describe('User create', () => {
-  it('should return a new user with the supplied properties', (done) => {
+  it('should return a new user and token with the supplied properties', (done) => {
     const data = {
       email: 'proff@gmail.com',
       first_name: 'Anthonia',
@@ -19,13 +19,14 @@ describe('User create', () => {
       bank: 'UBA',
     };
     chai.request(server).post('/api/v1/users').send(data).end((err, res) => {
+      expect(res.status).to.eq(201);
+      expect(res).to.have.header('x-auth');
       const keys = Object.keys(data);
       keys.forEach((key) => {
         if (key !== 'password' && key !== 'password_confirmation') {
           expect(res.body).to.have.property(key).equal(data[key]);
         }
       });
-      expect(res.status).to.eq(201);
       done();
     });
   });

@@ -108,6 +108,15 @@ const User = {
         error,
       });
     }
+    if (user.password !== req.body.password) {
+      error.password = 'Wrong username/password';
+      return res.status(404).send({
+        message: error.password,
+        status: 'error',
+        error,
+      });
+    }
+
     return 'it worked';
   },
 };

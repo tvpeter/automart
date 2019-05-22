@@ -220,9 +220,9 @@ describe('User', () => {
         password: 'pasword',
       };
       chai.request(server).post('/api/v1/auth').send(data).end((req, res) => {
-        expect(res.status).to.eq(404);
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
+        expect(res.status).to.eq(404);
         done();
       });
     });

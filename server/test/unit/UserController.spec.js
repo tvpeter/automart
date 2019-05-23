@@ -204,7 +204,7 @@ describe('User', () => {
       });
     });
 
-    it('should return error 401 if password is incorrect for given email', (done) => {
+    it('should return error 401 if password is incorrect for given email', () => {
       UserModel.create(
         {
           email: 'peter@gmail.com',
@@ -222,60 +222,32 @@ describe('User', () => {
         email: 'peter@gmail.com',
         password: 'pasword',
       };
-      chai.request(server).post(loginUrl).send(data).end((req, res) => {
+
+      chai.request(server).post(loginUrl).send(data).then((res) => {
+        expect(res.status).to.eq(401);
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
-        expect(res.status).to.eq(401);
-        done();
-      });
-    });
-    it('should return user-auth cookie if user is not admin', (done) => {
-      UserModel.create({
-        email: 'peter@gmail.com',
-        first_name: 'Anthonia',
-        last_name: 'Tyonum',
-        password: 'password',
-        address: 'my address',
-        phone: '09029382393',
-        account_number: '2081769837',
-        bank: 'UBA',
-        password_confirmation: 'password',
-      });
-      const data = {
-        email: 'peter@gmail.com',
-        password: 'password',
-      };
-      chai.request(server).post(loginUrl).send(data).end((req, res) => {
-        expect(res.status).to.eq(200);
-        expect(res).to.have.cookie('User-auth');
-        expect(res.body).to.have.property('token');
-        done();
-      });
+      })
+        .catch((error) => {
+          throw error;
+        });
     });
 
-    it('should return admin-auth cookie if user is admin', (done) => {
-      UserModel.create({
-        email: 'johndoe@gmail.com',
-        first_name: 'Anthonia',
-        last_name: 'Tyonum',
-        password: 'password',
-        address: 'my address',
-        phone: '09029382393',
-        account_number: '2081769837',
-        bank: 'UBA',
-        password_confirmation: 'password',
-        isAdmin: true,
-      });
+    it('should return a header with token and credentials if password and email are correct', () => {
       const data = {
-        email: 'johndoe@gmail.com',
+        email: 'peter@gmail.com',
         password: 'password',
       };
-      chai.request(server).post(loginUrl).send(data).end((req, res) => {
-        expect(res).to.have.cookie('admin-auth');
+      chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(200);
-        expect(res.body).to.have.property('token');
-        done();
-      });
+        expect(res).to.have.header('x-auth');
+        expect(res.body).to.have.property('first_name');
+        expect(res.body).to.have.property('last_name');
+        expect(res.body).to.have.property('email');
+      })
+        .catch((error) => {
+          throw error;
+        });
     });
   });
 });

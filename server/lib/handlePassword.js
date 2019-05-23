@@ -7,20 +7,28 @@ import bcrypt from 'bcrypt';
  */
 
 export const hashPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
+  try {
+    const salt = await bcrypt.genSalt(10);
 
-  const hashed = await bcrypt.hash(password, salt);
-  return hashed;
+    const hashed = await bcrypt.hash(password, salt);
+    return hashed;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
  * @description check supplied password against hashed password in db
  * @param {string} password -plain password
  * @param {string} hashedPassword - hashed password from db
- * @returns {Promise}
+ * @returns {Promise <boolean>}
  */
 
 export const comparePassword = async (password, hashedPassword) => {
-  const checkPassword = await bcrypt.compare(password, hashedPassword);
-  return checkPassword;
+  try {
+    const checkPassword = await bcrypt.compare(password, hashedPassword);
+    return checkPassword;
+  } catch (error) {
+    throw error;
+  }
 };

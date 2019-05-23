@@ -1,6 +1,5 @@
 class Car {
-  constructor(owner) {
-    this.owner = owner;
+  constructor() {
     this.cars = [];
   }
   /**
@@ -12,7 +11,7 @@ class Car {
   createCar(data) {
     const newCar = {
       id: Math.floor(Math.random() * 100000) + 1 + Date.now(),
-      owner: this.owner,
+      owner: data.owner || '',
       created_on: new Date().toLocaleString(),
       state: data.state || '',
       status: data.status || 'available',
@@ -24,7 +23,12 @@ class Car {
       img: [...data.img] || [],
     };
     this.cars.push(newCar);
+    return newCar;
+  }
+
+  getAllCars() {
+    return this.cars;
   }
 }
 
-export default Car;
+export default new Car();

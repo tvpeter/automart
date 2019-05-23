@@ -22,9 +22,9 @@ const auth = (req, res, next) => {
     });
   }
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    // req.userId = decoded.id;
-    // req.role = decoded.role;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    req.role = decoded.role;
     return next();
   } catch (err) {
     error.message = 'Unauthorized, invalid token or session have expired';

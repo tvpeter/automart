@@ -39,7 +39,7 @@ describe('Cars', () => {
           done();
         });
     });
-    it('should return error 400 if request does not contain manufacturer', (done) => {
+    it('should return error 400 if request does not contain all required fields', (done) => {
       const data = {
         owner: 'owener',
         status: 'avaialable',
@@ -51,10 +51,31 @@ describe('Cars', () => {
         description: 'The car is still new',
         img: ['img', 'img2'],
       };
+      chai.request(server).post(adUrl).set('x-auth', token).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.error).to.have.property('fields');
+          expect(res.body.message).to.eq('Fill all required fields');
+          done();
+        });
+    });
+
+    it('should return error 401 if token is not provided', (done) => {
+      const data = {
+        owner: 'owner',
+        status: 'avaialable',
+        price: '2.5m',
+        state: 'new',
+        manufacturer: 'BMW',
+        model: 'es6 v',
+        body_type: 'car',
+        description: 'The car is still new',
+        img: ['img', 'img2'],
+      };
       chai.request(server).post(adUrl).send(data).end((err, res) => {
-        expect(res.status).to.eq(400);
-        expect(res.body.error).to.have.property('fields');
-        expect(res.body.message).to.eq('Fill all required fields');
+        expect(res.body.error).to.have.property('token');
+        expect(res.status).to.eq(401);
+        expect(res.body.message).to.eq('No authorization token provided');
         done();
       });
     });

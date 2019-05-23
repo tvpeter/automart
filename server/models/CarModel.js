@@ -29,6 +29,44 @@ class Car {
   getAllCars() {
     return this.cars;
   }
+
+  /**
+   * @description - select cars owned by the user
+   * @param {string} owner
+   * @param {object} carToAdd
+   * @returns {boolean}
+   */
+  similarUserCar(owner, carToAdd) {
+    const onwerCars = []; let result = false;
+    this.cars.forEach((car) => {
+      if (car.owner === owner) {
+        onwerCars.push(car);
+      }
+    });
+
+    if (onwerCars.length > 0) {
+      onwerCars.find((car) => {
+        if (!this.constructor.compareCars(car, carToAdd)) {
+          result = true;
+        }
+        return result;
+      });
+    }
+    return result;
+  }
+
+  /**
+   * @description - compare two selected cars
+   * @param {object} car1
+   * @param {object} car2
+   * @returns boolean
+   */
+  static compareCars(car1, car2) {
+    const keysToCompare = ['state', 'status', 'manufacturer', 'model', 'body_type'];
+
+    // true means not equal, false means equal
+    return keysToCompare.some(key => (car1[key] !== car2[key]));
+  }
 }
 
 export default new Car();

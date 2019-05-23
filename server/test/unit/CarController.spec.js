@@ -78,31 +78,35 @@ describe('Cars', () => {
         done();
       });
     });
-    it('should return error 409 if user has the same car that is available', async (done) => {
-      await Cars.createCar({
+    it('should return error 409 if user has the same car that is available', (done) => {
+      Cars.createCar({
         owner: '1558605162264',
         status: 'avaialable',
         price: '2.5m',
         state: 'new',
+        model: 'es6 v',
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
         img: ['img', 'img2'],
       });
+
       const data = {
         owner: '1558605162264',
         status: 'avaialable',
         price: '2.5m',
         state: 'new',
+        model: 'es6 v',
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
         img: ['img', 'img2'],
       };
-      chai.request(server).set('x-auth', token).post(adUrl).send(data)
+      chai.request(server).post(adUrl).set('x-auth', token).send(data)
         .end((err, res) => {
-          expect(res.status).to.eq(409);
+          expect(res.body.error).to.have.property('owner');
           expect(res.body.message).to.eq('You have a similar unsold car');
+          expect(res.status).to.eq(409);
           done();
         });
     });

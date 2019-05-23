@@ -15,7 +15,8 @@ const Car = {
     }
 
     const owner = req.userId;
-    const newCar = CarModel.createCar({
+    // check if owner has the same car in db
+    const newCarData = {
       owner,
       state: req.body.state,
       status: req.body.status,
@@ -25,7 +26,19 @@ const Car = {
       body_type: req.body.body_type,
       description: req.body.description,
       img: [...req.body.img],
-    });
+    };
+
+    const checkInDb = CarModel.similarUserCar(owner, newCarData);
+    if (checkInDb) {
+      error.owner = 'You have a similar unsold car';
+      return res.status(409).send({
+        message: error.owner,
+        status: 'error',
+        error,
+      });
+    }
+
+    const newCar = CarModel.createCar(newCarData);
     return res.status(201).send({
       status: 'success',
       newCar,

@@ -1,5 +1,5 @@
 import UserModel from '../models/UserModel';
-import { hashPassword } from '../lib/encrypt';
+import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
 
@@ -9,7 +9,7 @@ const User = {
    * @params {object}
    * @returns {object}
    */
-  create(req, res) {
+  async create(req, res) {
     const error = {};
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       error.password = 'Password and confirmation does not match';
@@ -21,7 +21,6 @@ const User = {
     }
 
     if (!validEmail(req.body.email)) {
-
       error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
         status: 'error',
@@ -77,7 +76,7 @@ const User = {
       });
     }
 
-    req.body.password = hashPassword(req.body.password);
+    req.body.password = await hashPassword(req.body.password);
 
     const user = UserModel.create(req.body);
     const token = generateToken(user.id, user.isAdmin);
@@ -100,7 +99,7 @@ const User = {
     const users = UserModel.getAllUsers();
     return res.status(200).send(users);
   },
-  signIn(req, res) {
+  async signIn(req, res) {
     const error = {};
 
     if (!req.body.email || !req.body.password) {
@@ -120,7 +119,9 @@ const User = {
         error,
       });
     }
-    if (user.password !== req.body.password) {
+
+    const validPassword = await comparePassword(req.body.password, user.password);
+    if (!validPassword) {
       error.password = 'Wrong username/password';
       return res.status(401).send({
         message: error.password,
@@ -128,20 +129,14 @@ const User = {
         error,
       });
     }
-    const token = user.phone + Date.now();
-    if (!user.isAdmin) {
-      res.cookie('User-auth', token, { httpOnly: true });
-      return res.status(200).send({
-        status: 'success',
-        token,
-        isAdmin: user.isAdmin,
-      });
-    }
-    res.cookie('admin-auth', token, { httpOnly: true });
-    return res.status(200).send({
+    const token = generateToken(user.id, user.isAdmin);
+
+    return res.status(200).header('x-auth', token).send({
       status: 'success',
       token,
-      isAdmin: user.isAdmin,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
     });
   },
 

@@ -3,6 +3,17 @@ import CarModel from '../models/CarModel';
 const Car = {
 
   create(req, res) {
+    const error = {};
+    if (!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price
+      || !req.body.model || !req.body.body_type) {
+      error.fields = 'Fill all required fields';
+      return res.status(400).send({
+        status: 'error',
+        message: error.fields,
+        error,
+      });
+    }
+
     const owner = req.userId;
     const newCar = CarModel.createCar({
       owner,

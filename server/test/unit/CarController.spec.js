@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../../index';
-// import User from '../../controllers/UserController';
+import Cars from '../../models/CarModel';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -67,7 +67,6 @@ describe('Cars', () => {
         price: '2.5m',
         state: 'new',
         manufacturer: 'BMW',
-        model: 'es6 v',
         body_type: 'car',
         description: 'The car is still new',
         img: ['img', 'img2'],
@@ -78,6 +77,34 @@ describe('Cars', () => {
         expect(res.body.message).to.eq('No authorization token provided');
         done();
       });
+    });
+    it('should return error 409 if user has the same car that is available', async (done) => {
+      await Cars.createCar({
+        owner: '1558605162264',
+        status: 'avaialable',
+        price: '2.5m',
+        state: 'new',
+        manufacturer: 'BMW',
+        body_type: 'car',
+        description: 'The car is still new',
+        img: ['img', 'img2'],
+      });
+      const data = {
+        owner: '1558605162264',
+        status: 'avaialable',
+        price: '2.5m',
+        state: 'new',
+        manufacturer: 'BMW',
+        body_type: 'car',
+        description: 'The car is still new',
+        img: ['img', 'img2'],
+      };
+      chai.request(server).set('x-auth', token).post(adUrl).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(409);
+          expect(res.body.message).to.eq('You have a similar unsold car');
+          done();
+        });
     });
   });
 });

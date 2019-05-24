@@ -1,14 +1,11 @@
 import express from 'express';
-import User from './controllers/UserController';
+import routes from './routes/index';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.post('/api/v1/auth/signup', User.create);
-app.get('/api/v1/users', User.getAll);
-app.post('/api/v1/auth/signin', User.signIn);
-app.get('/api/v1/', (req, res) => res.status(200).send('Hello world'));
+app.use('/api/v1', routes);
 
 const port = process.env.PORT || 4000;
 

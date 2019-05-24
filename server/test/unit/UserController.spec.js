@@ -204,7 +204,7 @@ describe('User', () => {
       });
     });
 
-    it('should return error 401 if password is incorrect for given email', () => {
+    it('should return error 401 if password is incorrect for given email', (done) => {
       UserModel.create(
         {
           email: 'peter@gmail.com',
@@ -223,17 +223,28 @@ describe('User', () => {
         password: 'pasword',
       };
 
-      chai.request(server).post(loginUrl).send(data).then((res) => {
+      chai.request(server).post(loginUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(401);
         expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
-      })
-        .catch((error) => {
-          throw error;
-        });
+        done();
+      });
     });
 
     it('should return a header with token and credentials if password and email are correct', () => {
+      UserModel.create(
+        {
+          email: 'peter@gmail.com',
+          first_name: 'Anthonia',
+          last_name: 'Tyonum',
+          password: 'password',
+          password_confirmation: 'password',
+          address: 'my address',
+          phone: '09023928389',
+          account_number: '2081769837',
+          bank: 'UBA',
+        },
+      );
       const data = {
         email: 'peter@gmail.com',
         password: 'password',
@@ -241,12 +252,10 @@ describe('User', () => {
       chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
-        expect(res.body).to.have.property('first_name');
-        expect(res.body).to.have.property('last_name');
-        expect(res.body).to.have.property('email');
+        expect(res.body.user).to.have.property('first_name');
       })
-        .catch((error) => {
-          throw error;
+        .catch((err) => {
+          throw err;
         });
     });
   });

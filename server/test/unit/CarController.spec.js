@@ -131,4 +131,20 @@ describe('Cars', () => {
       });
     });
   });
+
+  // unsold cars according to manufacturer
+
+  describe('view unsold cars by manufacturer', () => {
+    it('should return all unsold cars by a manufacturer', (done) => {
+      const manufacturers = [
+        'BMW', 'TOYOTA', 'NISSAN',
+      ];
+      chai.request(server).get('/api/v1/cars/').query(manufacturers)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('cars').to.be.an('ARRAY');
+          done();
+        });
+    });
+  });
 });

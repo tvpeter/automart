@@ -20,7 +20,7 @@ class Car {
       model: data.model || '',
       body_type: data.body_type || '',
       description: data.description || '',
-      img: [...data.img] || [],
+      img: data.img || '',
     };
     this.cars.push(newCar);
     return newCar;

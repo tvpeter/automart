@@ -130,13 +130,10 @@ const User = {
       });
     }
     const token = generateToken(user.id, user.isAdmin);
-
+    user.token = token;
     return res.status(200).header('x-auth', token).send({
       status: 'success',
-      token,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
+      user,
     });
   },
 

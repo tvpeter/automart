@@ -46,7 +46,7 @@ describe('Cars', () => {
         model: 'es6 v',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).set('x-auth', token).send(data)
         .end((err, res) => {
@@ -66,7 +66,7 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       });
 
       const data = {
@@ -78,7 +78,7 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).set('x-auth', token)
         .send(data)
@@ -119,7 +119,7 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).send(data).end((err, res) => {
         expect(res.body.error).to.have.property('token');
@@ -143,6 +143,17 @@ describe('Cars', () => {
           expect(res.body).to.have.property('cars').to.be.an('ARRAY');
           done();
         });
+    });
+
+    it('should return a custom error if no vehicle is found for the manufacturer', (done) => {
+      const manufacturers = [
+        'BMW', 'TOYOTA', 'NISSAN',
+      ];
+      chai.request(server).get(`/api/v1/cars/${manufacturers[2]}`).end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('There are no vehicles for the selected manufacturer');
+        done();
+      });
     });
   });
 });

@@ -92,6 +92,16 @@ const Car = {
       cars,
     });
   },
+
+  getAllUnsoldCars(req, res) {
+    // const error = {};
+
+    const cars = CarModel.getAllUnsoldCars();
+    return res.status(200).send({
+      status: 200,
+      data: cars,
+    });
+  },
 };
 
 export default Car;

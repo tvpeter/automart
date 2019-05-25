@@ -1,8 +1,6 @@
-import fs from 'fs';
 import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import CarModel from '../models/CarModel';
-
 
 dotenv.config();
 cloudinary.v2.config({
@@ -67,10 +65,7 @@ const Car = {
         error,
       });
     }
-
-
     const newCar = CarModel.createCar(newCarData);
-    fs.unlinkSync(req.file.path);
     return res.status(201).send({
       status: 'success',
       newCar,
@@ -81,8 +76,17 @@ const Car = {
     return res.send(cars);
   },
   getCarsByManufacturer(req, res) {
+    const error = {};
     const cars = CarModel.getUnsoldCarsByManufactuer(req.params.manufacturer);
 
+    if (cars.length < 1) {
+      error.err = 'There are no vehicles for the selected manufacturer';
+      return res.status(404).send({
+        status: 'error',
+        message: error.err,
+        error,
+      });
+    }
     return res.status(200).send({
       status: 'success',
       cars,

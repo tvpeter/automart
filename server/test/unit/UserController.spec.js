@@ -249,14 +249,11 @@ describe('User', () => {
         email: 'peter@gmail.com',
         password: 'password',
       };
-      chai.request(server).post(loginUrl).send(data).then((res) => {
+      chai.request(server).post(loginUrl).send(data).then((err, res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
         expect(res.body.user).to.have.property('first_name');
-      })
-        .catch((err) => {
-          throw err;
-        });
+      });
     });
   });
 });

@@ -9,7 +9,7 @@ const adUrl = '/api/v1/car';
 describe('Cars', () => {
   let token;
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODY4NjMzMTQwMSwicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODY4NjI1OCwiZXhwIjoxNTU4NzI5NDU4fQ.oq4RwZ4ddT8Gmsy-wDuiDJiOlYXxdIjih85hsxwFfKs';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODc2OTc3NDQ5NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODc2OTcxMiwiZXhwIjoxNTU4ODEyOTEyfQ.GcU_qJiP9A8Y65c8C4LBYzlDgQeh8P7vAe7p2JyMSHg';
   });
   afterEach(() => {
     token = '';
@@ -20,22 +20,20 @@ describe('Cars', () => {
         status: 'avaialable',
         price: '2.5m',
         state: 'new',
-        manufacturer: 'BMW',
         model: 'es6 v',
+        manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
-      chai.request(server).post(adUrl).set('x-auth', token).send(data)
+      chai.request(server).post(adUrl)
+        .set('x-auth', token)
         .then((res) => {
           expect(res.status).to.eq(201);
           expect(res.body.newCar).to.have.property('status').eq(data.status);
           expect(res.body.newCar).to.have.property('state').eq(data.state);
           expect(res.body.newCar).to.have.property('model').eq(data.model);
           expect(res.body.newCar).to.have.property('body_type').eq(data.body_type);
-        })
-        .catch((err) => {
-          throw err;
         });
     });
     it('should return error 400 if request does not contain all required fields', (done) => {
@@ -48,7 +46,7 @@ describe('Cars', () => {
         model: 'es6 v',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).set('x-auth', token).send(data)
         .end((err, res) => {
@@ -68,7 +66,7 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       });
 
       const data = {
@@ -80,7 +78,7 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).set('x-auth', token)
         .send(data)
@@ -121,12 +119,39 @@ describe('Cars', () => {
         manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
-        img: 'imgurl',
+        img: 'https://mydummyimgurl.com',
       };
       chai.request(server).post(adUrl).send(data).end((err, res) => {
         expect(res.body.error).to.have.property('token');
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('No authorization token provided');
+        done();
+      });
+    });
+  });
+
+  // unsold cars according to manufacturer
+
+  describe('view unsold cars by manufacturer', () => {
+    it('should return all unsold cars by a manufacturer', (done) => {
+      const manufacturers = [
+        'BMW', 'TOYOTA', 'NISSAN',
+      ];
+      chai.request(server).get(`/api/v1/cars/${manufacturers[0]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('cars').to.be.an('ARRAY');
+          done();
+        });
+    });
+
+    it('should return a custom error if no vehicle is found for the manufacturer', (done) => {
+      const manufacturers = [
+        'BMW', 'TOYOTA', 'NISSAN',
+      ];
+      chai.request(server).get(`/api/v1/cars/${manufacturers[2]}`).end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('There are no vehicles for the selected manufacturer');
         done();
       });
     });

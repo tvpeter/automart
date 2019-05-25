@@ -1,6 +1,9 @@
+import carsData from '../test/unit/carsData';
+
 class Car {
   constructor() {
-    this.cars = [];
+    // this.cars = carsData;
+    this.cars = carsData;
   }
   /**
    * @description - creates a car advert
@@ -66,6 +69,10 @@ class Car {
 
     // true means not equal, false means equal
     return keysToCompare.some(key => (car1[key] !== car2[key]));
+  }
+
+  getUnsoldCarsByManufactuer(manufacturer) {
+    return this.cars.filter(car => car.status.toLowerCase() === 'available' && car.manufacturer.toLowerCase() === manufacturer.toLowerCase());
   }
 }
 

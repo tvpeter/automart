@@ -119,22 +119,31 @@ const User = {
         error,
       });
     }
+    try {
+      const validPassword = await comparePassword(req.body.password, user.password);
+      if (!validPassword) {
+        error.password = 'Wrong username/password';
+        return res.status(401).send({
+          message: error.password,
+          status: 'error',
+          error,
+        });
+      }
 
-    const validPassword = await comparePassword(req.body.password, user.password);
-    if (!validPassword) {
-      error.password = 'Wrong username/password';
-      return res.status(401).send({
-        message: error.password,
+      const token = generateToken(user.id, user.isAdmin);
+      user.token = token;
+      return res.status(200).header('x-auth', token).send({
+        status: 'success',
+        user,
+      });
+    } catch (tokenError) {
+      error.tokenError = tokenError;
+      return res.status(500).send({
         status: 'error',
+        message: error.tokenError,
         error,
       });
     }
-    const token = generateToken(user.id, user.isAdmin);
-    user.token = token;
-    return res.status(200).header('x-auth', token).send({
-      status: 'success',
-      user,
-    });
   },
 
 };

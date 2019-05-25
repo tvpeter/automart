@@ -3,6 +3,7 @@ import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import CarModel from '../models/CarModel';
 
+
 dotenv.config();
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -79,7 +80,14 @@ const Car = {
     const cars = CarModel.getAllCars();
     return res.send(cars);
   },
+  getCarsByManufacturer(req, res) {
+    const cars = CarModel.getUnsoldCarsByManufactuer(req.params.manufacturer);
 
+    return res.status(200).send({
+      status: 'success',
+      cars,
+    });
+  },
 };
 
 export default Car;

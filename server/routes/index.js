@@ -32,7 +32,13 @@ const router = express.Router();
 router.post('/auth/signup', User.create);
 router.get('/users', User.getAll);
 router.post('/auth/signin', User.signIn);
+// create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
+
+// get cars by manufacturer
+router.get('/cars/:manufacturer', Car.getCarsByManufacturer);
+
+// get all cars
 router.get('/car', Car.getAll);
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 

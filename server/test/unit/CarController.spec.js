@@ -156,4 +156,15 @@ describe('Cars', () => {
       });
     });
   });
+
+  // view all unsold cars
+  describe('view all unsold cars', () => {
+    it('should return all unsold cars', (done) => {
+      chai.request(server).get('/api/v1/cars/status/available').end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body).to.have.property('data').to.be.an('ARRAY');
+        done();
+      });
+    });
+  });
 });

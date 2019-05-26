@@ -1,9 +1,6 @@
-import carsData from '../carsData';
-
 class Car {
   constructor() {
-    // this.cars = carsData;
-    this.cars = carsData;
+    this.cars = [];
   }
   /**
    * @description - creates a car advert

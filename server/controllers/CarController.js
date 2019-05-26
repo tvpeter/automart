@@ -94,9 +94,13 @@ const Car = {
   },
 
   getAllUnsoldCars(req, res) {
-    // const error = {};
-
     const cars = CarModel.getAllUnsoldCars();
+    if (cars.length < 1) {
+      return res.status(404).send({
+        status: 404,
+        error: 'There are no cars available now. Check back',
+      });
+    }
     return res.status(200).send({
       status: 200,
       data: cars,

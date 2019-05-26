@@ -11,14 +11,11 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
-    const error = {};
     if (!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price
       || !req.body.model || !req.body.body_type) {
-      error.fields = 'Fill all required fields';
       return res.status(400).send({
-        status: 'error',
-        message: error.fields,
-        error,
+        status: 400,
+        message: 'Fill all required fields',
       });
     }
 
@@ -36,19 +33,15 @@ const Car = {
 
     const checkInDb = CarModel.similarUserCar(owner, newCarData);
     if (checkInDb) {
-      error.owner = 'You have a similar unsold car';
-      return res.status(409).send({
-        message: error.owner,
-        status: 'error',
-        error,
+      return res.status(400).send({
+        status: 400,
+        message: 'You have a similar unsold car',
       });
     }
     if (!req.file) {
-      error.file = 'Upload images for your product';
       return res.status(400).send({
-        status: 'error',
-        message: error.file,
-        error,
+        status: 400,
+        message: 'Upload images for your product',
       });
     }
     try {
@@ -57,39 +50,35 @@ const Car = {
         format: 'png',
       });
       newCarData.img = image.url;
+
+      const newCar = CarModel.createCar(newCarData);
+      return res.status(201).send({
+        status: 201,
+        data: newCar,
+      });
     } catch (err) {
-      error.img = err;
       return res.status(400).send({
-        status: 'error',
-        message: error.img,
-        error,
+        status: 400,
+        message: 'There\'s problem uploading your image, try again',
       });
     }
-    const newCar = CarModel.createCar(newCarData);
-    return res.status(201).send({
-      status: 'success',
-      newCar,
-    });
   },
   getAll(req, res) {
     const cars = CarModel.getAllCars();
     return res.send(cars);
   },
   getCarsByManufacturer(req, res) {
-    const error = {};
     const cars = CarModel.getUnsoldCarsByManufactuer(req.params.manufacturer);
 
     if (cars.length < 1) {
-      error.err = 'There are no vehicles for the selected manufacturer';
       return res.status(404).send({
-        status: 'error',
-        message: error.err,
-        error,
+        status: 404,
+        message: 'There are no vehicles for the selected manufacturer',
       });
     }
     return res.status(200).send({
       status: 'success',
-      cars,
+      data: cars,
     });
   },
 
@@ -98,7 +87,7 @@ const Car = {
     if (cars.length < 1) {
       return res.status(404).send({
         status: 404,
-        error: 'There are no cars available now. Check back',
+        message: 'There are no cars available now. Check back',
       });
     }
     return res.status(200).send({

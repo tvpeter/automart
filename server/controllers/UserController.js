@@ -12,20 +12,17 @@ const User = {
   async create(req, res) {
     const error = {};
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-      error.password = 'Password and confirmation does not match';
+      error.password = '';
       return res.status(400).send({
-        status: 'error',
-        message: error.password,
-        error,
+        status: 400,
+        message: 'Password and confirmation does not match',
       });
     }
 
     if (!validEmail(req.body.email)) {
-      error.email = 'Invalid / empty email supplied';
       return res.status(400).send({
-        status: 'error',
-        message: error.email,
-        error,
+        status: 400,
+        message: 'Invalid / empty email supplied',
       });
     }
 
@@ -39,40 +36,32 @@ const User = {
       || !req.body.account_number
       || !req.body.bank
     ) {
-      error.message = 'Fill all required fields';
       return res.status(400).send({
-        message: error.message,
-        status: 'error',
-        error,
+        status: 400,
+        message: 'Fill all required fields',
       });
     }
 
     if (req.body.password.length < 6) {
-      error.password = 'Password is too short';
       return res.status(400).send({
-        message: error.password,
-        status: 'error',
-        error,
+        status: 400,
+        message: 'Password is too short',
       });
     }
     if (req.body.email.length >= 30 || req.body.first_name.length >= 30
       || req.body.last_name.length >= 30) {
-      error.last_name = 'Name or email is too long';
       return res.status(400).send({
-        message: error.last_name,
-        status: 'error',
-        error,
+        status: 400,
+        message: 'Name or email is too long',
       });
     }
     const checkEmailInDb = UserModel.findByProperty('email', req.body.email);
     const checkPhoneInDb = UserModel.findByProperty('phone', req.body.phone);
 
     if (checkEmailInDb || checkPhoneInDb) {
-      error.phone = 'User with given email or phone already exist';
       return res.status(400).send({
-        message: error.phone,
-        status: 'error',
-        error,
+        status: 400,
+        message: 'User with given email or phone already exist',
       });
     }
 
@@ -82,17 +71,19 @@ const User = {
     const token = generateToken(user.id, user.isAdmin);
 
     return res.status(201).header('x-auth', token).send({
-      status: 'success',
-      token,
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      phone: user.phone,
-      address: user.address,
-      account_number: user.account_number,
-      bank: user.bank,
-      isAdmin: user.isAdmin,
+      status: 201,
+      data: {
+        token,
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        account_number: user.account_number,
+        bank: user.bank,
+        isAdmin: user.isAdmin,
+      },
     });
   },
   getAll(req, res) {
@@ -100,50 +91,40 @@ const User = {
     return res.status(200).send(users);
   },
   async signIn(req, res) {
-    const error = {};
-
     if (!req.body.email || !req.body.password) {
-      error.email = 'Invalid login credentials';
       return res.status(400).send({
-        message: error.email,
-        status: 'error',
-        error,
+        status: 400,
+        message: 'Invalid login credentials',
       });
     }
     const user = UserModel.findByProperty('email', req.body.email);
     if (!user) {
-      error.id = 'Invalid login credentials';
       return res.status(404).send({
-        message: error.id,
-        status: 'error',
-        error,
+        status: 404,
+        message: 'Invalid login credentials',
       });
     }
+    delete req.headers['x-auth'];
     try {
       const validPassword = await comparePassword(req.body.password, user.password);
       if (!validPassword) {
-        error.password = 'Wrong username/password';
         return res.status(401).send({
-          message: error.password,
-          status: 'error',
-          error,
+          status: 401,
+          message: 'Wrong username/password',
         });
       }
-
-      const token = generateToken(user.id, user.isAdmin);
-      user.token = token;
-      return res.status(200).header('x-auth', token).send({
-        status: 'success',
-        user,
-      });
     } catch (tokenError) {
-      error.tokenError = tokenError;
       return res.status(500).send({
-        status: 'error',
-        message: error.tokenError,
-        error,
+        status: 500,
+        message: 'Oh, something went wrong, try again',
       });
     }
+    const token = generateToken(user.id, user.isAdmin);
+    user.token = token;
+    return res.status(200).header('x-auth', token).send({
+      status: 200,
+      data: user,
+    });
   },
 
 };

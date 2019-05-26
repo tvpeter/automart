@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../../index';
-import UserModel from '../../models/UserModel';
+import server from '../index';
+import UserModel from '../models/UserModel';
 
 const { expect } = chai;
 const signupUrl = '/api/v1/auth/signup';
@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 describe('User', () => {
   describe('User create', () => {
     it('should return a new user with the supplied properties', (done) => {
-      const data = {
+      const userDetails = {
         email: 'proff@gmail.com',
         first_name: 'Anthonia',
         last_name: 'Tyonum',
@@ -21,11 +21,11 @@ describe('User', () => {
         account_number: '2081769837',
         bank: 'UBA',
       };
-      chai.request(server).post(signupUrl).send(data).end((err, res) => {
-        const keys = Object.keys(data);
+      chai.request(server).post(signupUrl).send(userDetails).end((err, res) => {
+        const keys = Object.keys(userDetails);
         keys.forEach((key) => {
           if (key !== 'password' && key !== 'password_confirmation') {
-            expect(res.body).to.have.property(key).equal(data[key]);
+            expect(res.body.data).to.have.property(key).equal(userDetails[key]);
           }
         });
         expect(res.status).to.eq(201);
@@ -49,7 +49,6 @@ describe('User', () => {
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Password and confirmation does not match');
-        expect(res.body.error).to.have.property('password');
         done();
       });
     });
@@ -68,7 +67,6 @@ describe('User', () => {
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Fill all required fields');
-        expect(res.body.error).to.have.property('message');
         done();
       });
     });
@@ -87,7 +85,6 @@ describe('User', () => {
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid / empty email supplied');
-        expect(res.body.error).to.have.property('email');
         done();
       });
     });
@@ -106,7 +103,6 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Password is too short');
         done();
       });
@@ -126,7 +122,6 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.error).to.have.property('last_name');
         expect(res.body.message).to.eq('Name or email is too long');
         done();
       });
@@ -158,7 +153,6 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.error).to.have.property('phone');
         expect(res.body.message).to.eq('User with given email or phone already exist');
         done();
       });
@@ -172,7 +166,6 @@ describe('User', () => {
       };
       chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.error).to.have.property('email');
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
       });
@@ -198,7 +191,6 @@ describe('User', () => {
       };
       chai.request(server).post(loginUrl).send(data).end((req, res) => {
         expect(res.status).to.eq(404);
-        expect(res.body.error).to.have.property('id');
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
       });
@@ -225,7 +217,6 @@ describe('User', () => {
 
       chai.request(server).post(loginUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(401);
-        expect(res.body.error).to.have.property('password');
         expect(res.body.message).to.eq('Wrong username/password');
         done();
       });
@@ -249,11 +240,13 @@ describe('User', () => {
         email: 'peter@gmail.com',
         password: 'password',
       };
-      chai.request(server).post(loginUrl).send(data).then((err, res) => {
+      chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
-        expect(res.body.user).to.have.property('first_name');
-      });
+      })
+        .catch((err) => {
+          throw err;
+        });
     });
   });
 });

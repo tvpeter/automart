@@ -1,9 +1,6 @@
-import carsData from '../test/unit/carsData';
-
 class Car {
   constructor() {
-    // this.cars = carsData;
-    this.cars = carsData;
+    this.cars = [];
   }
   /**
    * @description - creates a car advert
@@ -71,8 +68,20 @@ class Car {
     return keysToCompare.some(key => (car1[key] !== car2[key]));
   }
 
+  /**
+   * @description - get all unsold cars by manufacturer
+   * @param {string} manufacturer
+   */
   getUnsoldCarsByManufactuer(manufacturer) {
     return this.cars.filter(car => car.status.toLowerCase() === 'available' && car.manufacturer.toLowerCase() === manufacturer.toLowerCase());
+  }
+
+  /**
+   * @description -get all unsold cars
+   * @returns {Array}
+   */
+  getAllUnsoldCars() {
+    return this.cars.filter(car => car.status.toLocaleLowerCase() === 'available');
   }
 }
 

@@ -181,4 +181,23 @@ describe('Cars', () => {
       });
     });
   });
+
+  // seller update ad price
+  describe('Seller update ad price', () => {
+    it('should return the ad with updated price', (done) => {
+      const reqData = {
+        adId: 1558731356445,
+        userId: 1558730737306,
+        newPrice: 2400000,
+      };
+      chai.request(server).post(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.price).to.equal(reqData.price);
+          expect(res.body.userId).to.eq(reqData.userId);
+          expect(res.body.adId).to.eq(reqData.adId);
+          done();
+        });
+    });
+  });
 });

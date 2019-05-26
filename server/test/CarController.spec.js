@@ -2,6 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import request from 'supertest';
 import fs from 'fs';
+import path from 'path';
 import carsData from './carsData';
 import server from '../index';
 import Cars from '../models/CarModel';
@@ -27,7 +28,7 @@ describe('Cars', () => {
         .post(adUrl)
         .type('form')
         .set('x-auth', token)
-        .attach('img', fs.readFileSync('/Users/tvpeter/Projects/automart/server/test/bmwx6d.jpg'))
+        .attach('img', fs.readFileSync(path.resolve('/Users/tvpeter/Projects/automart/server/test/', './bmwx6d.jpg')))
         .field('status', 'available')
         .field('price', '25000000')
         .field('state', 'new')
@@ -51,7 +52,7 @@ describe('Cars', () => {
         .post(adUrl)
         .type('form')
         .set('x-auth', token)
-        .attach('img', fs.readFileSync('/Users/tvpeter/Projects/automart/server/test/bmwx6d.jpg'))
+        .attach('img', fs.readFileSync(path.resolve('/Users/tvpeter/Projects/automart/server/test/', './bmwx6d.jpg')))
         .field('status', 'available')
         .field('price', '')
         .field('state', 'new')
@@ -73,7 +74,7 @@ describe('Cars', () => {
         .post(adUrl)
         .type('form')
         .set('x-auth', token)
-        .attach('img', fs.readFileSync('/Users/tvpeter/Projects/automart/server/test/bmwx6d.jpg'))
+        .attach('img', fs.readFileSync(path.resolve('/Users/tvpeter/Projects/automart/server/test/', './bmwx6d.jpg')))
         .field('owner', '1558730737306')
         .field('price', '12000000')
         .field('state', 'New')

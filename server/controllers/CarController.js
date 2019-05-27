@@ -97,6 +97,12 @@ const Car = {
   },
   getSingleAd(req, res) {
     const car = CarModel.findSingle(req.params.id);
+    if (!car) {
+      return res.status(404).send({
+        status: 404,
+        message: 'The ad you are looking for is no longer available',
+      });
+    }
     return res.status(200).send({
       status: 200,
       data: car,

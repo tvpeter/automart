@@ -192,6 +192,15 @@ describe('Cars', () => {
         done();
       });
     });
+    it('should return error 404 with custom message if ad is not found', (done) => {
+      carsArray();
+      const id = 2938374143834;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('The ad you are looking for is no longer available');
+        done();
+      });
+    });
   });
   // seller update ad price
   describe('Seller update ad price', () => {

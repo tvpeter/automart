@@ -95,6 +95,14 @@ const Car = {
       data: cars,
     });
   },
+  getSingleAd(req, res) {
+    const car = CarModel.findSingle(req.params.id);
+    return res.status(200).send({
+      status: 200,
+      data: car,
+    });
+  },
+
 };
 
 export default Car;

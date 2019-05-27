@@ -18,7 +18,7 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MjgyNDQ4NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODg2MjgzNywiZXhwIjoxNTU4OTA2MDM3fQ.4BwI9ZINfoSBpV7aDGMoKAyIMhDdGtfdlMlIcamEE4k';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODk0NDYxNTgzNiwicm9sZSI6dHJ1ZSwiaWF0IjoxNTU4OTQ0NjA4LCJleHAiOjE1NTg5ODc4MDh9.ROfIJZb47shBCgrl4DlCcZah4MCC4p2fFOwlqhqxrnc';
   });
   afterEach(() => {
     Cars.cars = [];
@@ -184,6 +184,7 @@ describe('Cars', () => {
   // get ad by id
   describe('Get ad by id', () => {
     it('should return a single ad details', (done) => {
+      carsArray();
       const id = 1558731356445;
       chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
         expect(res.status).to.eq(200);

@@ -187,15 +187,14 @@ describe('Cars', () => {
     it('should return the ad with updated price', (done) => {
       const reqData = {
         adId: 1558731356445,
-        userId: 1558730737306,
         newPrice: 2400000,
+        description: 'This is to add further description',
       };
-      chai.request(server).post(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.data.price).to.equal(reqData.price);
-          expect(res.body.userId).to.eq(reqData.userId);
-          expect(res.body.adId).to.eq(reqData.adId);
+          expect(res.body.data.description).to.equal(reqData.description);
           done();
         });
     });

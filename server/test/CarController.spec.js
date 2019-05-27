@@ -192,9 +192,20 @@ describe('Cars', () => {
         done();
       });
     });
+
+    it('should return error 400 with custom message if supplied id is not valid', (done) => {
+      carsArray();
+      const id = 12345678901;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body.message).to.eq('Invalid ad id');
+        done();
+      });
+    });
+
     it('should return error 404 with custom message if ad is not found', (done) => {
       carsArray();
-      const id = 2938374143834;
+      const id = 9293837414384;
       chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('The ad you are looking for is no longer available');

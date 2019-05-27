@@ -181,7 +181,17 @@ describe('Cars', () => {
       });
     });
   });
-
+  // get ad by id
+  describe('Get ad by id', () => {
+    it('should return a single ad details', (done) => {
+      const id = 1558731356445;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data.id).to.eq(id);
+        done();
+      });
+    });
+  });
   // seller update ad price
   describe('Seller update ad price', () => {
     it('should return the ad with updated price', (done) => {

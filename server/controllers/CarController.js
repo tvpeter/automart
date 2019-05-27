@@ -96,6 +96,12 @@ const Car = {
     });
   },
   getSingleAd(req, res) {
+    if (req.params.id.trim().length !== 13) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid ad id',
+      });
+    }
     const car = CarModel.findSingle(req.params.id);
     if (!car) {
       return res.status(404).send({

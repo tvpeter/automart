@@ -65,7 +65,16 @@ const Car = {
   },
   getAll(req, res) {
     const cars = CarModel.getAllCars();
-    return res.send(cars);
+    if (cars.length < 1) {
+      return res.send({
+        status: 404,
+        message: 'There are no cars available now. Check back',
+      });
+    }
+    return res.send({
+      status: 200,
+      data: cars,
+    });
   },
   getCarsByProperty(req, res) {
     const reqParam = Object.keys(req.params)[0];

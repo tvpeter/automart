@@ -19,7 +19,7 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODk2MzUzMywiZXhwIjoxNTU5MDA2NzMzfQ.Rq0shxCH1imx-wn-WcOSMi4iVwg7nXw0x7AB0eewX0Q';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAwNjg5MSwiZXhwIjoxNTU5MDUwMDkxfQ.s4MautUk901ex4hX0usC7g8hp2fn3jRO7JCqiSHr094';
   });
   afterEach(() => {
     Cars.cars = [];
@@ -228,6 +228,19 @@ describe('Cars', () => {
       expect(res.body.data.price).to.eq(reqData.price);
       expect(res.status).to.eq(200);
       expect(res.body.data.description).to.eq(reqData.description);
+    });
+    it('should return error 404 if ad is not found', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760204,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The advert you want to update is not available');
+        });
     });
   });
 });

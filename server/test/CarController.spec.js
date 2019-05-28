@@ -152,13 +152,30 @@ describe('Cars', () => {
     it('should return a custom error if no vehicle is found for the manufacturer', (done) => {
       carsArray();
       const manufacturers = [
-        'BMW', 'TOYOTA', 'NISSAN',
+        'BMW', 'TOYOTA', 'FIAT',
       ];
       chai.request(server).get(`/api/v1/cars/${manufacturers[2]}`).end((err, res) => {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('There are no vehicles for the selected manufacturer');
         done();
       });
+    });
+  });
+
+  // unsold cars by body type
+
+  describe('view unsold cars by body type', () => {
+    it('should return all unsold cars by body type', (done) => {
+      carsArray();
+      const bodyType = [
+        'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
+      ];
+      chai.request(server).get(`/api/v1/cars/${bodyType[0]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          done();
+        });
     });
   });
 

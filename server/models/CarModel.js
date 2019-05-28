@@ -88,6 +88,15 @@ class Car {
   }
 
   /**
+   * @description -filter cars by body type
+   * @param {string} body_type
+   * @returns {Array}
+   */
+  getUnsoldCarsByBodyType(bodyType) {
+    return this.cars.filter(car => car.status.toLowerCase() === 'available' && car.body_type.toLowerCase() === bodyType.toLowerCase());
+  }
+
+  /**
    * @description -get all unsold cars
    * @returns {Array}
    */

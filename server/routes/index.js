@@ -32,11 +32,18 @@ const router = express.Router();
 router.post('/auth/signup', User.create);
 router.get('/users', User.getAll);
 router.post('/auth/signin', User.signIn);
+
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
 
+// get a single ad
+router.get('/car/:id', Car.getSingleAd);
+
 // get cars by manufacturer
 router.get('/cars/:manufacturer', Car.getCarsByManufacturer);
+
+// update ad
+router.patch('/car/:id', auth, Car.updateAdvert);
 
 // get all unsold cars
 router.get('/cars/status/available', Car.getAllUnsoldCars);

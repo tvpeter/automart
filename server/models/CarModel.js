@@ -1,6 +1,8 @@
+import carsData from '../test/carsData';
+
 class Car {
   constructor() {
-    this.cars = [];
+    this.cars = carsData;
   }
   /**
    * @description - creates a car advert
@@ -56,6 +58,15 @@ class Car {
   }
 
   /**
+   * @description - return a single ad
+   * @param {integer} adId
+   * @returns {object}
+   */
+  findSingle(id) {
+    return this.cars.find(car => parseInt(car.id, 10) === parseInt(id, 10));
+  }
+
+  /**
    * @description - compare two selected cars
    * @param {object} car1
    * @param {object} car2
@@ -82,6 +93,36 @@ class Car {
    */
   getAllUnsoldCars() {
     return this.cars.filter(car => car.status.toLocaleLowerCase() === 'available');
+  }
+
+  /**
+   * @description - update ad
+   * @param {Integer} id
+   * @param {Object} updateData
+   * @returns {Object}
+   */
+  completeUpdate(id, updateData) {
+    const car = this.findSingle(id);
+    // const carIndex = this.cars.indexOf(car);
+
+    // this.cars[carIndex].state = updateData.state || car.state;
+    // this.cars[carIndex].status = updateData.status || car.status;
+    // this.cars[carIndex].price = updateData.price || car.price;
+    // this.cars[carIndex].description = updateData.description || car.description;
+    car.state = updateData.state || car.state;
+    car.status = updateData.status || car.status;
+    car.price = updateData.price || car.price;
+    car.description = updateData.description || car.description;
+    return car;
+  }
+
+  updateAdStatus(id, updateData) {
+    const car = this.findSingle(id);
+
+    const index = this.cars.indexOf(car);
+
+    this.cars[index].status = updateData.status || car.status;
+    return this.cars[index];
   }
 }
 

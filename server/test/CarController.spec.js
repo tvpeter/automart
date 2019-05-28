@@ -6,6 +6,7 @@ import path from 'path';
 import carsData from './carsData';
 import server from '../index';
 import Cars from '../models/CarModel';
+import UserModel from '../models/UserModel';
 
 const loc = path.resolve('./');
 
@@ -18,11 +19,12 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MjgyNDQ4NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODg2MjgzNywiZXhwIjoxNTU4OTA2MDM3fQ.4BwI9ZINfoSBpV7aDGMoKAyIMhDdGtfdlMlIcamEE4k';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAwNjg5MSwiZXhwIjoxNTU5MDUwMDkxfQ.s4MautUk901ex4hX0usC7g8hp2fn3jRO7JCqiSHr094';
   });
   afterEach(() => {
     Cars.cars = [];
     token = '';
+    UserModel.users = [];
   });
   describe('Create Ad', () => {
     it('should create an advert if all required fields are supplied', () => {
@@ -179,6 +181,93 @@ describe('Cars', () => {
         expect(res.body.message).to.eq('There are no cars available now. Check back');
         done();
       });
+    });
+  });
+  // get ad by id
+  describe('Get ad by id', () => {
+    it('should return a single ad details', (done) => {
+      carsArray();
+      const id = 1558731356445;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data.id).to.eq(id);
+        done();
+      });
+    });
+
+    it('should return error 400 with custom message if supplied id is not valid', (done) => {
+      carsArray();
+      const id = 12345678901;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body.message).to.eq('Invalid ad id');
+        done();
+      });
+    });
+
+    it('should return error 404 with custom message if ad is not found', (done) => {
+      carsArray();
+      const id = 9293837414384;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('The ad you are looking for is no longer available');
+        done();
+      });
+    });
+  });
+  // seller update ad price
+  describe('Seller update ad price', () => {
+    it('should return the ad with updated price', async () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760215,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      const res = await chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData);
+      expect(res.body.data.price).to.eq(reqData.price);
+      expect(res.status).to.eq(200);
+      expect(res.body.data.description).to.eq(reqData.description);
+    });
+    it('should return error 404 if ad is not found', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760204,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The advert you want to update is not available');
+        });
+    });
+    it('should return error 401 if another user attempts update an ad', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760215,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      const tkk = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MjgyNDQ4NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAxMTY5NywiZXhwIjoxNTU5MDU0ODk3fQ.lF07r6InQ7Lqb0YPO6udIlIyBRio3bMGIcbBEjzXR3U';
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', tkk).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The advert you want to update is not available');
+        });
+    });
+    it('should return error 401 if user is not logged in', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760215,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+        });
     });
   });
 });

@@ -1,9 +1,8 @@
+import usersdata from '../test/usersData';
+
 class UserModel {
-  /**
-       * class constructor
-       */
   constructor() {
-    this.users = [];
+    this.users = usersdata;
   }
 
   /**

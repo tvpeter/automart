@@ -95,6 +95,54 @@ const Car = {
       data: cars,
     });
   },
+  getSingleAd(req, res) {
+    if (req.params.id.trim().length !== 13) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid ad id',
+      });
+    }
+    const car = CarModel.findSingle(req.params.id);
+    if (!car) {
+      return res.status(404).send({
+        status: 404,
+        message: 'The ad you are looking for is no longer available',
+      });
+    }
+    return res.status(200).send({
+      status: 200,
+      data: car,
+    });
+  },
+
+  updateAdvert(req, res) {
+    const car = CarModel.findSingle(req.body.id);
+    if (!car) {
+      res.staus(404).send({
+        status: 404,
+        message: 'The advert you want to update is not available',
+      });
+    }
+
+    const { userId, role } = req;
+    if (parseInt(userId, 10) !== parseInt(car.owner, 10) && !role) {
+      return res.status(401).send({
+        status: 401,
+        message: 'You do not have the permission to update this data',
+      });
+    }
+    let updatedCar;
+    if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
+      updatedCar = CarModel.completeUpdate(req.body.id, req.body);
+    } else {
+      updatedCar = CarModel.updateAdStatus(req.body.id, req.body);
+    }
+    return res.status(200).send({
+      status: 200,
+      data: updatedCar,
+    });
+  },
+
 };
 
 export default Car;

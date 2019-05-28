@@ -19,7 +19,7 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAwNjg5MSwiZXhwIjoxNTU5MDUwMDkxfQ.s4MautUk901ex4hX0usC7g8hp2fn3jRO7JCqiSHr094';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTA1MzI0NywiZXhwIjoxNTU5MDk2NDQ3fQ.q_6twOyXE8YIdn09F3NtFkAdJ3SHQhwJwQVDnTupQ3U';
   });
   afterEach(() => {
     Cars.cars = [];
@@ -135,12 +135,12 @@ describe('Cars', () => {
 
   // unsold cars according to manufacturer
 
-  describe('view unsold cars by manufacturer', () => {
+  describe('view available cars by manufacturer', () => {
+    const manufacturers = [
+      'BMW', 'TOYOTA', 'FIAT',
+    ];
     it('should return all unsold cars by a manufacturer', (done) => {
       carsArray();
-      const manufacturers = [
-        'BMW', 'TOYOTA', 'NISSAN',
-      ];
       chai.request(server).get(`/api/v1/car/manufacturer/${manufacturers[0]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
@@ -151,9 +151,6 @@ describe('Cars', () => {
 
     it('should return a custom error if no vehicle is found for the manufacturer', (done) => {
       carsArray();
-      const manufacturers = [
-        'BMW', 'TOYOTA', 'FIAT',
-      ];
       chai.request(server).get(`/api/v1/car/manufacturer/${manufacturers[2]}`).end((err, res) => {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('There are no cars for the selected manufacturer');
@@ -164,12 +161,13 @@ describe('Cars', () => {
 
   // unsold cars by body type
 
-  describe('view unsold cars by body type', () => {
+  describe('view available cars by body type', () => {
+    const bodyType = [
+      'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
+    ];
     it('should return all unsold cars by body type', (done) => {
       carsArray();
-      const bodyType = [
-        'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
-      ];
+
       chai.request(server).get(`/api/v1/car/bodytype/${bodyType[1]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
@@ -179,9 +177,6 @@ describe('Cars', () => {
     });
     it('should return error 404 if cars of given body type are not found', (done) => {
       carsArray();
-      const bodyType = [
-        'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
-      ];
       chai.request(server).get(`/api/v1/car/bodytype/${bodyType[2]}`)
         .end((err, res) => {
           expect(res.status).to.eq(404);
@@ -191,8 +186,44 @@ describe('Cars', () => {
     });
   });
 
+  // view available cars by state (used, new)
+  describe('view available cars by state', () => {
+    const state = [
+      'Used', 'New',
+    ];
+    it('should return all available cars by state -used', (done) => {
+      carsArray();
+      chai.request(server).get(`/api/v1/car/state/${state[0]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          expect(res.body.data[0]).to.have.property('state').eq(state[0]);
+          done();
+        });
+    });
+    it('should return all available cars by state -new', (done) => {
+      carsArray();
+      chai.request(server).get(`/api/v1/car/state/${state[1]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          expect(res.body.data[0]).to.have.property('state').eq(state[1]);
+          done();
+        });
+    });
+    it('should return error 404 if cars are not found for selected state -old', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/state/old')
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('There are no cars for the selected state');
+          done();
+        });
+    });
+  });
+
   // view all unsold cars
-  describe('view all unsold cars', () => {
+  describe('view all available cars', () => {
     it('should return all unsold cars', (done) => {
       carsArray();
       chai.request(server).get('/api/v1/cars/status/available').end((err, res) => {

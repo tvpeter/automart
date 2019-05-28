@@ -45,6 +45,9 @@ router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 // get cars by body type
 router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
 
+// get cars by state
+router.get('/car/state/:state', Car.getCarsByProperty);
+
 // update ad
 router.patch('/car/:id', auth, Car.updateAdvert);
 

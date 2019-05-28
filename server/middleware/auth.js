@@ -14,11 +14,10 @@ const auth = (req, res, next) => {
   const error = {};
   const token = req.header('x-auth');
   if (!token) {
-    error.token = 'No authorization token provided';
+    error.token = '';
     return res.status(401).send({
-      status: 'error',
-      message: error.token,
-      error,
+      status: 401,
+      message: 'No authorization token provided',
     });
   }
   try {
@@ -27,11 +26,9 @@ const auth = (req, res, next) => {
     req.role = decoded.role;
     return next();
   } catch (err) {
-    error.message = 'Unauthorized, invalid token or session have expired';
     return res.status(401).json({
-      status: 'error',
-      message: error.message,
-      error,
+      status: 401,
+      message: 'Unauthorized, invalid token or session have expired',
     });
   }
 };

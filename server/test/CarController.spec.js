@@ -242,5 +242,32 @@ describe('Cars', () => {
           expect(res.body.message).to.eq('The advert you want to update is not available');
         });
     });
+    it('should return error 401 if another user attempts update an ad', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760215,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      const tkk = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MjgyNDQ4NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAxMTY5NywiZXhwIjoxNTU5MDU0ODk3fQ.lF07r6InQ7Lqb0YPO6udIlIyBRio3bMGIcbBEjzXR3U';
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', tkk).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The advert you want to update is not available');
+        });
+    });
+    it('should return error 401 if user is not logged in', () => {
+      carsArray();
+      const reqData = {
+        id: 1558943760215,
+        price: 2400000,
+        description: 'This is to add further description',
+      };
+      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).send(reqData)
+        .then((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+        });
+    });
   });
 });

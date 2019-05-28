@@ -103,7 +103,12 @@ class Car {
    */
   completeUpdate(id, updateData) {
     const car = this.findSingle(id);
+    // const carIndex = this.cars.indexOf(car);
 
+    // this.cars[carIndex].state = updateData.state || car.state;
+    // this.cars[carIndex].status = updateData.status || car.status;
+    // this.cars[carIndex].price = updateData.price || car.price;
+    // this.cars[carIndex].description = updateData.description || car.description;
     car.state = updateData.state || car.state;
     car.status = updateData.status || car.status;
     car.price = updateData.price || car.price;
@@ -113,8 +118,11 @@ class Car {
 
   updateAdStatus(id, updateData) {
     const car = this.findSingle(id);
-    car.status = updateData.status || car.status;
-    return car;
+
+    const index = this.cars.indexOf(car);
+
+    this.cars[index].status = updateData.status || car.status;
+    return this.cars[index];
   }
 }
 

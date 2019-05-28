@@ -115,6 +115,28 @@ const Car = {
     });
   },
 
+  updateAdvert(req, res) {
+    const car = CarModel.findSingle(req.body.id);
+
+    const { userId, role } = req;
+    if (parseInt(userId, 10) !== parseInt(car.owner, 10) && !role) {
+      return res.status(401).send({
+        status: 401,
+        message: 'You do not have the permission to update this data',
+      });
+    }
+    let updatedCar;
+    if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
+      updatedCar = CarModel.completeUpdate(req.body.id, req.body);
+    } else {
+      updatedCar = CarModel.updateAdStatus(req.body.id, req.body);
+    }
+    return res.status(200).send({
+      status: 200,
+      data: updatedCar,
+    });
+  },
+
 };
 
 export default Car;

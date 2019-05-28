@@ -33,11 +33,11 @@ router.post('/auth/signup', User.create);
 router.get('/users', User.getAll);
 router.post('/auth/signin', User.signIn);
 
+// get cars within a price range
+router.get('/car/price/', Car.getCarsWithinPriceRange);
+
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
-
-// get a single ad
-router.get('/car/:id', Car.getSingleAd);
 
 // get cars by manufacturer
 router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
@@ -47,6 +47,9 @@ router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
 
 // get cars by state
 router.get('/car/state/:state', Car.getCarsByProperty);
+
+// get a single ad
+router.get('/car/:id', Car.getSingleAd);
 
 // update ad
 router.patch('/car/:id', auth, Car.updateAdvert);

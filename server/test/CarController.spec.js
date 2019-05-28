@@ -292,12 +292,12 @@ describe('Cars', () => {
     it('should return error 404 if ad is not found', () => {
       carsArray();
       const reqData = {
-        id: 1558943760204,
+        id: 9558943760204,
         price: 2400000,
         description: 'This is to add further description',
       };
       chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
-        .then((err, res) => {
+        .then((res) => {
           expect(res.status).to.eq(404);
           expect(res.body.message).to.eq('The advert you want to update is not available');
         });
@@ -311,7 +311,7 @@ describe('Cars', () => {
       };
       const tkk = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MjgyNDQ4NCwicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTAxMTY5NywiZXhwIjoxNTU5MDU0ODk3fQ.lF07r6InQ7Lqb0YPO6udIlIyBRio3bMGIcbBEjzXR3U';
       chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', tkk).send(reqData)
-        .then((err, res) => {
+        .then((res) => {
           expect(res.status).to.eq(404);
           expect(res.body.message).to.eq('The advert you want to update is not available');
         });
@@ -324,7 +324,7 @@ describe('Cars', () => {
         description: 'This is to add further description',
       };
       chai.request(server).patch(`/api/v1/car/${reqData.adId}`).send(reqData)
-        .then((err, res) => {
+        .then((res) => {
           expect(res.status).to.eq(401);
           expect(res.body.message).to.eq('No authorization token provided');
         });
@@ -357,6 +357,43 @@ describe('Cars', () => {
       chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid ad id');
+        done();
+      });
+    });
+  });
+  // get ads within a price range
+  describe('Get ads within a price range', () => {
+    it('should return an array of ads within a price range', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/price/?min=5000000&max=8000000').end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data).to.be.an('ARRAY');
+        done();
+      });
+    });
+
+    it('Minimum should default to 0 if not supplied', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/price/?max=8000000').end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data).to.be.an('ARRAY');
+        done();
+      });
+    });
+
+    it('Maximum should default to 24000000 if not supplied', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/price/?min=2000000').end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data).to.be.an('ARRAY');
+        done();
+      });
+    });
+    it('Should return error 404 if no ads are found in the given range', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/price/?min=12000000&max=24000000').end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('There are no cars within the selected range');
         done();
       });
     });

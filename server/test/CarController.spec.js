@@ -135,7 +135,7 @@ describe('Cars', () => {
 
   // unsold cars according to manufacturer
 
-  describe('view unsold cars by manufacturer', () => {
+  describe('view available cars by manufacturer', () => {
     it('should return all unsold cars by a manufacturer', (done) => {
       carsArray();
       const manufacturers = [
@@ -164,7 +164,7 @@ describe('Cars', () => {
 
   // unsold cars by body type
 
-  describe('view unsold cars by body type', () => {
+  describe('view available cars by body type', () => {
     it('should return all unsold cars by body type', (done) => {
       carsArray();
       const bodyType = [
@@ -191,8 +191,25 @@ describe('Cars', () => {
     });
   });
 
+  // view available cars by state (used, new)
+  describe('view available cars by state', () => {
+    it('should return all available cars by state', (done) => {
+      carsArray();
+      const state = [
+        'Used', 'New',
+      ];
+      chai.request(server).get(`/api/v1/car/state/${state[0]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          expect(res.body.data[0]).to.have.property('state').eq(state[0]);
+          done();
+        });
+    });
+  });
+
   // view all unsold cars
-  describe('view all unsold cars', () => {
+  describe('view all available cars', () => {
     it('should return all unsold cars', (done) => {
       carsArray();
       chai.request(server).get('/api/v1/cars/status/available').end((err, res) => {

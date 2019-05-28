@@ -270,4 +270,35 @@ describe('Cars', () => {
         });
     });
   });
+  // get single ad
+  describe('User can view single ad', () => {
+    it('should return full details of an ad', (done) => {
+      carsArray();
+      const id = 1558731356445;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body).to.have.property('data');
+        expect(res.body.data.id).to.eq(id);
+        done();
+      });
+    });
+    it('should return error 404 if ad is not found', (done) => {
+      carsArray();
+      const id = 1558731656445;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('The ad you are looking for is no longer available');
+        done();
+      });
+    });
+    it('should return error 400 if invalid ad id is supplied', (done) => {
+      carsArray();
+      const id = 155873165645;
+      chai.request(server).get(`/api/v1/car/${id}`).end((err, res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body.message).to.eq('Invalid ad id');
+        done();
+      });
+    });
+  });
 });

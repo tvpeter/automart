@@ -67,13 +67,15 @@ const Car = {
     const cars = CarModel.getAllCars();
     return res.send(cars);
   },
-  getCarsByManufacturer(req, res) {
-    const cars = CarModel.getUnsoldCarsByManufactuer(req.params.manufacturer);
+  getCarsByProperty(req, res) {
+    const reqParam = Object.keys(req.params)[0];
+    const cars = (reqParam.toLowerCase() === 'manufacturer') ? CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer)
+      : CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
 
     if (cars.length < 1) {
       return res.status(404).send({
         status: 404,
-        message: 'There are no vehicles for the selected manufacturer',
+        message: `There are no cars for the selected ${reqParam}`,
       });
     }
     return res.status(200).send({
@@ -81,7 +83,6 @@ const Car = {
       data: cars,
     });
   },
-
   getAllUnsoldCars(req, res) {
     const cars = CarModel.getAllUnsoldCars();
     if (cars.length < 1) {
@@ -118,7 +119,7 @@ const Car = {
   updateAdvert(req, res) {
     const car = CarModel.findSingle(req.body.id);
     if (!car) {
-      res.staus(404).send({
+      res.status(404).send({
         status: 404,
         message: 'The advert you want to update is not available',
       });

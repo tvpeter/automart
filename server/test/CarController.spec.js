@@ -6,6 +6,7 @@ import path from 'path';
 import carsData from './carsData';
 import server from '../index';
 import Cars from '../models/CarModel';
+import UserModel from '../models/UserModel';
 
 const loc = path.resolve('./');
 
@@ -18,11 +19,12 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODk0NDYxNTgzNiwicm9sZSI6dHJ1ZSwiaWF0IjoxNTU4OTQ0NjA4LCJleHAiOjE1NTg5ODc4MDh9.ROfIJZb47shBCgrl4DlCcZah4MCC4p2fFOwlqhqxrnc';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1ODk2MzUzMywiZXhwIjoxNTU5MDA2NzMzfQ.Rq0shxCH1imx-wn-WcOSMi4iVwg7nXw0x7AB0eewX0Q';
   });
   afterEach(() => {
     Cars.cars = [];
     token = '';
+    UserModel.users = [];
   });
   describe('Create Ad', () => {
     it('should create an advert if all required fields are supplied', () => {
@@ -215,19 +217,17 @@ describe('Cars', () => {
   });
   // seller update ad price
   describe('Seller update ad price', () => {
-    it('should return the ad with updated price', (done) => {
+    it('should return the ad with updated price', async () => {
+      carsArray();
       const reqData = {
-        adId: 1558731356445,
-        newPrice: 2400000,
+        id: 1558943760215,
+        price: 2400000,
         description: 'This is to add further description',
       };
-      chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData)
-        .end((err, res) => {
-          expect(res.status).to.eq(200);
-          expect(res.body.data.price).to.equal(reqData.price);
-          expect(res.body.data.description).to.equal(reqData.description);
-          done();
-        });
+      const res = await chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData);
+      expect(res.body.data.price).to.eq(reqData.price);
+      expect(res.status).to.eq(200);
+      expect(res.body.data.description).to.eq(reqData.description);
     });
   });
 });

@@ -69,8 +69,16 @@ const Car = {
   },
   getCarsByProperty(req, res) {
     const reqParam = Object.keys(req.params)[0];
-    const cars = (reqParam.toLowerCase() === 'manufacturer') ? CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer)
-      : CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
+    let cars;
+
+    if (reqParam.toLowerCase() === 'manufacturer') {
+      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
+    } else if (reqParam.toLowerCase() === 'body_type') {
+      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
+    } else {
+      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.state);
+    }
+
 
     if (cars.length < 1) {
       return res.status(404).send({

@@ -196,13 +196,13 @@ describe('Cars', () => {
     it('should return all available cars by state', (done) => {
       carsArray();
       const state = [
-        'Used', 'New',
+        'used', 'New',
       ];
-      chai.request(server).get(`/api/v1/car/state/${state[0]}`)
+      chai.request(server).get(`/api/v1/car/state/${state[1]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body).to.have.property('data').to.be.an('ARRAY');
-          expect(res.body.data[0]).to.have.property('state').eq(state[0]);
+          expect(res.body.data[0]).to.have.property('state').eq(state[1]);
           done();
         });
     });

@@ -117,6 +117,12 @@ const Car = {
 
   updateAdvert(req, res) {
     const car = CarModel.findSingle(req.body.id);
+    if (!car) {
+      res.staus(404).send({
+        status: 404,
+        message: 'The advert you want to update is not available',
+      });
+    }
 
     const { userId, role } = req;
     if (parseInt(userId, 10) !== parseInt(car.owner, 10) && !role) {

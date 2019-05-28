@@ -80,20 +80,12 @@ class Car {
   }
 
   /**
-   * @description - get all unsold cars by manufacturer
-   * @param {string} manufacturer
+   * @description - get all unsold cars by given property - body type, manufacturer
+   * @param {string} ppty - gotten from the req object
+   * @param {string} val - gotten from the req object
    */
-  getUnsoldCarsByManufactuer(manufacturer) {
-    return this.cars.filter(car => car.status.toLowerCase() === 'available' && car.manufacturer.toLowerCase() === manufacturer.toLowerCase());
-  }
-
-  /**
-   * @description -filter cars by body type
-   * @param {string} body_type
-   * @returns {Array}
-   */
-  getUnsoldCarsByBodyType(bodyType) {
-    return this.cars.filter(car => car.status.toLowerCase() === 'available' && car.body_type.toLowerCase() === bodyType.toLowerCase());
+  getUnsoldCarsByProperty(ppty, val) {
+    return this.cars.filter(car => car.status.toLowerCase() === 'available' && car[ppty].toLowerCase() === val.toLowerCase());
   }
 
   /**

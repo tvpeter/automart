@@ -185,7 +185,7 @@ describe('Cars', () => {
       chai.request(server).get(`/api/v1/car/bodytype/${bodyType[2]}`)
         .end((err, res) => {
           expect(res.status).to.eq(404);
-          expect(res.body.message).to.eq('There are no cars for the selected body type');
+          expect(res.body.message).to.eq('There are no cars for the selected body_type');
           done();
         });
     });

@@ -67,27 +67,15 @@ const Car = {
     const cars = CarModel.getAllCars();
     return res.send(cars);
   },
-  getCarsByManufacturer(req, res) {
-    const cars = CarModel.getUnsoldCarsByManufactuer(req.params.manufacturer);
+  getCarsByProperty(req, res) {
+    const reqParam = Object.keys(req.params)[0];
+    const cars = (reqParam.toLowerCase() === 'manufacturer') ? CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer)
+      : CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
 
     if (cars.length < 1) {
       return res.status(404).send({
         status: 404,
-        message: 'There are no cars for the selected manufacturer',
-      });
-    }
-    return res.status(200).send({
-      status: 'success',
-      data: cars,
-    });
-  },
-  getCarsByBodyType(req, res) {
-    const cars = CarModel.getUnsoldCarsByBodyType(req.params.bodyType);
-
-    if (cars.length < 1) {
-      return res.status(404).send({
-        status: 404,
-        message: 'There are no cars for the selected body type',
+        message: `There are no cars for the selected ${reqParam}`,
       });
     }
     return res.status(200).send({

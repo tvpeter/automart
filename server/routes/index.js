@@ -40,10 +40,10 @@ router.post('/car', auth, upload.single('img'), Car.create);
 router.get('/car/:id', Car.getSingleAd);
 
 // get cars by manufacturer
-router.get('/car/manufacturer/:manufacturer', Car.getCarsByManufacturer);
+router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 
 // get cars by body type
-router.get('/car/bodytype/:bodyType', Car.getCarsByBodyType);
+router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
 
 // update ad
 router.patch('/car/:id', auth, Car.updateAdvert);

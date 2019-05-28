@@ -193,16 +193,35 @@ describe('Cars', () => {
 
   // view available cars by state (used, new)
   describe('view available cars by state', () => {
-    it('should return all available cars by state', (done) => {
+    const state = [
+      'Used', 'New',
+    ];
+    it('should return all available cars by state -used', (done) => {
       carsArray();
-      const state = [
-        'used', 'New',
-      ];
+      chai.request(server).get(`/api/v1/car/state/${state[0]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          expect(res.body.data[0]).to.have.property('state').eq(state[0]);
+          done();
+        });
+    });
+    it('should return all available cars by state -new', (done) => {
+      carsArray();
       chai.request(server).get(`/api/v1/car/state/${state[1]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body).to.have.property('data').to.be.an('ARRAY');
           expect(res.body.data[0]).to.have.property('state').eq(state[1]);
+          done();
+        });
+    });
+    it('should return error 404 if cars are not found for selected state -old', (done) => {
+      carsArray();
+      chai.request(server).get('/api/v1/car/state/old')
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('There are no cars for the selected state');
           done();
         });
     });

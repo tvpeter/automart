@@ -73,7 +73,7 @@ const Car = {
     if (cars.length < 1) {
       return res.status(404).send({
         status: 404,
-        message: 'There are no vehicles for the selected manufacturer',
+        message: 'There are no cars for the selected manufacturer',
       });
     }
     return res.status(200).send({
@@ -81,7 +81,20 @@ const Car = {
       data: cars,
     });
   },
+  getCarsByBodyType(req, res) {
+    const cars = CarModel.getUnsoldCarsByBodyType(req.params.bodyType);
 
+    if (cars.length < 1) {
+      return res.status(404).send({
+        status: 404,
+        message: 'There are no cars for the selected body type',
+      });
+    }
+    return res.status(200).send({
+      status: 'success',
+      data: cars,
+    });
+  },
   getAllUnsoldCars(req, res) {
     const cars = CarModel.getAllUnsoldCars();
     if (cars.length < 1) {
@@ -118,7 +131,7 @@ const Car = {
   updateAdvert(req, res) {
     const car = CarModel.findSingle(req.body.id);
     if (!car) {
-      res.staus(404).send({
+      res.status(404).send({
         status: 404,
         message: 'The advert you want to update is not available',
       });

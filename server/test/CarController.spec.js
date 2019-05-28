@@ -141,7 +141,7 @@ describe('Cars', () => {
       const manufacturers = [
         'BMW', 'TOYOTA', 'NISSAN',
       ];
-      chai.request(server).get(`/api/v1/cars/${manufacturers[0]}`)
+      chai.request(server).get(`/api/v1/car/manufacturer/${manufacturers[0]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body).to.have.property('data').to.be.an('ARRAY');
@@ -154,9 +154,9 @@ describe('Cars', () => {
       const manufacturers = [
         'BMW', 'TOYOTA', 'FIAT',
       ];
-      chai.request(server).get(`/api/v1/cars/${manufacturers[2]}`).end((err, res) => {
+      chai.request(server).get(`/api/v1/car/manufacturer/${manufacturers[2]}`).end((err, res) => {
         expect(res.status).to.eq(404);
-        expect(res.body.message).to.eq('There are no vehicles for the selected manufacturer');
+        expect(res.body.message).to.eq('There are no cars for the selected manufacturer');
         done();
       });
     });
@@ -170,10 +170,22 @@ describe('Cars', () => {
       const bodyType = [
         'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
       ];
-      chai.request(server).get(`/api/v1/cars/${bodyType[0]}`)
+      chai.request(server).get(`/api/v1/car/bodytype/${bodyType[1]}`)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body).to.have.property('data').to.be.an('ARRAY');
+          done();
+        });
+    });
+    it('should return error 404 if cars of given body type are not found', (done) => {
+      carsArray();
+      const bodyType = [
+        'SUV', 'SEDAN', 'JEEP', 'PICKUP', 'VAN', 'WAGON', 'CONVERTIBLE', 'HATCHBACK',
+      ];
+      chai.request(server).get(`/api/v1/car/bodytype/${bodyType[2]}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('There are no cars for the selected body type');
           done();
         });
     });

@@ -21,7 +21,7 @@ export const hashPassword = async (password) => {
  * @description check supplied password against hashed password in db
  * @param {string} password -plain password
  * @param {string} hashedPassword - hashed password from db
- * @returns {Promise <boolean>}
+ * @returns {<boolean>}
  */
 
 export const comparePassword = async (password, hashedPassword) => {

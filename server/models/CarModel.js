@@ -80,7 +80,7 @@ class Car {
   }
 
   /**
-   * @description - get all unsold cars by given property - body type, manufacturer
+   * @description - get all unsold cars by given property - body type, manufacturer or state
    * @param {string} ppty - gotten from the req object
    * @param {string} val - gotten from the req object
    */
@@ -114,10 +114,8 @@ class Car {
   updateAdStatus(id, updateData) {
     const car = this.findSingle(id);
 
-    const index = this.cars.indexOf(car);
-
-    this.cars[index].status = updateData.status || car.status;
-    return this.cars[index];
+    car.status = updateData.status || car.status;
+    return car;
   }
 
   /**

@@ -161,6 +161,25 @@ const Car = {
     });
   },
 
+  getCarsWithinPriceRange(req, res) {
+    const min = req.query.min ? req.query.min : 0;
+    const max = req.query.max ? req.query.max : 3000000;
+
+    const cars = CarModel.getCarsWithinPriceRange(min, max);
+
+    if (cars.length < 1) {
+      return res.status(404).send({
+        status: 404,
+        message: 'There are no cars within the selected range',
+      });
+    }
+
+    return res.status(200).send({
+      status: 200,
+      data: cars,
+    });
+  },
+
 };
 
 export default Car;

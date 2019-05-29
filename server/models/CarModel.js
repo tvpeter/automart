@@ -119,6 +119,17 @@ class Car {
     this.cars[index].status = updateData.status || car.status;
     return this.cars[index];
   }
+
+  /**
+   * @description - get cars within a price range
+   * @param {Number} min
+   * @param {Number} max
+   * @returns {Array}
+   */
+  getCarsWithinPriceRange(min, max) {
+    return this.cars.filter(car => parseInt(car.price, 10)
+      >= parseInt(min, 10) && parseInt(car.price, 10) <= parseInt(max, 10));
+  }
 }
 
 export default new Car();

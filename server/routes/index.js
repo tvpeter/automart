@@ -29,9 +29,17 @@ const upload = multer({
 
 const router = express.Router();
 
+// user signup
 router.post('/auth/signup', User.create);
+
+// users
 router.get('/users', User.getAll);
+
+// user login
 router.post('/auth/signin', User.signIn);
+
+// change password
+router.patch('/user', auth, User.changePassword);
 
 // get cars within a price range
 router.get('/car/price/', Car.getCarsWithinPriceRange);

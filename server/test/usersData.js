@@ -2,14 +2,15 @@ const users = [
   {
     id: 1558861688503,
     email: 'johndoe@gmail.com',
-    first_name: 'Anthonia',
-    last_name: 'Tyonum',
+    first_name: 'John',
+    last_name: 'Doe',
     password: '$2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi',
     address: 'my address',
     isAdmin: false,
     phone: '09023928389',
     account_number: '2081769837',
     bank: 'UBA',
+    status: 'active',
   },
   {
     id: 1558862824484,
@@ -22,6 +23,19 @@ const users = [
     phone: '08765677765',
     account_number: '2081769837',
     bank: 'UBA',
+    status: 'active',
+  },
+  {
+    id: 1559120430869,
+    first_name: 'peter',
+    last_name: 'tyonum',
+    email: 'tvpeter@gmail.com',
+    phone: '08137277480',
+    address: 'This is the address of the user',
+    account_number: '0020600555',
+    bank: 'GTBank',
+    isAdmin: false,
+    status: 'active',
   },
 ];
 

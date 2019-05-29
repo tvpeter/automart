@@ -86,10 +86,14 @@ const User = {
       },
     });
   },
+
+
   getAll(req, res) {
     const users = UserModel.getAllUsers();
     return res.status(200).send(users);
   },
+
+
   async signIn(req, res) {
     if (!req.body.email || !req.body.password) {
       return res.status(400).send({
@@ -102,6 +106,12 @@ const User = {
       return res.status(404).send({
         status: 404,
         message: 'Invalid login credentials',
+      });
+    }
+    if (user.status !== 'active') {
+      return res.status(401).send({
+        status: 401,
+        message: 'Your account is not active',
       });
     }
     delete req.headers['x-auth'];
@@ -119,11 +129,43 @@ const User = {
         message: 'Oh, something went wrong, try again',
       });
     }
+
     const token = generateToken(user.id, user.isAdmin);
     user.token = token;
     return res.status(200).header('x-auth', token).send({
       status: 200,
       data: user,
+    });
+  },
+
+  async changePassword(req, res) {
+    if (!req.body.currentPassword || !req.body.newPassword) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Fill the required fields',
+      });
+    }
+    const { userId } = req;
+    const user = UserModel.getUser(userId);
+    if (!user) {
+      return res.status(404).send({
+        message: 'User not found',
+        status: 404,
+      });
+    }
+    const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
+    if (!confirmPassword) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Wrong current password, use password reset link',
+      });
+    }
+    const hashNewPassword = await hashPassword(req.body.newPassword);
+    const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
+
+    return res.send({
+      status: 200,
+      data: updatedUserDetails,
     });
   },
 

@@ -3,10 +3,10 @@ import chaiHttp from 'chai-http';
 import request from 'supertest';
 import fs from 'fs';
 import path from 'path';
-import carsData from './carsData';
-import server from '../index';
-import Cars from '../models/CarModel';
-import UserModel from '../models/UserModel';
+import carsData from '../carsData';
+import server from '../../index';
+import Cars from '../../models/CarModel';
+import UserModel from '../../models/UserModel';
 
 const loc = path.resolve('./');
 
@@ -19,7 +19,7 @@ describe('Cars', () => {
     Cars.cars = carsData;
   };
   beforeEach(() => {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTA1MzI0NywiZXhwIjoxNTU5MDk2NDQ3fQ.q_6twOyXE8YIdn09F3NtFkAdJ3SHQhwJwQVDnTupQ3U';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1ODg2MTY4ODUwMywicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTEzMTIxOSwiZXhwIjoxNTU5MTc0NDE5fQ.GXBS-jKCrdmVBenUyE-CsQPL9MlywiF9GT0Aiz6CotY';
   });
   afterEach(() => {
     Cars.cars = [];

@@ -1,13 +1,17 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../index';
-import UserModel from '../models/UserModel';
+import server from '../../index';
+import UserModel from '../../models/UserModel';
+import usersData from '../usersData';
 
 const { expect } = chai;
 const signupUrl = '/api/v1/auth/signup';
 const loginUrl = '/api/v1/auth/signin';
 chai.use(chaiHttp);
 describe('User', () => {
+  const usersArray = () => {
+    UserModel.users = usersData;
+  };
   describe('User create', () => {
     it('should return a new user with the supplied properties', (done) => {
       const userDetails = {
@@ -21,13 +25,8 @@ describe('User', () => {
         account_number: '2081769837',
         bank: 'UBA',
       };
-      chai.request(server).post(signupUrl).send(userDetails).end((err, res) => {
-        const keys = Object.keys(userDetails);
-        keys.forEach((key) => {
-          if (key !== 'password' && key !== 'password_confirmation') {
-            expect(res.body.data).to.have.property(key).equal(userDetails[key]);
-          }
-        });
+      chai.request(server).post(signupUrl).send(userDetails).then((res) => {
+        // expect(res.data.email).to.eq(userDetails.email);
         expect(res.status).to.eq(201);
         expect(res).to.have.header('x-auth');
         done();
@@ -126,7 +125,7 @@ describe('User', () => {
         done();
       });
     });
-    it('should return error if user email or phone has been used', (done) => {
+    it('should return error if user email has been used', (done) => {
       UserModel.create(
         {
           email: 'peter@gmail.com',
@@ -157,14 +156,47 @@ describe('User', () => {
         done();
       });
     });
+    it('should return error if given phone has been used', (done) => {
+      UserModel.create(
+        {
+          email: 'petertt@gmail.com',
+          first_name: 'Peter',
+          last_name: 'Tyonum',
+          password: 'password',
+          address: 'my address',
+          phone: '09029382393',
+          account_number: '2081769837',
+          bank: 'UBA',
+          password_confirmation: 'password',
+        },
+      );
+      const data = {
+        email: 'peterst@gmail.com',
+        first_name: 'John',
+        last_name: 'Tyonum',
+        password: 'password',
+        address: 'my address',
+        phone: '09029382393',
+        account_number: '2081769837',
+        bank: 'UBA',
+        password_confirmation: 'password',
+      };
+      chai.request(server).post(signupUrl).send(data).end((err, res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body.message).to.eq('User with given email or phone already exist');
+        done();
+      });
+    });
   });
+
+  // user sign in
   describe('User Signin', () => {
     it('should return error 400 if user did not supply email and/or password', (done) => {
       const data = {
         email: 'johndoe@google.dev',
         password: '',
       };
-      chai.request(server).post(loginUrl).send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
@@ -189,7 +221,7 @@ describe('User', () => {
         email: 'johndoe@gmail.com',
         password: 'password',
       };
-      chai.request(server).post(loginUrl).send(data).end((req, res) => {
+      chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
@@ -215,7 +247,7 @@ describe('User', () => {
         password: 'pasword',
       };
 
-      chai.request(server).post(loginUrl).send(data).end((err, res) => {
+      chai.request(server).post(loginUrl).send(data).then((res) => {
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('Wrong username/password');
         done();
@@ -244,6 +276,56 @@ describe('User', () => {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
       })
+        .catch((err) => {
+          throw err;
+        });
+    });
+  });
+
+  // user change password
+  describe('User sign in', () => {
+    usersArray();
+    const data = {
+      currentPassword: 'password',
+      newPassword: 'newpassword',
+    };
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1OTEyMDQzMDg2OSwicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTEyMDUzMSwiZXhwIjoxNTU5MTYzNzMxfQ.Nr8KPOJjgs-cPfOzfPYXs7u07eZ51BgkdsKdz9v60Iw';
+    it('should return user with updated password', () => {
+      chai.request(server).patch('/api/v1/user').set('x-auth', token).send(data)
+        .then((res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data).to.contain('password');
+        })
+        .catch((err) => {
+          throw err;
+        });
+    });
+    it('should return 404 if current password is not supplied', () => {
+      chai.request(server).patch('/api/v1/user').set('x-auth', token).send({ newPassword: 'newpassword' })
+        .then((res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Fill the required fields');
+        })
+        .catch((err) => {
+          throw err;
+        });
+    });
+    it('should return 401 if user is not logged in', () => {
+      chai.request(server).patch('/api/v1/user').set('x-auth', token).send(data)
+        .then((res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+        })
+        .catch((err) => {
+          throw err;
+        });
+    });
+    it('should return 400 if current password is wrong', () => {
+      chai.request(server).patch('/api/v1/user').set('x-auth', token).send({ currentPassword: 'password1', newPassword: 'anotherpassword' })
+        .then((res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('Wrong current password, use password reset link');
+        })
         .catch((err) => {
           throw err;
         });

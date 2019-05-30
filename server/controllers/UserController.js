@@ -10,9 +10,7 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
-    const error = {};
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-      error.password = '';
       return res.status(400).send({
         status: 400,
         message: 'Password and confirmation does not match',

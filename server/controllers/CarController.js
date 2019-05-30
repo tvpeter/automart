@@ -136,7 +136,7 @@ const Car = {
   updateAdvert(req, res) {
     const car = CarModel.findSingle(req.body.id);
     if (!car) {
-      res.status(404).send({
+      return res.status(404).send({
         status: 404,
         message: 'The advert you want to update is not available',
       });

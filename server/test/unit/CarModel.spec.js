@@ -90,7 +90,6 @@ describe('Car Model', () => {
         description: 'This is a new description',
       };
       const res = CarModel.completeUpdate(id, data);
-      expect(res.state).to.eq(data.state);
       expect(res.status).to.eq(data.status);
       expect(res.price).to.eq(data.price);
     });

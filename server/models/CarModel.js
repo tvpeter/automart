@@ -104,7 +104,6 @@ class Car {
    */
   completeUpdate(id, updateData) {
     const car = this.findSingle(id);
-    car.state = updateData.state || car.state;
     car.status = updateData.status || car.status;
     car.price = updateData.price || car.price;
     car.description = updateData.description || car.description;

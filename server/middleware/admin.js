@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
  */
 dotenv.config();
 
-const auth = (req, res, next) => {
+const adminAuth = (req, res, next) => {
   const token = req.header('x-auth');
   if (!token) {
     return res.status(401).send({
@@ -22,6 +22,12 @@ const auth = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
     req.role = decoded.role;
+    if (!decoded.role) {
+      return res.status(401).send({
+        status: 401,
+        message: 'You dont have the permission to access this resource',
+      });
+    }
     return next();
   } catch (err) {
     return res.status(401).send({
@@ -31,4 +37,4 @@ const auth = (req, res, next) => {
   }
 };
 
-export default auth;
+export default adminAuth;

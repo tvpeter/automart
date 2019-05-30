@@ -3,6 +3,8 @@ import chaiHttp from 'chai-http';
 import server from '../../index';
 import UserModel from '../../models/UserModel';
 import usersData from '../usersData';
+import generateToken from '../../lib/generateToken';
+
 
 const { expect } = chai;
 const signupUrl = '/api/v1/auth/signup';
@@ -15,20 +17,20 @@ describe('User', () => {
   describe('User create', () => {
     it('should return a new user with the supplied properties', (done) => {
       const userDetails = {
-        email: 'proff@gmail.com',
-        first_name: 'Anthonia',
-        last_name: 'Tyonum',
+        email: 'kkkkkkjj@gmail.com',
+        first_name: 'Karmanis',
+        last_name: 'Valec',
         password: 'password',
         password_confirmation: 'password',
         address: 'my address',
-        phone: '09023928389',
+        phone: '087687765435',
         account_number: '2081769837',
         bank: 'UBA',
       };
-      chai.request(server).post(signupUrl).send(userDetails).then((res) => {
-        // expect(res.data.email).to.eq(userDetails.email);
+      chai.request(server).post(signupUrl).send(userDetails).end((err, res) => {
         expect(res.status).to.eq(201);
-        expect(res).to.have.header('x-auth');
+        expect(res.body.data).to.have.property('email').eq(userDetails.email);
+        expect(res.body.data).to.have.property('phone').eq(userDetails.phone);
         done();
       });
     });
@@ -126,21 +128,9 @@ describe('User', () => {
       });
     });
     it('should return error if user email has been used', (done) => {
-      UserModel.create(
-        {
-          email: 'peter@gmail.com',
-          first_name: 'Anthonia',
-          last_name: 'Tyonum',
-          password: 'password',
-          address: 'my address',
-          phone: '09029382393',
-          account_number: '2081769837',
-          bank: 'UBA',
-          password_confirmation: 'password',
-        },
-      );
+      usersArray();
       const data = {
-        email: 'peter@gmail.com',
+        email: usersData[0].email,
         first_name: 'Anthonia',
         last_name: 'Tyonum',
         password: 'password',
@@ -157,26 +147,14 @@ describe('User', () => {
       });
     });
     it('should return error if given phone has been used', (done) => {
-      UserModel.create(
-        {
-          email: 'petertt@gmail.com',
-          first_name: 'Peter',
-          last_name: 'Tyonum',
-          password: 'password',
-          address: 'my address',
-          phone: '09029382393',
-          account_number: '2081769837',
-          bank: 'UBA',
-          password_confirmation: 'password',
-        },
-      );
+      usersArray();
       const data = {
         email: 'peterst@gmail.com',
         first_name: 'John',
         last_name: 'Tyonum',
         password: 'password',
         address: 'my address',
-        phone: '09029382393',
+        phone: usersData[0].phone,
         account_number: '2081769837',
         bank: 'UBA',
         password_confirmation: 'password',
@@ -191,12 +169,9 @@ describe('User', () => {
 
   // user sign in
   describe('User Signin', () => {
-    it('should return error 400 if user did not supply email and/or password', (done) => {
-      const data = {
-        email: 'johndoe@google.dev',
-        password: '',
-      };
-      chai.request(server).post(loginUrl).send(data).then((res) => {
+    it('should return error 400 if user did not supply password', (done) => {
+      usersArray();
+      chai.request(server).post(loginUrl).send({ email: 'johndoe@google.dev' }).then((res) => {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
@@ -204,21 +179,8 @@ describe('User', () => {
     });
 
     it('should return error 404 if user email is not found', (done) => {
-      UserModel.create(
-        {
-          email: 'peter@gmail.com',
-          first_name: 'Anthonia',
-          last_name: 'Tyonum',
-          password: 'password',
-          address: 'my address',
-          phone: '09029382393',
-          account_number: '2081769837',
-          bank: 'UBA',
-          password_confirmation: 'password',
-        },
-      );
       const data = {
-        email: 'johndoe@gmail.com',
+        email: 'jjjohng@gmail.com',
         password: 'password',
       };
       chai.request(server).post(loginUrl).send(data).then((res) => {
@@ -229,25 +191,13 @@ describe('User', () => {
     });
 
     it('should return error 401 if password is incorrect for given email', (done) => {
-      UserModel.create(
-        {
-          email: 'peter@gmail.com',
-          first_name: 'Anthonia',
-          last_name: 'Tyonum',
-          password: 'password',
-          address: 'my address',
-          phone: '09029382393',
-          account_number: '2081769837',
-          bank: 'UBA',
-          password_confirmation: 'password',
-        },
-      );
+      usersArray();
       const data = {
-        email: 'peter@gmail.com',
+        email: usersData[0].email,
         password: 'pasword',
       };
 
-      chai.request(server).post(loginUrl).send(data).then((res) => {
+      chai.request(server).post(loginUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('Wrong username/password');
         done();
@@ -255,79 +205,69 @@ describe('User', () => {
     });
 
     it('should return a header with token and credentials if password and email are correct', () => {
-      UserModel.create(
-        {
-          email: 'peter@gmail.com',
-          first_name: 'Anthonia',
-          last_name: 'Tyonum',
-          password: 'password',
-          password_confirmation: 'password',
-          address: 'my address',
-          phone: '09023928389',
-          account_number: '2081769837',
-          bank: 'UBA',
-        },
-      );
+      usersArray();
       const data = {
-        email: 'peter@gmail.com',
+        email: usersData[0].email,
         password: 'password',
       };
-      chai.request(server).post(loginUrl).send(data).then((res) => {
+      chai.request(server).post(loginUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
-      })
-        .catch((err) => {
-          throw err;
-        });
+        expect(res.body.data).to.have.property('email').eq(data.email);
+      });
     });
   });
 
   // user change password
-  describe('User sign in', () => {
-    usersArray();
-    const data = {
-      currentPassword: 'password',
-      newPassword: 'newpassword',
-    };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTU1OTEyMDQzMDg2OSwicm9sZSI6ZmFsc2UsImlhdCI6MTU1OTEyMDUzMSwiZXhwIjoxNTU5MTYzNzMxfQ.Nr8KPOJjgs-cPfOzfPYXs7u07eZ51BgkdsKdz9v60Iw';
-    it('should return user with updated password', () => {
-      chai.request(server).patch('/api/v1/user').set('x-auth', token).send(data)
-        .then((res) => {
+  describe('User change password', () => {
+    it('should return user with updated password', (done) => {
+      usersArray();
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch('/api/v1/user').set('x-auth', token)
+        .send({ currentPassword: 'password', newPassword: 'newpassword' })
+        .end((err, res) => {
           expect(res.status).to.eq(200);
-          expect(res.body.data).to.contain('password');
-        })
-        .catch((err) => {
-          throw err;
+          expect(res.body.data).to.be.an('Object');
+          expect(res.body.data.email).to.eq(user.email);
+          done();
         });
     });
-    it('should return 404 if current password is not supplied', () => {
-      chai.request(server).patch('/api/v1/user').set('x-auth', token).send({ newPassword: 'newpassword' })
-        .then((res) => {
-          expect(res.status).to.eq(404);
-          expect(res.body.message).to.eq('Fill the required fields');
-        })
-        .catch((err) => {
-          throw err;
+
+    it('should return 400 if current password is wrong', (done) => {
+      usersArray();
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch('/api/v1/user').set('x-auth', token)
+        .send({ currentPassword: 'password1', newPassword: 'anotherpassword' })
+        .end((err, res) => {
+          expect(res.body.status).to.eq(400);
+          expect(res.body.message).to.eq('Wrong current password, use password reset link');
+          done();
         });
     });
-    it('should return 401 if user is not logged in', () => {
-      chai.request(server).patch('/api/v1/user').set('x-auth', token).send(data)
-        .then((res) => {
-          expect(res.status).to.eq(401);
-          expect(res.body.message).to.eq('No authorization token provided');
-        })
-        .catch((err) => {
-          throw err;
-        });
-    });
-    it('should return 400 if current password is wrong', () => {
-      chai.request(server).patch('/api/v1/user').set('x-auth', token).send({ currentPassword: 'password1', newPassword: 'anotherpassword' })
+
+    it('should return 400 if current password is not supplied', async () => {
+      usersArray();
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).patch('/api/v1/user').set('x-auth', token)
+        .send({ newPassword: 'newpassword' })
         .then((res) => {
           expect(res.status).to.eq(400);
-          expect(res.body.message).to.eq('Wrong current password, use password reset link');
-        })
-        .catch((err) => {
-          throw err;
+          expect(res.body.message).to.eq('Fill the required fields');
+        });
+    });
+    it('should return 401 if user is not logged in', (done) => {
+      usersArray();
+      chai.request(server).patch('/api/v1/user').send({ currentPassword: 'password', newPassword: 'newpassword' })
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+          done();
         });
     });
   });

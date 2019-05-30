@@ -3,6 +3,7 @@ import multer from 'multer';
 import User from '../controllers/UserController';
 import Car from '../controllers/CarController';
 import auth from '../middleware/auth';
+import adminAuth from '../middleware/admin';
 
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
@@ -33,7 +34,7 @@ const router = express.Router();
 router.post('/auth/signup', User.create);
 
 // users
-router.get('/users', User.getAll);
+router.get('/users', adminAuth, User.getAll);
 
 // user login
 router.post('/auth/signin', User.signIn);
@@ -66,7 +67,7 @@ router.patch('/car/:id', auth, Car.updateAdvert);
 router.get('/cars/status/available', Car.getAllUnsoldCars);
 
 // get all cars
-router.get('/car', Car.getAll);
+router.get('/car', adminAuth, Car.getAll);
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 
 export default router;

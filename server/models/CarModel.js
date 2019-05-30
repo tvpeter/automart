@@ -128,6 +128,16 @@ class Car {
     return this.cars.filter(car => parseInt(car.price, 10)
       >= parseInt(min, 10) && parseInt(car.price, 10) <= parseInt(max, 10));
   }
+
+  /**
+   * @description - delete a car
+   * @param {Object} car
+   * @returns {Array} of item deleted or empty array if none is deleted
+   */
+  deleteCar(car) {
+    const addIndex = this.cars.indexOf(car);
+    return this.cars.splice(addIndex, 1);
+  }
 }
 
 export default new Car();

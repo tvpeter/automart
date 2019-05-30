@@ -180,6 +180,34 @@ const Car = {
     });
   },
 
+  deleteAd(req, res) {
+    if (!req.params.id) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid request',
+      });
+    }
+
+    const car = CarModel.findSingle(req.params.id);
+    if (!car) {
+      return res.status(404).send({
+        status: 404,
+        message: 'The ad is no longer available',
+      });
+    }
+    const deleteACarAd = CarModel.deleteCar(car);
+    if (deleteACarAd.length < 1) {
+      return res.status(500).send({
+        status: 500,
+        message: 'Ad not deleted, please retry',
+      });
+    }
+
+    return res.status(200).send({
+      status: 200,
+      message: 'Ad successfully deleted',
+    });
+  },
 };
 
 export default Car;

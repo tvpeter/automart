@@ -68,6 +68,9 @@ router.get('/cars/status/available', Car.getAllUnsoldCars);
 
 // get all cars
 router.get('/car', adminAuth, Car.getAll);
+
+// admin delete an ad
+router.delete('/car/:id', adminAuth, Car.deleteAd);
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 
 export default router;

@@ -426,4 +426,56 @@ describe('Cars', () => {
       });
     });
   });
+
+  // admin can delete any posted ad
+  describe('Admin can delete a posted ad', () => {
+    it('should delete a posted ad', (done) => {
+      const user = usersData[0];
+      user.isAdmin = true;
+      carsArray();
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete(`/api/v1/car/${carsData[0].id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.message).to.eq('Ad successfully deleted');
+          done();
+        });
+    });
+    it('should return error 401 if user is not admin or not logged in', (done) => {
+      carsArray();
+      chai.request(server).delete(`/api/v1/car/${carsData[0].id}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+          done();
+        });
+    });
+    it('should return error 404 if wrong ad id is given', (done) => {
+      const user = usersData[0];
+      user.isAdmin = true;
+      carsArray();
+      const token = generateToken(user.id, user.isAdmin);
+      const id = carsData[0].id + 1;
+      chai.request(server).delete(`/api/v1/car/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The ad is no longer available');
+          done();
+        });
+    });
+    it('should return error 404 if ad is not available', (done) => {
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      const { id } = carsData[0];
+      Cars.cars = [];
+      chai.request(server).delete(`/api/v1/car/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          console.log(res);
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The ad is no longer available');
+          done();
+        });
+    });
+  });
 });

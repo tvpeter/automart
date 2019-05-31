@@ -471,7 +471,6 @@ describe('Cars', () => {
       Cars.cars = [];
       chai.request(server).delete(`/api/v1/car/${id}`).set('x-auth', token)
         .end((err, res) => {
-          console.log(res);
           expect(res.status).to.eq(404);
           expect(res.body.message).to.eq('The ad is no longer available');
           done();

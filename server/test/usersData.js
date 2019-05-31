@@ -38,6 +38,19 @@ const users = [
     bank: 'GTBank',
     status: 'active',
   },
+  {
+    id: 1558730737306,
+    email: 'tvpeter@gmail.com',
+    first_name: 'peter',
+    last_name: 'tyonum',
+    password: '$2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2',
+    address: 'This is the address of the user',
+    isAdmin: true,
+    phone: '08137277480',
+    account_number: '0020600555',
+    bank: 'GTBank',
+    status: 'active',
+  },
 ];
 
 export default users;

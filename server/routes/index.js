@@ -4,6 +4,7 @@ import User from '../controllers/UserController';
 import Car from '../controllers/CarController';
 import auth from '../middleware/auth';
 import adminAuth from '../middleware/admin';
+import Order from '../controllers/OrderController';
 
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
@@ -71,6 +72,10 @@ router.get('/car', adminAuth, Car.getAll);
 
 // admin delete an ad
 router.delete('/car/:id', adminAuth, Car.deleteAd);
+
+// user make an order
+router.post('/order', auth, Order.create);
+
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 
 export default router;

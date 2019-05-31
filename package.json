@@ -5,8 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon --exec babel-node server/index.js",
-    "test": "nyc --require babel-core/register mocha server/test/**/**.spec.js --exit || true",
-    "build": "babel server --out-dir server/build --ignore test/**.spec.js",
+    "test": "mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
+    "build": "babel server --out-dir server/build",
     "prebuild": "rm -rf server/build",
     "prestart": "npm run lint && npm run build",
     "start": "NODE_ENV=production node server/build/index.js",

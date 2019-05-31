@@ -33,6 +33,7 @@ describe('Cars', () => {
         .type('form')
         .set('x-auth', token)
         .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
+        .set('Content-Type', 'image/jpeg')
         .field('status', 'available')
         .field('price', '')
         .field('state', 'new')

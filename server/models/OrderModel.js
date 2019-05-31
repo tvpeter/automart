@@ -23,5 +23,24 @@ class OrderModel {
     this.orders.push(newOrder);
     return newOrder;
   }
+
+  /**
+   * @param {Number} orderId
+   * @param {Number} newPrice
+   * @returns {Object}
+   */
+  updateOrderPrice(orderId, newPrice) {
+    const order = this.getSingleOrder(orderId);
+    order.priceOffered = parseFloat(newPrice);
+    return order;
+  }
+
+  /**
+   * @param {Number} orderId
+   * @returns {Object}
+   */
+  getSingleOrder(orderId) {
+    return this.orders.find(order => parseInt(order.id, 10) === parseInt(orderId, 10));
+  }
 }
 export default new OrderModel();

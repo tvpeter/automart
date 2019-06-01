@@ -1,4 +1,5 @@
 # Automart
+[![Coverage Status](https://coveralls.io/repos/github/tvpeter/automart/badge.svg?branch=develop)](https://coveralls.io/github/tvpeter/automart?branch=develop)
 
 Automart is an online marketplace for automobiles of diverse makes, model or body type, where users can sell their cars or buy from trusted dealearships or private sellers.
 

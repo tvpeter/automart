@@ -6,6 +6,8 @@ import CarModel from '../../models/CarModel';
 import UserModel from '../../models/UserModel';
 import generateToken from '../../lib/generateToken';
 import usersData from '../usersData';
+import ordersData from '../ordersData';
+import OrderModel from '../../models/OrderModel';
 
 
 const { expect } = chai;
@@ -33,11 +35,11 @@ describe('Order transaction', () => {
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.data).to.have.property('id');
-          expect(res.body.data).to.have.property('car_id').eq(data.carId);
+          expect(res.body.data).to.have.property('carId').eq(data.carId);
           expect(res.body.data.price).to.eq(data.price);
           expect(res.body.data.priceOffered).to.eq(data.priceOffered);
-          expect(res.body.data.owner).to.eq(data.sellerId);
-          expect(res.body.data.buyer).to.eq(data.buyerId);
+          expect(res.body.data.sellerId).to.eq(data.sellerId);
+          expect(res.body.data.buyerId).to.eq(data.buyerId);
           done();
         });
     });
@@ -177,6 +179,144 @@ describe('Order transaction', () => {
         .end((err, res) => {
           expect(res.status).to.eq(401);
           expect(res.body.message).to.eq('No authorization token provided');
+          done();
+        });
+    });
+  });
+  describe('Seller update order price while status is still pending', () => {
+    it('should update the price ', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      ordersData[0].buyerId = user.id;
+
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      const newPrice = parseInt(ordersData[0].price, 10);
+      const data = {
+        orderId: ordersData[0].id,
+        newPrice,
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.priceOffered).to.eq(data.newPrice);
+          expect(res.body.data.buyerId).to.eq(user.id);
+          done();
+        });
+    });
+    it('should return error 400 if newprice is not stated ', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      ordersData[0].buyerId = user.id;
+
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      const data = {
+        orderId: ordersData[0].id,
+        newPrice: '',
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('Ensure to send the order id and new price');
+          done();
+        });
+    });
+    it('should return error 400 if order id is not supplied ', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      ordersData[0].buyerId = user.id;
+
+      user.isAdmin = false;
+      const newPrice = parseInt(ordersData[0].price, 10);
+      const token = generateToken(user.id, user.isAdmin);
+      const data = {
+        orderId: '',
+        newPrice,
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('Ensure to send the order id and new price');
+          done();
+        });
+    });
+    it('should return error 404 if order is not found', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      ordersData[0].buyerId = user.id;
+
+      user.isAdmin = false;
+      const newPrice = parseInt(ordersData[0].price, 10);
+      const token = generateToken(user.id, user.isAdmin);
+      const data = {
+        orderId: '6667778889990',
+        newPrice,
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          // eslint-disable-next-line no-unused-expressions
+          expect(err).to.be.null;
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Check that the order is still pending');
+          done();
+        });
+    });
+    it('should return error 404 if order is no longer pending', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      ordersData[0].buyerId = user.id;
+
+      user.isAdmin = false;
+      const newPrice = parseInt(ordersData[0].price, 10);
+      const token = generateToken(user.id, user.isAdmin);
+      ordersData[0].status = 'Rejected';
+      const data = {
+        orderId: ordersData[0].id,
+        newPrice,
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          // eslint-disable-next-line no-unused-expressions
+          expect(err).to.be.null;
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Check that the order is still pending');
+          done();
+        });
+    });
+    it('should return error 400 if old and new prices are the same ', (done) => {
+      carsData[0].owner = usersData[1].id;
+      CarModel.cars = carsData;
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+
+      user.isAdmin = false;
+      ordersData[0].status = 'pending';
+      const token = generateToken(user.id, user.isAdmin);
+      const data = {
+        orderId: ordersData[0].id,
+        newPrice: ordersData[0].priceOffered,
+      };
+      chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('The new offered price and the old are the same');
           done();
         });
     });

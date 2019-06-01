@@ -76,6 +76,9 @@ router.delete('/car/:id', adminAuth, Car.deleteAd);
 // user make an order
 router.post('/order', auth, Order.create);
 
+// seller update offer price
+router.patch('/order', auth, Order.updatePrice);
+
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 
 export default router;

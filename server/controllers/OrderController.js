@@ -36,7 +36,6 @@ const Order = {
     const buyerId = req.userId;
 
 
-    // checks if the user is active
     const seller = UserModel.getUser(car.owner);
     if (!seller) {
       return res.status(404).send({
@@ -44,6 +43,7 @@ const Order = {
         message: 'Unverified seller. Kindly check back',
       });
     }
+    // checks if the user is active
     if (seller.status !== 'active') {
       return res.status(412).send({
         status: 412,
@@ -52,6 +52,7 @@ const Order = {
     }
     const order = OrderModel.createOrder({
       buyerId,
+      sellerId: car.owner,
       carId: req.body.carId,
       price: car.price,
       priceOffered: req.body.priceOffered,
@@ -60,14 +61,55 @@ const Order = {
       status: 200,
       data: {
         id: order.id,
-        car_id: req.body.carId,
-        created_on: order.date,
+        carId: req.body.carId,
+        date: order.date,
         status: order.status,
         price: order.price,
         priceOffered: order.priceOffered,
-        owner: seller.id,
-        buyer: buyerId,
+        sellerId: seller.id,
+        buyerId,
       },
+    });
+  },
+  updatePrice(req, res) {
+    // check that req contains the new price and orderid
+    if (!req.body.orderId || !req.body.newPrice) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Ensure to send the order id and new price',
+      });
+    }
+    // check that the order exist and status is still pending
+    const order = OrderModel.getSingleOrder(req.body.orderId);
+    if (!order || order.status.toLowerCase() !== 'pending') {
+      return res.status(404).send({
+        status: 404,
+        message: 'Check that the order is still pending',
+      });
+    }
+
+    // check that the request is coming from the buyer
+    const buyer = req.userId;
+
+    if (parseInt(buyer, 10) !== parseInt(order.buyerId, 10)) {
+      return res.status(403).send({
+        status: 403,
+        message: 'You dont have the permission to modify this order',
+      });
+    }
+
+    // check that the new price is diff from the former
+    if (parseFloat(req.body.newPrice) === parseFloat(order.priceOffered)) {
+      return res.status(400).send({
+        status: 400,
+        message: 'The new offered price and the old are the same',
+      });
+    }
+    // update the price and return the response
+    const updatedPriceOrder = OrderModel.updateOrderPrice(req.body.orderId, req.body.newPrice);
+    return res.status(200).send({
+      status: 200,
+      data: updatedPriceOrder,
     });
   },
 };

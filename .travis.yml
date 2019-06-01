@@ -8,4 +8,5 @@ cache:
 notifications:
   email: false
 scripts:
-  - npm run coverage
+  - npm test
+after_success: npm run coverage

@@ -67,3 +67,4 @@ UI/images/.DS_Store
 
 # coveralls
 .coveralls.yml
+lcov.info

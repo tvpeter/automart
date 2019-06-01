@@ -1,4 +1,6 @@
 # Automart
+[![Build Status](https://travis-ci.com/tvpeter/automart.svg?branch=develop)](https://travis-ci.com/tvpeter/automart)
+
 [![Coverage Status](https://coveralls.io/repos/github/tvpeter/automart/badge.svg)](https://coveralls.io/github/tvpeter/automart)
 
 

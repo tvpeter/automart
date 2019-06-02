@@ -11,6 +11,12 @@ addons:
   code_climate:
     repo_token:
       secure: CzOFVePWTzhscwl5MPxMDfCx2X0ezjJlPAyxFXfwC+T0NvPRIsY96QEi6tMJoeZkGJAI/l6p8c1CJJTfsiwTz1TyylgGqJ1xO+Qdz7E2PlVuF8the+1YDGzgPcNtOhjGAAOFQWHvr9opKcsmHUrmQ8ggZ18OQKx+tlUFbAN4Y+Y5lKDYA3neibtHxZlDERL9Xk0RXUdMaB+Gjow1izVg/WYxO15I0cwNSCaaw5K2+blLNrP0sCGB5XdtbsD8DszUm+dIHo9Ocl1AOMyuq1NDBted5ufc/ok6SAEDPZCOf89IAgcUqr5dN8DAGETH+96BVHno/ewm/QDt8RN9fA4/xmbggBg+kDL9so+bpGpuAXShcU4wqMImA9ivuMqiNoKVbI6i9yV2NKqQEI0bPSWIYU1AZoSuN1UeoUdjJ6gFgAskq6LJoaXfIEyYeUYRYArXhiM/dXGPaxJaj2jSB8T8gAtx+1LK649AjSijcohTs13dDcVNUAdqdyAjpvrKCJPOeDIvyNGAlt04WJSJg8A5DZGz/0NWrvgle9Wzl1GeKl9M/VOmUe9mC4fwj/TPvPLAV5H4Hl/8NFeMqz7W0xSjUpbESqemVIKVOTU6SAF8EXG0Gs18YpxmVoHFCZdI2qgCjoTNSmKRQfRnbzb6yp+mY355r1BxVCyZpczS9wNRUiA=
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 scripts:
 - npm test
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success: npm run coverage

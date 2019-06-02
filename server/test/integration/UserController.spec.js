@@ -29,8 +29,11 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(userDetails).end((err, res) => {
         expect(res.status).to.eq(201);
-        expect(res.body.data).to.have.property('email').eq(userDetails.email);
-        expect(res.body.data).to.have.property('phone').eq(userDetails.phone);
+        expect(res.body.data.email).to.eq(userDetails.email);
+        expect(res.body.data.phone).to.eq(userDetails.phone);
+        expect(res.body.data.address).to.eq(userDetails.address);
+        expect(res.body.data.account_number).to.eq(userDetails.account_number);
+        expect(res.body.data.bank).to.eq(userDetails.bank);
         done();
       });
     });

@@ -5,6 +5,7 @@ import Car from '../controllers/CarController';
 import auth from '../middleware/auth';
 import adminAuth from '../middleware/admin';
 import Order from '../controllers/OrderController';
+import Flag from '../controllers/FlagController';
 
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
@@ -79,6 +80,8 @@ router.post('/order', auth, Order.create);
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
 
+// flag an ad
+router.post('/flag', auth, Flag.createFlag);
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 
 export default router;

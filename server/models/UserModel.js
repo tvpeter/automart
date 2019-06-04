@@ -60,6 +60,20 @@ class UserModel {
   getUser(userid) {
     return this.users.find(user => user.id === parseInt(userid, 10));
   }
+
+  /**
+   *@description Returns an active user by specified property
+   * @param {} ppty [id, email, phone]
+   * @param {*} val
+   * @returns {Object} User object;
+   */
+  isUserActive(ppty, val) {
+    const user = (ppty.toLowerCase() === 'id') ? this.getUser(val) : this.findByProperty(ppty, val);
+    if (!user || user.status.toLowerCase() !== 'active') {
+      return false;
+    }
+    return user;
+  }
 }
 
 export default new UserModel();

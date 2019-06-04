@@ -26,8 +26,8 @@ const User = {
       });
     }
 
-    if (req.body.email.length >= 30 || req.body.first_name.length >= 30
-      || req.body.last_name.length >= 30 || req.body.password.length < 6) {
+    if (req.body.password.length < 6 || req.body.email.length >= 30
+      || req.body.first_name.length >= 30 || req.body.last_name.length >= 30) {
       return res.status(400).send({
         status: 400,
         message: 'Ensure password is atleast 6 characters, name and email not more than 30 characters',
@@ -82,11 +82,11 @@ const User = {
         message: 'Invalid login credentials',
       });
     }
-    const user = UserModel.findByProperty('email', req.body.email);
-    if (!user || user.status !== 'active') {
+    const user = UserModel.isUserActive('email', req.body.email);
+    if (!user) {
       return res.status(404).send({
         status: 404,
-        message: 'Invalid login credentials/inactive account',
+        message: 'Invalid login credentials',
       });
     }
     delete req.headers['x-auth'];
@@ -105,22 +105,22 @@ const User = {
       });
     }
 
-    const token = generateToken(user.id, user.isAdmin);
-    user.token = token;
-    return res.status(200).header('x-auth', token).send({
+    user.token = generateToken(user.id, user.isAdmin);
+    return res.status(200).header('x-auth', user.token).send({
       status: 200,
       data: user,
     });
   },
 
   async changePassword(req, res) {
-    if (!req.body.currentPassword || !req.body.newPassword) {
+    const { userId } = req;
+    const updatePasswordParams = ['currentPassword', 'newPassword'];
+    if (validateData(updatePasswordParams, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Fill the required fields',
       });
     }
-    const { userId } = req;
     const user = UserModel.getUser(userId);
     if (!user) {
       return res.status(404).send({

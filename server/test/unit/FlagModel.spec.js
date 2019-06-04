@@ -21,6 +21,8 @@ describe('Flag model', () => {
       expect(newFlag).to.have.property('status').eq('pending');
       expect(newFlag).to.have.property('reportedBy').eq(data.reportedBy);
       expect(newFlag).to.have.property('severity').eq('minor');
+      expect(newFlag).to.have.property('reason');
+      expect(newFlag).to.have.property('description');
       expect(flags.length).to.be.greaterThan(0);
       done();
     });

@@ -12,8 +12,9 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
+    const requiredProperties = ['owner', 'state', 'status', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
-    if (validatenewCar(req.body)) {
+    if (validatenewCar(requiredProperties, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Fill all required fields',

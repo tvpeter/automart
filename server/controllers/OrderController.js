@@ -1,53 +1,33 @@
 import CarModel from '../models/CarModel';
 import UserModel from '../models/UserModel';
 import OrderModel from '../models/OrderModel';
+import validatenewCar from '../lib/validateData';
+
 
 const Order = {
   create(req, res) {
-    if (!req.body.carId || !req.body.priceOffered) {
-      return res.status(412).send({
-        status: 412,
+    const requiredParams = ['carId', 'priceOffered'];
+    if (validatenewCar(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+      return res.status(400).send({
+        status: 400,
         message: 'Select car and state amount you want to pay',
       });
     }
-    // check whether the car id is valid
-    if (req.body.carId.toString().length !== 13) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid ad id',
-      });
-    }
-
     // verify the car and its status
     const car = CarModel.findSingle(req.body.carId);
-    if (!car) {
+    if (!car || car.status.toLowerCase() !== 'available') {
       return res.status(404).send({
         status: 404,
-        message: 'This car is no longer available',
-      });
-    }
-
-    if (car.status.toLowerCase() !== 'available') {
-      return res.status(403).send({
-        status: 403,
-        message: 'The car is not available for purchase now',
+        message: 'This car is not available for purchase',
       });
     }
     const buyerId = req.userId;
 
-
     const seller = UserModel.getUser(car.owner);
-    if (!seller) {
+    if (!seller || seller.status !== 'active') {
       return res.status(404).send({
-        status: 404,
-        message: 'Unverified seller. Kindly check back',
-      });
-    }
-    // checks if the user is active
-    if (seller.status !== 'active') {
-      return res.status(412).send({
         status: 412,
-        message: 'The seller is not permitted transactions',
+        message: 'Unverified seller. Kindly check back',
       });
     }
     const order = OrderModel.createOrder({

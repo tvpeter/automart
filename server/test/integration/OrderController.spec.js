@@ -43,7 +43,7 @@ describe('Order transaction', () => {
           done();
         });
     });
-    it('should return error 412 if carId or price is not supplied', (done) => {
+    it('should return error 400 if carId or price is not supplied', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
       UserModel.users = usersData;
@@ -60,7 +60,7 @@ describe('Order transaction', () => {
       };
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(data)
         .end((err, res) => {
-          expect(res.status).to.eq(412);
+          expect(res.status).to.eq(400);
           expect(res.body.message).to.eq('Select car and state amount you want to pay');
           done();
         });
@@ -84,7 +84,7 @@ describe('Order transaction', () => {
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(data)
         .end((err, res) => {
           expect(res.status).to.eq(400);
-          expect(res.body.message).to.eq('Invalid ad id');
+          expect(res.body.message).to.eq('Select car and state amount you want to pay');
           done();
         });
     });
@@ -107,11 +107,11 @@ describe('Order transaction', () => {
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(data)
         .end((err, res) => {
           expect(res.status).to.eq(404);
-          expect(res.body.message).to.eq('This car is no longer available');
+          expect(res.body.message).to.eq('This car is not available for purchase');
           done();
         });
     });
-    it('should return error 403 if car status is not == available', (done) => {
+    it('should return error 404 if car status is not == available', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
       UserModel.users = usersData;
@@ -130,12 +130,12 @@ describe('Order transaction', () => {
       };
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(data)
         .end((err, res) => {
-          expect(res.status).to.eq(403);
-          expect(res.body.message).to.eq('The car is not available for purchase now');
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('This car is not available for purchase');
           done();
         });
     });
-    it('should return 412 if seller is not active', (done) => {
+    it('should return 404 if seller is not active', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
       UserModel.users = usersData;
@@ -155,8 +155,8 @@ describe('Order transaction', () => {
       };
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(data)
         .end((err, res) => {
-          expect(res.status).to.eq(412);
-          expect(res.body.message).to.eq('The seller is not permitted transactions');
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Unverified seller. Kindly check back');
           done();
         });
     });

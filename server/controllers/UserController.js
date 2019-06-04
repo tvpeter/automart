@@ -2,6 +2,7 @@ import UserModel from '../models/UserModel';
 import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
+import validatenewCar from '../lib/validateData';
 
 const User = {
   /*
@@ -10,6 +11,13 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
+    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank'];
+    if (validatenewCar(requiredProperties, req.body)) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Fill all required fields',
+      });
+    }
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       return res.status(400).send({
         status: 400,
@@ -21,22 +29,6 @@ const User = {
       return res.status(400).send({
         status: 400,
         message: 'Invalid / empty email supplied',
-      });
-    }
-
-    if (
-      !req.body.email
-      || !req.body.first_name
-      || !req.body.last_name
-      || !req.body.password
-      || !req.body.address
-      || !req.body.phone
-      || !req.body.account_number
-      || !req.body.bank
-    ) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Fill all required fields',
       });
     }
 
@@ -88,9 +80,11 @@ const User = {
 
   getAll(req, res) {
     const users = UserModel.getAllUsers();
-    return res.status(200).send(users);
+    return res.status(200).send({
+      status: 200,
+      data: users,
+    });
   },
-
 
   async signIn(req, res) {
     if (!req.body.email || !req.body.password) {

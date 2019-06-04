@@ -7,7 +7,7 @@ class Flag {
     const newFlag = {
       id: Date.now(),
       carId: data.carId,
-      createdOn: new Date().toLocaleString(),
+      created_on: new Date().toLocaleString(),
       reason: data.reason || '',
       description: data.description || '',
       reportedBy: data.reportedBy || '',

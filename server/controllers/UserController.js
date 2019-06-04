@@ -65,7 +65,6 @@ const User = {
     });
   },
 
-
   getAll(req, res) {
     const users = UserModel.getAllUsers();
     return res.status(200).send({
@@ -75,13 +74,13 @@ const User = {
   },
 
   async signIn(req, res) {
+    delete req.headers['x-auth'];
     if (validateData(['email', 'password'], req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Invalid login credentials',
       });
     }
-    delete req.headers['x-auth'];
     const user = UserModel.isUserActive('email', req.body.email);
     if (!user) {
       return res.status(404).send({
@@ -106,7 +105,7 @@ const User = {
 
   async changePassword(req, res) {
     const { userId } = req;
-    if (validateData(['currentPassword', 'newPassword'], req.body)) {
+    if (!req.body.currentPassword || !req.body.newPassword) {
       return res.status(400).send({
         status: 400,
         message: 'Fill the required fields',

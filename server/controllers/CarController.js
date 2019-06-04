@@ -1,6 +1,7 @@
 import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import CarModel from '../models/CarModel';
+import validatenewCar from '../lib/validateData';
 
 dotenv.config();
 cloudinary.v2.config({
@@ -11,27 +12,15 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
-    if (!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price
-      || !req.body.model || !req.body.body_type) {
+    req.body.owner = req.userId;
+    if (validatenewCar(req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Fill all required fields',
       });
     }
 
-    const owner = req.userId;
-    const newCarData = {
-      owner,
-      state: req.body.state,
-      status: req.body.status,
-      price: req.body.price,
-      manufacturer: req.body.manufacturer,
-      model: req.body.model,
-      body_type: req.body.body_type,
-      description: req.body.description,
-    };
-
-    const checkInDb = CarModel.similarUserCar(owner, newCarData);
+    const checkInDb = CarModel.similarUserCar(req.body.owner, req.body);
     if (checkInDb) {
       return res.status(400).send({
         status: 400,
@@ -49,16 +38,16 @@ const Car = {
         folder: 'automart/',
         format: 'png',
       });
-      newCarData.img = image.url;
+      req.body.img = image.url;
 
-      const newCar = CarModel.createCar(newCarData);
+      const newCar = CarModel.createCar(req.body);
       return res.status(201).send({
         status: 201,
         data: newCar,
       });
     } catch (err) {
       return res.status(400).send({
-        status: 400,
+        status: 500,
         message: 'There\'s problem uploading your image, try again',
       });
     }
@@ -149,12 +138,10 @@ const Car = {
         message: 'You do not have the permission to update this data',
       });
     }
-    let updatedCar;
-    if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
-      updatedCar = CarModel.completeUpdate(req.body.id, req.body);
-    } else {
-      updatedCar = CarModel.updateAdStatus(req.body.id, req.body);
-    }
+    const updatedCar = (parseInt(userId, 10) === parseInt(car.owner, 10))
+      ? CarModel.completeUpdate(req.body.id, req.body)
+      : CarModel.updateAdStatus(req.body.id, req.body);
+
     return res.status(200).send({
       status: 200,
       data: updatedCar,
@@ -181,13 +168,6 @@ const Car = {
   },
 
   deleteAd(req, res) {
-    if (!req.params.id) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid request',
-      });
-    }
-
     const car = CarModel.findSingle(req.params.id);
     if (!car) {
       return res.status(404).send({

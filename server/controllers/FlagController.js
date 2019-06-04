@@ -5,16 +5,16 @@ import validateData from '../lib/validateData';
 const Flag = {
   createFlag(req, res) {
     req.body.reportedBy = req.userId;
-    const reqProperties = ['carId', 'reason', 'reportedBy'];
-    if (validateData(reqProperties, req.body)) {
+    const flagsReqs = ['carId', 'reason', 'reportedBy'];
+    if (validateData(flagsReqs, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Ensure to indicate the ad id and reason for the report',
       });
     }
 
-    const car = CarModel.findSingle(req.body.carId);
-    if (!car || car.status.toLowerCase() !== 'available') {
+    const cartoFlag = CarModel.findSingle(req.body.carId);
+    if (!cartoFlag || cartoFlag.status.toLowerCase() !== 'available') {
       return res.status(404).send({
         status: 404,
         message: 'The ad is not longer active. Thank you.',

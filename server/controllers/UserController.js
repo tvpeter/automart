@@ -75,13 +75,13 @@ const User = {
   },
 
   async signIn(req, res) {
-    const loginParams = ['email', 'password'];
-    if (validateData(loginParams, req.body)) {
+    if (validateData(['email', 'password'], req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Invalid login credentials',
       });
     }
+    delete req.headers['x-auth'];
     const user = UserModel.isUserActive('email', req.body.email);
     if (!user) {
       return res.status(404).send({
@@ -89,19 +89,11 @@ const User = {
         message: 'Invalid login credentials',
       });
     }
-    delete req.headers['x-auth'];
-    try {
-      const validPassword = await comparePassword(req.body.password, user.password);
-      if (!validPassword) {
-        return res.status(401).send({
-          status: 401,
-          message: 'Wrong username/password',
-        });
-      }
-    } catch (tokenError) {
-      return res.status(500).send({
-        status: 500,
-        message: 'Oh, something went wrong, try again',
+    const validPassword = await comparePassword(req.body.password, user.password);
+    if (!validPassword) {
+      return res.status(401).send({
+        status: 401,
+        message: 'Wrong username/password',
       });
     }
 
@@ -114,8 +106,7 @@ const User = {
 
   async changePassword(req, res) {
     const { userId } = req;
-    const updatePasswordParams = ['currentPassword', 'newPassword'];
-    if (validateData(updatePasswordParams, req.body)) {
+    if (validateData(['currentPassword', 'newPassword'], req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Fill the required fields',

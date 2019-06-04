@@ -1,5 +1,5 @@
 # Automart
-[![Build Status](https://travis-ci.com/tvpeter/automart.svg?branch=develop)](https://travis-ci.com/tvpeter/automart) [![Coverage Status](https://coveralls.io/repos/github/tvpeter/automart/badge.svg)](https://coveralls.io/github/tvpeter/automart) [![Maintainability](https://api.codeclimate.com/v1/badges/f44f0d79ee6af7ddd67b/maintainability)](https://codeclimate.com/github/tvpeter/automart/maintainability)
+[![Build Status](https://travis-ci.com/tvpeter/automart.svg?branch=develop)](https://travis-ci.com/tvpeter/automart) [![Coverage Status](https://coveralls.io/repos/github/tvpeter/automart/badge.svg?branch=develop)](https://coveralls.io/github/tvpeter/automart?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/f44f0d79ee6af7ddd67b/maintainability)](https://codeclimate.com/github/tvpeter/automart/maintainability)
 
 
 Automart is an online marketplace for automobiles of diverse makes, model or body type, where users can sell their cars or buy from trusted dealearships or private sellers.

@@ -60,4 +60,16 @@ describe('User Model', () => {
       expect(user).to.have.property('first_name').eq(usersdata[0].first_name);
     });
   });
+  describe('Make User Admin', () => {
+    it('should make a user an admin', () => {
+      UserModel.users = usersdata;
+      usersdata[0].isAdmin = false;
+
+      const userId = usersdata[0].id;
+      const newAdmin = UserModel.makeUserAdmin(userId);
+      expect(newAdmin).to.be.an('Object');
+      // eslint-disable-next-line no-unused-expressions
+      expect(newAdmin.isAdmin).to.be.true;
+    });
+  });
 });

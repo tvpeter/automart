@@ -133,7 +133,20 @@ const User = {
       data: updatedUserDetails,
     });
   },
-
+  makeAdmin(req, res) {
+    const user = UserModel.isUserActive('id', req.params.id);
+    if (!user) {
+      return res.status(412).send({
+        status: 412,
+        message: 'User not found or inactive',
+      });
+    }
+    const newAdmin = UserModel.makeUserAdmin(user.id);
+    return res.status(200).send({
+      status: 200,
+      data: newAdmin,
+    });
+  },
 };
 
 export default User;

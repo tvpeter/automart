@@ -74,6 +74,16 @@ class UserModel {
     }
     return user;
   }
+
+  /**
+   * @param {Number}
+   * @returns {Object}
+   */
+  makeUserAdmin(userId) {
+    const user = this.getUser(userId);
+    user.isAdmin = true;
+    return user;
+  }
 }
 
 export default new UserModel();

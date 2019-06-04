@@ -14,8 +14,8 @@ const Order = {
       });
     }
     // verify the car and its status
-    const car = CarModel.findSingle(req.body.carId);
-    if (!car || car.status.toLowerCase() !== 'available') {
+    const car = CarModel.carIsEligible(req.body.carId);
+    if (!car) {
       return res.status(404).send({
         status: 404,
         message: 'This car is not available for purchase',

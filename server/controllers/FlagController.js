@@ -13,8 +13,8 @@ const Flag = {
       });
     }
 
-    const cartoFlag = CarModel.findSingle(req.body.carId);
-    if (!cartoFlag || cartoFlag.status.toLowerCase() !== 'available') {
+    const cartoFlag = CarModel.carIsEligible(req.body.carId);
+    if (!cartoFlag) {
       return res.status(404).send({
         status: 404,
         message: 'The ad is not longer active. Thank you.',

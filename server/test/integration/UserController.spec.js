@@ -70,7 +70,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Fill all required fields');
+        expect(res.body.message).to.eq('Fill all required fields with a valid email address');
         done();
       });
     });
@@ -78,17 +78,18 @@ describe('User', () => {
     it('should return error if invalid email address is supplied', (done) => {
       const data = {
         email: 'peter.gmail.com',
-        first_name: 'Anthonia',
+        first_name: 'Karmanis',
+        last_name: 'Valec',
         password: 'password',
+        password_confirmation: 'password',
         address: 'my address',
-        phone: '08137277480',
+        phone: '087687765435',
         account_number: '2081769837',
         bank: 'UBA',
-        password_confirmation: 'password',
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Invalid / empty email supplied');
+        expect(res.body.message).to.eq('Fill all required fields with a valid email address');
         done();
       });
     });
@@ -107,7 +108,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Password is too short');
+        expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
         done();
       });
     });
@@ -126,7 +127,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Name or email is too long');
+        expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
         done();
       });
     });
@@ -272,6 +273,37 @@ describe('User', () => {
           expect(res.body.message).to.eq('No authorization token provided');
           done();
         });
+    });
+  });
+
+  // admin get all users
+  describe('get all users', () => {
+    it('should return all registered users', async () => {
+      usersArray();
+      const user = usersData[1];
+      user.isAdmin = true;
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).get('/api/v1/users').set('x-auth', token).end((err, res) => {
+        expect(res.status).to.eq(200);
+        expect(res.body.data).to.be.an('Array');
+      });
+    });
+    it('should return error 401 if user is not admin', async () => {
+      usersArray();
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).get('/api/v1/users').set('x-auth', token).end((err, res) => {
+        expect(res.status).to.eq(401);
+        expect(res.body.message).to.eq('You dont have the permission to access this resource');
+      });
+    });
+    it('should return error 401 if user is not logged in', () => {
+      usersArray();
+      chai.request(server).get('/api/v1/users').end((err, res) => {
+        expect(res.status).to.eq(401);
+        expect(res.body.message).to.eq('No authorization token provided');
+      });
     });
   });
 });

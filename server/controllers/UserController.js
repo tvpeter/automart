@@ -2,6 +2,7 @@ import UserModel from '../models/UserModel';
 import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
+import validatenewCar from '../lib/validateData';
 
 const User = {
   /*
@@ -10,6 +11,14 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
+    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation'];
+
+    if (validatenewCar(requiredProperties, req.body) || !validEmail(req.body.email)) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Fill all required fields with a valid email address',
+      });
+    }
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
       return res.status(400).send({
         status: 400,
@@ -17,40 +26,11 @@ const User = {
       });
     }
 
-    if (!validEmail(req.body.email)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid / empty email supplied',
-      });
-    }
-
-    if (
-      !req.body.email
-      || !req.body.first_name
-      || !req.body.last_name
-      || !req.body.password
-      || !req.body.address
-      || !req.body.phone
-      || !req.body.account_number
-      || !req.body.bank
-    ) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Fill all required fields',
-      });
-    }
-
-    if (req.body.password.length < 6) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Password is too short',
-      });
-    }
     if (req.body.email.length >= 30 || req.body.first_name.length >= 30
-      || req.body.last_name.length >= 30) {
+      || req.body.last_name.length >= 30 || req.body.password.length < 6) {
       return res.status(400).send({
         status: 400,
-        message: 'Name or email is too long',
+        message: 'Ensure password is atleast 6 characters, name and email not more than 30 characters',
       });
     }
     const checkEmailInDb = UserModel.findByProperty('email', req.body.email);
@@ -88,9 +68,11 @@ const User = {
 
   getAll(req, res) {
     const users = UserModel.getAllUsers();
-    return res.status(200).send(users);
+    return res.status(200).send({
+      status: 200,
+      data: users,
+    });
   },
-
 
   async signIn(req, res) {
     if (!req.body.email || !req.body.password) {

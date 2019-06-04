@@ -35,7 +35,7 @@ const router = express.Router();
 // user signup
 router.post('/auth/signup', User.create);
 
-// users
+// admin get all users
 router.get('/users', adminAuth, User.getAll);
 
 // user login

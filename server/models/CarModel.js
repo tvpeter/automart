@@ -137,6 +137,15 @@ class Car {
     const addIndex = this.cars.indexOf(car);
     return this.cars.splice(addIndex, 1);
   }
+
+  carIsEligible(carId) {
+    const car = this.findSingle(carId);
+
+    if (!car || car.status.toLowerCase() !== 'available') {
+      return false;
+    }
+    return car;
+  }
 }
 
 export default new Car();

@@ -1,24 +1,25 @@
 import CarModel from '../models/CarModel';
 import FlagModel from '../models/FlagModel';
+import validateData from '../lib/validateData';
 
 const Flag = {
   createFlag(req, res) {
-    if (!req.body.carId || !req.body.reason) {
+    req.body.reportedBy = req.userId;
+    const flagsReqs = ['carId', 'reason', 'reportedBy'];
+    if (validateData(flagsReqs, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Ensure to indicate the ad id and reason for the report',
       });
     }
 
-    const car = CarModel.findSingle(req.body.carId);
-    if (!car || car.status.toLowerCase() !== 'available') {
+    const cartoFlag = CarModel.carIsEligible(req.body.carId);
+    if (!cartoFlag) {
       return res.status(404).send({
         status: 404,
         message: 'The ad is not longer active. Thank you.',
       });
     }
-    req.body.reportedBy = req.userId;
-    // state the report severity level
     if (req.body.reason.toLowerCase() === 'fake' || req.body.reason.toLowerCase() === 'stolen' || req.body.reason === 'suspicious') {
       req.body.severity = 'extreme';
     }

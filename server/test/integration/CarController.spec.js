@@ -92,7 +92,7 @@ describe('Cars', () => {
       };
       chai.request(server).post(adUrl).set('x-auth', token).send(data)
         .end((err, res) => {
-          expect(res.body.message).to.eq('Upload images for your product');
+          expect(res.body.message).to.eq('Fill all required fields');
           expect(res.status).to.eq(400);
           done();
         });

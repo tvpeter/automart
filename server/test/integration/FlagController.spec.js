@@ -28,7 +28,7 @@ describe('Flags controller', () => {
       const data = {
         carId: carsData[0].id,
         reason: 'Wrong Description',
-        description: 'Weird description of the car by the owner',
+        description: 'The car description is misleading',
         reportedBy: user.id,
       };
       chai.request(server).post('/api/v1/flag').set('x-auth', token).send(data)

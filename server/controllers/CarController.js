@@ -12,9 +12,9 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
-    const requiredProperties = ['owner', 'state', 'status', 'price', 'manufacturer', 'model', 'body_type', 'description'];
+    const requiredFields = ['owner', 'state', 'status', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
-    if (validatenewCar(requiredProperties, req.body)) {
+    if (validatenewCar(requiredFields, req.body) || !req.file) {
       return res.status(400).send({
         status: 400,
         message: 'Fill all required fields',
@@ -28,26 +28,19 @@ const Car = {
         message: 'You have a similar unsold car',
       });
     }
-    if (!req.file) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Upload images for your product',
-      });
-    }
     try {
       const image = await cloudinary.uploader.upload(req.file.path, {
         folder: 'automart/',
         format: 'png',
       });
       req.body.img = image.url;
-
       const newCar = CarModel.createCar(req.body);
       return res.status(201).send({
         status: 201,
         data: newCar,
       });
     } catch (err) {
-      return res.status(400).send({
+      return res.status(500).send({
         status: 500,
         message: 'There\'s problem uploading your image, try again',
       });

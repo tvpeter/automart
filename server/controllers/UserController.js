@@ -11,11 +11,12 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
-    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank'];
-    if (validatenewCar(requiredProperties, req.body)) {
+    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation'];
+
+    if (validatenewCar(requiredProperties, req.body) || !validEmail(req.body.email)) {
       return res.status(400).send({
         status: 400,
-        message: 'Fill all required fields',
+        message: 'Fill all required fields with a valid email address',
       });
     }
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
@@ -25,24 +26,11 @@ const User = {
       });
     }
 
-    if (!validEmail(req.body.email)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid / empty email supplied',
-      });
-    }
-
-    if (req.body.password.length < 6) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Password is too short',
-      });
-    }
     if (req.body.email.length >= 30 || req.body.first_name.length >= 30
-      || req.body.last_name.length >= 30) {
+      || req.body.last_name.length >= 30 || req.body.password.length < 6) {
       return res.status(400).send({
         status: 400,
-        message: 'Name or email is too long',
+        message: 'Ensure password is atleast 6 characters, name and email not more than 30 characters',
       });
     }
     const checkEmailInDb = UserModel.findByProperty('email', req.body.email);

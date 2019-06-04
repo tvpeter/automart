@@ -70,7 +70,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Fill all required fields');
+        expect(res.body.message).to.eq('Fill all required fields with a valid email address');
         done();
       });
     });
@@ -89,7 +89,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Invalid / empty email supplied');
+        expect(res.body.message).to.eq('Fill all required fields with a valid email address');
         done();
       });
     });
@@ -108,7 +108,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Password is too short');
+        expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
         done();
       });
     });
@@ -127,7 +127,7 @@ describe('User', () => {
       };
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Name or email is too long');
+        expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
         done();
       });
     });

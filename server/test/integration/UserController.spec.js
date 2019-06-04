@@ -306,4 +306,60 @@ describe('User', () => {
       });
     });
   });
+  describe('Admin make user admin', () => {
+    it('Should make a user an admin', async () => {
+      usersArray();
+      usersData[0].isAdmin = false;
+      const newAdmin = usersData[0];
+      usersData[2].isAdmin = true;
+      const user = usersData[2];
+
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/user/${newAdmin.id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data).to.have.property('id').eq(newAdmin.id);
+          // eslint-disable-next-line no-unused-expressions
+          expect(res.body.data).to.have.property('isAdmin').to.be.true;
+        });
+    });
+    it('Should error 401 if admin is not logged in', () => {
+      usersArray();
+      usersData[0].isAdmin = false;
+      const newAdmin = usersData[0];
+
+      chai.request(server).patch(`/api/v1/user/${newAdmin.id}`)
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+        });
+    });
+    it('Should return error 412 if user is not found', async () => {
+      usersArray();
+      usersData[2].isAdmin = true;
+      const user = usersData[2];
+
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).patch('/api/v1/user/1212121212121').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(412);
+          expect(res.body.message).to.eq('User not found or inactive');
+        });
+    });
+    it('Should return error 412 if user is not active', async () => {
+      usersArray();
+      usersData[0].isAdmin = false;
+      usersData[0].status = 'suspended';
+      const newAdmin = usersData[0];
+      usersData[2].isAdmin = true;
+      const user = usersData[2];
+
+      const token = await generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/user/${newAdmin.id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(412);
+          expect(res.body.message).to.eq('User not found or inactive');
+        });
+    });
+  });
 });

@@ -2,7 +2,7 @@ import UserModel from '../models/UserModel';
 import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
-import validatenewCar from '../lib/validateData';
+import validateData from '../lib/validateData';
 
 const User = {
   /*
@@ -13,7 +13,7 @@ const User = {
   async create(req, res) {
     const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation'];
 
-    if (validatenewCar(requiredProperties, req.body) || !validEmail(req.body.email)) {
+    if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
       return res.status(400).send({
         status: 400,
         message: 'Fill all required fields with a valid email address',
@@ -75,23 +75,18 @@ const User = {
   },
 
   async signIn(req, res) {
-    if (!req.body.email || !req.body.password) {
+    const loginParams = ['email', 'password'];
+    if (validateData(loginParams, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Invalid login credentials',
       });
     }
     const user = UserModel.findByProperty('email', req.body.email);
-    if (!user) {
+    if (!user || user.status !== 'active') {
       return res.status(404).send({
         status: 404,
-        message: 'Invalid login credentials',
-      });
-    }
-    if (user.status !== 'active') {
-      return res.status(401).send({
-        status: 401,
-        message: 'Your account is not active',
+        message: 'Invalid login credentials/inactive account',
       });
     }
     delete req.headers['x-auth'];

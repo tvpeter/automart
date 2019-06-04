@@ -6,7 +6,8 @@ import validatenewCar from '../lib/validateData';
 
 const Order = {
   create(req, res) {
-    const requiredParams = ['carId', 'priceOffered'];
+    req.body.buyerId = req.userId;
+    const requiredParams = ['carId', 'priceOffered', 'buyerId'];
     if (validatenewCar(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
       return res.status(400).send({
         status: 400,
@@ -21,17 +22,16 @@ const Order = {
         message: 'This car is not available for purchase',
       });
     }
-    const buyerId = req.userId;
 
-    const seller = UserModel.getUser(car.owner);
-    if (!seller || seller.status !== 'active') {
+    const seller = UserModel.isUserActive('id', car.owner);
+    if (!seller) {
       return res.status(404).send({
-        status: 412,
+        status: 404,
         message: 'Unverified seller. Kindly check back',
       });
     }
     const order = OrderModel.createOrder({
-      buyerId,
+      buyerId: req.body.buyerId,
       sellerId: car.owner,
       carId: req.body.carId,
       price: car.price,
@@ -47,7 +47,7 @@ const Order = {
         price: order.price,
         priceOffered: order.priceOffered,
         sellerId: seller.id,
-        buyerId,
+        buyerId: order.buyerId,
       },
     });
   },

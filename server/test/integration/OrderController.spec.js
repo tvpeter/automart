@@ -185,16 +185,16 @@ describe('Order transaction', () => {
   });
   describe('Seller update order price while status is still pending', () => {
     it('should update the price ', (done) => {
-      carsData[0].owner = usersData[1].id;
-      CarModel.cars = carsData;
       UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
-      ordersData[0].buyerId = user.id;
+      ordersData[0].sellerId = user.id;
+      ordersData[0].status = 'pending';
+      ordersData[0].buyerId = usersData[0].id;
 
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
-      const newPrice = parseInt(ordersData[0].price, 10);
+      const newPrice = parseInt(ordersData[0].price, 10) - 100000;
       const data = {
         orderId: ordersData[0].id,
         newPrice,
@@ -317,6 +317,53 @@ describe('Order transaction', () => {
         .end((err, res) => {
           expect(res.status).to.eq(400);
           expect(res.body.message).to.eq('The new offered price and the old are the same');
+          done();
+        });
+    });
+  });
+  describe('User get his/her sold ads', () => {
+    it('should return an array of the users sold ads', (done) => {
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].status = 'completed';
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get('/api/v1/transactions/sold').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data).to.be.an('Array');
+          expect(res.body.data[0]).to.have.property('sellerId').eq(user.id);
+          expect(res.body.data[0]).to.have.property('status').eq('completed');
+          done();
+        });
+    });
+    it('should return error 404 if user has not sold on the platform', (done) => {
+      ordersData[0].sellerId = usersData[1].id;
+      UserModel.users = usersData;
+      const user = usersData[0];
+
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get('/api/v1/transactions/sold').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('You have not sold on the platform');
+          done();
+        });
+    });
+    it('should return error 401 if user is not logged in', (done) => {
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+
+      chai.request(server).get('/api/v1/transactions/sold')
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
           done();
         });
     });

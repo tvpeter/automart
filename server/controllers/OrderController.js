@@ -95,7 +95,7 @@ const Order = {
   mySoldAds(req, res) {
     const { userId } = req;
     const soldAds = OrderModel.getSoldAdsByUser(userId);
-    if (soldAds.length < 1) {
+    if (soldAds.length === 0) {
       return res.status(404).send({
         status: 404,
         message: 'You have not sold on the platform',

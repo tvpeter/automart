@@ -4,6 +4,7 @@ import User from '../controllers/UserController';
 import Car from '../controllers/CarController';
 import auth from '../middleware/auth';
 import adminAuth from '../middleware/admin';
+import logout from '../middleware/logout';
 import Order from '../controllers/OrderController';
 import Flag from '../controllers/FlagController';
 
@@ -37,6 +38,9 @@ router.post('/auth/signup', User.create);
 
 // user login
 router.post('/auth/signin', User.signIn);
+
+// user log out
+router.get('/auth/logout', logout, User.logout);
 
 // get cars within a price range
 router.get('/car/price/', Car.getCarsWithinPriceRange);
@@ -91,6 +95,7 @@ router.patch('/user/:id', adminAuth, User.makeAdmin);
 
 // admin get all users
 router.get('/users', adminAuth, User.getAll);
+
 
 router.get('/', (req, res) => res.status(200).send('Hello world'));
 

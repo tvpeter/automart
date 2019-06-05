@@ -69,12 +69,15 @@ router.post('/order', auth, Order.create);
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
 
+// User gets all his/her sold ads
+router.get('/transactions/sold', auth, Order.mySoldAds);
+
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
 
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
-// update ad
+// update ad. Possible status include [ available, pending, suspended, accepted, sold]
 router.patch('/car/:id', auth, Car.updateAdvert);
 
 // change password

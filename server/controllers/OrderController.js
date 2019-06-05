@@ -92,6 +92,20 @@ const Order = {
       data: updatedPriceOrder,
     });
   },
+  mySoldAds(req, res) {
+    const { userId } = req;
+    const soldAds = OrderModel.getSoldAdsByUser(userId);
+    if (soldAds.length < 1) {
+      return res.status(404).send({
+        status: 404,
+        message: 'You have not sold on the platform',
+      });
+    }
+    return res.status(200).send({
+      status: 200,
+      data: soldAds,
+    });
+  },
 };
 
 export default Order;

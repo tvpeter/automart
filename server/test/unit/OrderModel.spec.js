@@ -2,6 +2,7 @@ import chai from 'chai';
 import OrderModel from '../../models/OrderModel';
 import usersdata from '../usersData';
 import carsdata from '../carsData';
+import ordersdata from '../ordersData';
 
 
 const { expect } = chai;
@@ -22,6 +23,17 @@ describe('Order Model', () => {
       expect(newOrder).to.have.property('date');
       expect(newOrder).to.have.property('priceOffered').eq(price);
       expect(newOrder.sellerId).to.eq(usersdata[1].id);
+    });
+  });
+  describe('User get his/her sold transactions', () => {
+    it('should return an array of his/her sold ads', () => {
+      ordersdata[0].sellerId = usersdata[0].id;
+      ordersdata[0].status = 'completed';
+
+      const myAds = OrderModel.getSoldAdsByUser(usersdata[0].id);
+      expect(myAds).to.be.an('Array');
+      expect(myAds[0].sellerId).to.eq(usersdata[0].id);
+      expect(myAds[0].status).to.eq('completed');
     });
   });
 });

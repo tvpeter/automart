@@ -147,6 +147,12 @@ const User = {
       data: newAdmin,
     });
   },
+  logout(req, res) {
+    return res.status(200).send({
+      status: 200,
+      message: 'You have been logged out successfully',
+    });
+  },
 };
 
 export default User;

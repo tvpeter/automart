@@ -8,7 +8,7 @@
     "test": "nyc mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
     "build": "babel server --out-dir server/build",
     "prebuild": "rm -rf server/build",
-    "prestart": "npm run lint && npm run build",
+    "pre-dev": "npm run lint && npm run build",
     "start": "NODE_ENV=production node server/build/index.js",
     "lint": "eslint server",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

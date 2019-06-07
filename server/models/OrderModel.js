@@ -50,5 +50,16 @@ class OrderModel {
   getAllOrders() {
     return this.orders;
   }
+
+  updateOrderStatus(orderId, status) {
+    const order = this.getSingleOrder(orderId);
+    order.status = status || order.status;
+    return order;
+  }
+
+  deleteOrder(order) {
+    const orderIndex = this.orders.indexOf(order);
+    return this.orders.splice(orderIndex, 1);
+  }
 }
 export default new OrderModel();

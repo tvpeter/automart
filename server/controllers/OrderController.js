@@ -119,6 +119,115 @@ const Order = {
       data: orders,
     });
   },
+
+  /**
+ * status could be pending, accepted (by seller), rejected(by seller),
+ * completed(buyer), cancelled(buyer)
+ */
+  updateOrderStatus(req, res) {
+    // get orderid
+    let updatedOrder;
+    const { orderId, status } = req.params;
+    if (!orderId || !status) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid input',
+      });
+    }
+    // retrieve the order
+    const order = OrderModel.getSingleOrder(orderId);
+    if (!order) {
+      return res.status(404).send({
+        status: 404,
+        message: 'Order details not found',
+      });
+    }
+    // check if seller and buyer are active
+    const seller = UserModel.isUserActive('id', order.sellerId);
+    const buyer = UserModel.isUserActive('id', order.buyerId);
+    if (!seller || !buyer) {
+      return res.status(406).send({
+        status: 406,
+        message: 'Seller or buyer inactive',
+      });
+    }
+    if (!parseInt(req.userId, 10) === parseInt(buyer.id, 10)
+      || !parseInt(req.userId, 10) === parseInt(seller.id, 10)) {
+      return res.status(403).send({
+        status: 403,
+        message: 'You dont have the permission to modify this resource',
+      });
+    }
+    if ((order.status === 'pending' && parseInt(req.userId, 10) === parseInt(buyer.id, 10))
+      || (order.status.toLowerCase() === 'accepted' && parseInt(req.userId, 10) === parseInt(buyer.id, 10))) {
+      if (status === 'cancelled' || status === 'completed') {
+        updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+      }
+    }
+    // if its buyer, buyer can cancel or complete order
+    if (parseInt(req.userId, 10) === (seller.id) && order.status.toLowerCase() === 'pending') {
+      if (req.body.status === 'accepted' || req.body.status === 'rejected') {
+        updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+      }
+    }
+    return res.status(200).send({
+      status: 200,
+      data: updatedOrder,
+    });
+  },
+
+  deleteOrder(req, res) {
+    if (!req.params.orderId || !req.userId) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid request',
+      });
+    }
+
+    const order = OrderModel.getSingleOrder(req.params.orderId);
+    if (!order || order.status.toLowerCase() !== 'cancelled') {
+      return res.status(404).send({
+        status: 404,
+        message: 'Order not found or uncompleted',
+      });
+    }
+
+    const deletedOrder = OrderModel.deleteOrder(order);
+    return res.status(200).send({
+      status: 200,
+      data: deletedOrder,
+    });
+  },
+  getSingleOrder(req, res) {
+    const requester = parseInt(req.userId, 10);
+
+    const { orderId } = req.params;
+    if (!orderId) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid request',
+      });
+    }
+    const order = OrderModel.getSingleOrder(orderId);
+    if (!order) {
+      return res.status(404).send({
+        status: 404,
+        message: 'Order not found',
+      });
+    }
+
+    if (requester !== parseInt(order.sellerId, 10) || requester !== parseInt(order.buyerId, 10)
+      || !req.role) {
+      return res.status(403).send({
+        status: 403,
+        message: 'You dont have the permission to view this resource',
+      });
+    }
+    return res.status(200).send({
+      status: 200,
+      data: order,
+    });
+  },
 };
 
 export default Order;

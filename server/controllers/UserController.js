@@ -153,6 +153,32 @@ const User = {
       message: 'You have been logged out successfully',
     });
   },
+  disableUser(req, res) {
+    // the userid is in the params
+    const userId = req.params.userid;
+    if (!userId) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid request',
+      });
+    }
+
+    // check that the user is active
+    const user = UserModel.isUserActive('id', userId);
+    if (!user) {
+      return res.status(404).send({
+        status: 404,
+        message: 'User not found or inactive',
+      });
+    }
+    // disable the user
+    const disabledUser = UserModel.disableUser(userId);
+    // return the result
+    return res.status(200).send({
+      status: 200,
+      data: disabledUser,
+    });
+  },
 };
 
 export default User;

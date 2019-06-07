@@ -48,11 +48,15 @@ router.post('/order', auth, Order.create);
 router.post('/car', auth, upload.single('img'), Car.create);
 
 // User gets all his/her sold ads
-router.get('/transactions/sold', auth, Order.mySoldAds);
+router.get('/order/me', auth, Order.mySoldAds);
+
+// view an order detail
+router.get('orders/:orderId', auth, Order.getSingleOrder);
 
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
 
+router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
 // update ad. Possible status include [ available, pending, suspended, accepted, sold]
@@ -76,6 +80,17 @@ router.patch('/user/:id', adminAuth, User.makeAdmin);
 
 // view all orders
 router.get('/orders', adminAuth, Order.getAllOrders);
+
+router.delete('/orders/:orderId', adminAuth, Order.deleteOrder);
+
+// disable a user
+router.patch('/users/:userId', adminAuth, User.disableUser);
+
+// update a flag
+router.patch('/flag/:flagId', adminAuth, Flag.updateFlag);
+
+// delete a flag
+router.delete('/flags/:flagId', adminAuth, Flag.deleteFlag);
 
 // admin get all users
 router.get('/users', adminAuth, User.getAll);

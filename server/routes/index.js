@@ -1,5 +1,4 @@
 import express from 'express';
-import multer from 'multer';
 import User from '../controllers/UserController';
 import Car from '../controllers/CarController';
 import auth from '../middleware/auth';
@@ -7,29 +6,8 @@ import adminAuth from '../middleware/admin';
 import logout from '../middleware/logout';
 import Order from '../controllers/OrderController';
 import Flag from '../controllers/FlagController';
+import upload from '../lib/upload';
 
-const storage = multer.diskStorage({
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + file.originalname);
-  },
-});
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/jpg'
-    || file.mimetype === 'image/png'
-    || file.mimetype === 'image/jpeg'
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 500000 },
-});
 
 const router = express.Router();
 
@@ -95,6 +73,9 @@ router.delete('/car/:id', adminAuth, Car.deleteAd);
 
 // make user an admin
 router.patch('/user/:id', adminAuth, User.makeAdmin);
+
+// view all orders
+router.get('/orders', adminAuth, Order.getAllOrders);
 
 // admin get all users
 router.get('/users', adminAuth, User.getAll);

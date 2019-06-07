@@ -96,7 +96,7 @@ const Order = {
     const { userId } = req;
     const soldAds = OrderModel.getSoldAdsByUser(userId);
     if (soldAds.length === 0) {
-      return res.status(404).send({
+      return res.status(404).sepnd({
         status: 404,
         message: 'You have not sold on the platform',
       });
@@ -104,6 +104,19 @@ const Order = {
     return res.status(200).send({
       status: 200,
       data: soldAds,
+    });
+  },
+  getAllOrders(req, res) {
+    const orders = OrderModel.getAllOrders();
+    if (orders < 1) {
+      return res.send({
+        status: 404,
+        message: 'There are no orders now. Check back',
+      });
+    }
+    return res.send({
+      status: 200,
+      data: orders,
     });
   },
 };

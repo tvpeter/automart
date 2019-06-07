@@ -46,5 +46,9 @@ class OrderModel {
   getSoldAdsByUser(userId) {
     return this.orders.filter(order => order.status === 'completed' && parseInt(order.sellerId, 10) === parseInt(userId, 10));
   }
+
+  getAllOrders() {
+    return this.orders;
+  }
 }
 export default new OrderModel();

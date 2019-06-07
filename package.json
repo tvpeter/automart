@@ -57,5 +57,8 @@
     "exclude": [
       "**/test/**"
     ]
+  },
+  "engines": {
+    "node": "11.14.0"
   }
 }

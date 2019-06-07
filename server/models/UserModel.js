@@ -84,6 +84,16 @@ class UserModel {
     user.isAdmin = true;
     return user;
   }
+
+  /**
+   * @description - disable a user using userId
+   * @param {Number} userId
+   */
+  disableUser(userId) {
+    const user = this.getUser(userId);
+    user.status = 'disabled';
+    return user;
+  }
 }
 
 export default new UserModel();

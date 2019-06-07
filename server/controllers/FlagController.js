@@ -31,6 +31,50 @@ const Flag = {
       data: newFlag,
     });
   },
+  updateFlag(req, res) {
+    if (!req.params.flagId || !req.role) {
+      return res.status(400).send({
+        status: 400,
+        message: 'Invalid input',
+      });
+    }
+    const flag = FlagModel.findSingleFlag(req.params.flagId);
+    if (!flag) {
+      return res.status(404).send({
+        status: 404,
+        message: 'Flag not found',
+      });
+    }
+    const updatedFlag = FlagModel.updateFlagStatus(req.params.flagId);
+
+    return res.status(200).send({
+      status: 200,
+      data: updatedFlag,
+    });
+  },
+
+  deleteFlag(req, res) {
+    const flag = FlagModel.findSingleFlag(req.params.flagId);
+    if (!flag) {
+      return res.status(404).send({
+        status: 404,
+        message: 'The flag is no longer available',
+      });
+    }
+    const deletedFlag = FlagModel.deleteFlag(flag);
+
+    if (deletedFlag.length < 1) {
+      return res.status(500).send({
+        status: 500,
+        message: 'Flag not deleted. Please retry',
+      });
+    }
+
+    return res.status(200).send({
+      status: 200,
+      message: 'Flag successfully deleted',
+    });
+  },
 };
 
 export default Flag;

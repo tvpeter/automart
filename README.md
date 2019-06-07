@@ -47,4 +47,8 @@ Below are the views for each category of user.
 - image change
 - Modal for password reset on [login](https://tvpeter.github.io/automart/users.html) page.
 
+##### Documentation
+
+View the detailed API documentation [here](https://app.swaggerhub.com/apis/tvpeter/automart/1.0.0)
+
 _Thanks for checking, you feedback is appreciated_

@@ -1,0 +1,1028 @@
+swagger: '2.0'
+info:
+  description: API for Automobile Online Marketplace
+  version: 1.0.0
+  title: automart
+  contact:
+    email: withtvpeter@gmail.com
+  license:
+    name: ISC
+host: automart
+basePath: /api/v1
+tags:
+  - name: auth
+    description: Operations about user authentication
+  - name: user
+    description: User profile and all users operation
+  - name: car
+    description: Operations about adverts
+  - name: order
+    description: Operations about orders
+  - name: flag
+    description: Operations about ads flags
+schemes:
+  - https
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Create user
+      description: Creates a new user account.
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          description: user to sign up
+          schema:
+            type: object
+            required:
+              - first_name
+              - last_name
+              - email
+              - phone
+              - account_number
+              - bank
+              - address
+              - password
+              - passord_confirmation
+            properties:
+              first_name:
+                type: string
+              last_name:
+                type: string
+              email:
+                type: string
+              phone:
+                type: integer
+              account_nmber:
+                type: integer
+              bank:
+                type: string
+              address:
+                type: string
+              password:
+                type: string
+              password_confirmation:
+                type: string
+      responses:
+        201:
+          description: User created succcessfully
+          examples:
+            application/json:
+              message: User created succcessfully
+              data:
+               token: MTU1OTgyMTklsle8juajdud83duae9d9ad9dhdIwMCw
+               id: 1558861688503
+               first_name: John
+               last_name: Doe
+               email: johndoe@email.com
+               phone: 09098392839
+               account_number: 1293023839
+               address: this is the address
+               isAdmin: false
+        400:
+          description: Invalid input
+  /auth/signin:
+    post:
+      tags:
+        - auth
+      summary: sign in a user
+      description: Sign in user into the application
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          description: user to sign in
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: User signed in
+          examples:
+            application/json:
+              message: User successfully signed in
+              user:
+                id: 1558861688503
+                first_name: John
+                last_name: Doe
+                email: johndoe@email.com
+              token: >-
+                eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTI1NTI5MjU3LCJleHAiOjE1MjU2MTU2NTd9.WqI-bayENIvde4UIkUWqVW3ZdMHtyVyY4RwOVx2gP4Y
+              phone: 09098392839
+              account_number: 0392383923
+              address: this is the address
+              isAdmin: false
+        400:
+          description: Invalid login credentials
+  /auth/logout:
+    get:
+      tags:
+        - auth
+      summary: Logs out a user
+      description: logs a user out of the app
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: You have been logged out successfully
+  /user:
+    patch:
+      tags:
+        - user
+      summary: Update user password
+      description: User update his/her password
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: userId
+          in: header
+          description: the id of the user performing the update
+          required: true
+          type: number
+      responses:
+        200:
+          description: User details updated successfully
+          examples:
+            application/json:
+              data:
+                id: 1558730737306
+                email: tvpeter@gmail.com
+                first_name: peter
+                last_name: tyonum
+                password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
+                address: This is the address of the user
+                isAdmin: false
+                phone: 08137277480
+                account_number: 0020600555
+                bank: GTBank
+                status: active
+        400:
+          description: Invalid input, fill all required fields
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: User not found
+  /users/{userId}:
+    patch:
+      tags:
+        - user
+      summary: Disable a user
+      description: Admin disable an active user
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          description: The admin authorization 
+          required: true
+          type: string
+        - in: path
+          name: userId
+          description: An adverts id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: User successfully disabled
+          examples:
+            application/json:
+              data:
+                id: 1558730737306
+                email: tvpeter@gmail.com
+                first_name: peter
+                last_name: tyonum
+                password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
+                address: This is the address of the user
+                isAdmin: false
+                phone: 08137277480
+                account_number: 0020600555
+                bank: GTBank
+                status: disabled
+        400:
+          description: Invalid request
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: User not found/inactive
+  /users:
+    get:
+      tags:
+        - user
+      summary:  Get all users 
+      description: Retrieve all users of the system
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token to identify the admin
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved all users
+          examples:
+            application/json:
+              data:
+              - id: 1558861688503
+                email: johndoe@gmail.com
+                first_name: John
+                last_name: Doe
+                password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
+                address: my address
+                isAdmin: false
+                phone: 09023928389
+                account_number: 2081769837
+                bank: UBA
+                status: active
+              - id: 1558862824484
+                email: jamesj@gmail.com
+                first_name: James
+                last_name: Johnson
+                password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
+                address: my address
+                isAdmin: true
+                phone: 09023928389
+                account_number: 2081769837
+                bank: UBA
+                status: disabled
+        401:
+          description: Unauthorized, invalid token or session have expired
+  /car:
+    post:
+      tags:
+        - car
+      summary: Creates a new car advert
+      description: Add meal to app
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: owner
+          in: header
+          description: Owner of the car
+          required: true
+          type: integer
+        - name: model
+          in: formData
+          description: Model of the car
+          required: true
+          type: string
+        - name: manufacturer
+          in: formData
+          description: The car manufacturer
+          required: true
+          type: string
+        - name: state
+          in: formData
+          description: the state of the car [new, used]
+          required: true
+          type: string
+        - name: price
+          in: formData
+          description: the price of the car advertised
+          required: true
+          type: number
+        - name: body_type
+          in: formData
+          description: the shape of the car [sedan, suv, jeep etc]
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: the description of the car advertised
+          required: true
+          type: string
+        - name: status
+          in: formData
+          description: the status of the car advertised[ available, sold]
+          required: false
+          type: string
+        - name: img
+          in: formData
+          description: Url to image of the car
+          type: string
+      responses:
+        201:
+          description: Ad created successfully
+          examples:
+            application/json:
+              data:
+              id: 1558731607229
+              owner: 1558730737306
+              created_on: 5/24/2019, 9:59:37 PM
+              state: Used
+              status: available
+              price: 7000000
+              manufacturer: Ford
+              model: 2017 Ford Fiesta
+              body_type: Hatchback
+              description: This is the description of the car
+              img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+        400:
+          description: Invalid inputs
+          examples:
+            application/json:
+              message: Fill all required fields
+              status: 400
+        401:
+          description: Unauthorized, invalid token or session have expired
+        500:
+          description: There's a problem uploading your image
+  /car/{id}:
+    get:
+      tags:
+        - car
+      summary: get ad by id
+      description: Get a single ad by id
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: An adverts id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successfully got an ad
+          examples:
+            application/json:
+              data:
+                id: 1558731607229
+                owner: 1558730737306
+                created_on: 5/24/2019, 9:59:37 PM
+                state: Used
+                status: available
+                price: 7000000
+                manufacturer: Ford
+                model: 2017 Ford Fiesta
+                body_type: Hatchback
+                description: This is the description of the car
+                img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+        400:
+          description: Invalid ad id
+        404:
+          description: Ad with given id not found
+    delete:
+      tags:
+        - car
+      summary: Deletes an ad
+      description: Deletes an ad by given id
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: Ad id used to delete the ad
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Ad successfully deleted
+        401:
+          description: >-
+            Unauthorized, invalid token, no token provided or session have
+            expired
+        404:
+          description: Meal does not exists
+  /car/price/:
+    get:
+      tags:
+        - car
+      summary: Get cars within a price range
+      description: Get cars within a price range
+      produces:
+        - application/json
+      parameters:
+        - name: min
+          in: path
+          description: the minimum price
+          required: true
+          type: integer
+        - name: max
+          in: path
+          description: the maximum price
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successfully returned ads
+          examples:
+            application/json:
+              data:
+              - id: 1558731607229
+                owner: 1558730737306
+                created_on: 5/24/2019, 9:59:37 PM
+                state: Used
+                status: available
+                price: 7000000
+                manufacturer: Ford
+                model: 2017 Ford Fiesta
+                body_type: Hatchback
+                description: This is the description of the car
+                img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+              - id: 1558731168820
+                owner: 1558955989206
+                created_on: 5/24/2019, 9:51:34 PM
+                state: New
+                status: available
+                price: 1200000
+                manufacturer: AUDI
+                model: SPORT UV
+                body_type: SUV
+                description: This is the description of the car
+                img: http://res.cloudinary.com/tvpeter/image/upload/v1558731093/vkjzwklvedrocyyerzyr.jpg
+  /car/manufacturer/{manufacturer}:
+    get:
+      tags:
+        - car
+      summary: Get cars by manufacturer
+      description: Get all cars by manufacturer
+      produces:
+        - application/json
+      parameters:
+        - name: manufacturer
+          in: path
+          description: the manufacturer to get ads
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved cars by manufacturer
+          examples:
+            application/json:
+                  status: success
+                  data:
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: AUDI
+                    model: 2017 AUDI YANKS
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: SUV
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731093/vkjzwklvedrocyyerzyr.jpg
+        404:
+          description: There are no ads for the selected manufacturer
+  /car/bodytype/{body_type}:
+    get:
+      tags:
+        - car
+      summary: Get cars by body type
+      description: Get all cars by body type
+      produces:
+        - application/json
+      parameters:
+        - name: body_type
+          in: path
+          description: the body type of cars to select from
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved cars by body type
+          examples:
+            application/json:
+                  status: success
+                  data:
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Ford
+                    model: 2017 Ford Fiesta
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731093/vkjzwklvedrocyyerzyr.jpg
+        404:
+          description: No ads with the selected body type
+  /car/state/{state}:
+    get:
+      tags:
+        - car
+      summary: Get cars by their state
+      description: Get all cars by their state
+      produces:
+        - application/json
+      parameters:
+        - name: state
+          in: path
+          description: Get cars by their state (used, new)
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved cars by their state
+          examples:
+            application/json:
+                  status: success
+                  data:
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Ford
+                    model: 2017 Ford Fiesta
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: Used
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731093/vkjzwklvedrocyyerzyr.jpg
+        404:
+          description: No ads for the selected state
+  /car/status/available:
+    get:
+      tags:
+        - car
+      summary: Get all available cars
+      description: Get all cars that are available
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully returned all cars
+          examples:
+            application/json:
+                  status: success
+                  data:
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Ford
+                    model: 2017 Ford Fiesta
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: http://res.cloudinary.com/tvpeter/image/upload/v1558731093/vkjzwklvedrocyyerzyr.jpg
+        404:
+          description: There are no cars available. Check back
+  /order/:
+    post:
+      tags:
+        - order
+      summary: Make an order
+      description: User makes an order
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: buyerId
+          in: header
+          description: Id of the buyer obtained from the authorization
+          required: true
+          type: number
+        - name: carId
+          in: formData
+          description: The id of the ad to be purchased
+          required: true
+          type: string
+        - name: priceOffered
+          in: formData
+          description: the amount the buyer is offering for the car
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Your order is received
+          examples:
+            application/json:
+                      data:
+                        id: 1559313537712
+                        carId: 1558731607229
+                        date: 5/31/2019, 3:38:57 PM
+                        status: pending
+                        price: 7000000
+                        priceOffered: 6500000
+                        sellerId: 1558730737306
+                        buyerId: 1558861688503
+                        deliveredDate: 5/31/2019, 3:38:57 PM,
+        400:
+          description: Invalid input for car or amount
+          examples:
+            application/json:
+              message: Car id is required
+              status: error
+        401:
+          description: No token provided or sessions expired
+        404:
+          description: Car not available or seller cannot be verified
+  /orders:
+    get:
+      tags:
+        - order
+      summary: Get all orders
+      description: Get all orders made
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Orders succesfully retrieved
+          examples:
+            application/json:
+              orders:
+                - id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  status: completed
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558861688503
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+                - id: 1559313537714
+                  carId: 1558731168820
+                  date: 5/31/2019, 3:38:57 PM
+                  status: pending
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558862824484
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: There are no orders yet
+  /orders/{orderId}:
+    patch:
+      tags:
+        - order
+      summary: Update an existing order
+      description: Buyer can cancel or complete an order, seller can reject or accept
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: orderId
+          in: path
+          description: Order id used to identify order to update
+          required: true
+          type: number
+        - name: status
+          in: formData
+          description: status to update order to, can be accepted, rejected, completed, cancelled.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Order Updated
+          examples:
+            application/json:
+              message: Successfully updated order
+              orders:
+                  id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  status: completed
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558861688503
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized, invalid token or session have expired
+        403:
+          description: You dont have the permission to modify this resource
+        404:
+          description: Order details not found
+        406:
+          description: seller or buyer inactive
+    get:
+      tags:
+        - order
+      summary: View a particular order
+      description: Order can be viewed by admin, buyer or seller
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: orderId
+          in: path
+          description: Id of the order to be viewed
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Order retrieved successfully
+          examples:
+            application/json:
+              orders:
+                  id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  status: completed
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558861688503
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized, invalid token or session have expired
+        403:
+          description: You dont have the permission to view this resource
+        404:
+          description: Order not found
+    delete:
+      tags:
+        - order
+      summary: Deletes an order
+      description: Deletes an order
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: orderId
+          in: path
+          description: Order id of the order to delete
+          required: true
+          type: number
+      responses:
+        200:
+          description: Order successfully deleted
+        400:
+          description: Invalid request
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: Order not found or uncompleted
+  /flag/:
+    post:
+      tags:
+        - flag
+      summary: Flag an ad
+      description: User can flag an ad as fradulent, too pricey or suspicious
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: carId
+          in: formData
+          description: Id of the ad to flag
+          required: true
+          type: number
+        - name: reason
+          in: formData
+          description: The reason for flagging an ad
+          required: true
+          type: string
+      responses:
+        200:
+          description: Your flag has been recorded
+          examples:
+            application/json:
+                      data:
+                        id: 1559313537712
+                        carId: 1558731607229
+                        date: 5/31/2019, 3:38:57 PM
+                        reason: suspicious
+                        description: The car parts are not original
+                        reportedBy: 1558730737306
+                        status: pending
+                        severity: extreme
+        400:
+          description: Ensure to indicate ad id
+        401:
+          description: No token provided or sessions expired
+        404:
+          description: The ad is no longer active
+  /flags/{flagId}:
+    patch:
+      tags:
+        - flag
+      summary: Update a flag status
+      description: admin to update the status of a flag to resolved
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: flagId
+          in: path
+          description: Flag to be updated
+          required: true
+          type: number
+      responses:
+        200:
+          description: Order Updated
+          examples:
+            application/json:
+              flag:
+                  id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  reason: suspicious
+                  description: The car parts are not original
+                  reportedBy: 1558730737306
+                  status: resolved
+                  severity: extreme
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized, invalid token or session have expired
+        403:
+          description: You dont have the permission to modify this resource
+        404:
+          description: Flag details not found
+    get:
+      tags:
+        - flag
+      summary: View a flag report
+      description: admin views a flag
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: flagId
+          in: path
+          description: Id of the flag to be viewed
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Order retrieved successfully
+          examples:
+            application/json:
+              flag:
+                  id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  reason: suspicious
+                  description: The car parts are not original
+                  reportedBy: 1558730737306
+                  status: resolved
+                  severity: extreme
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized, invalid token or session have expired
+        403:
+          description: You dont have the permission to view this resource
+        404:
+          description: Order not found
+    delete:
+      tags:
+        - flag
+      summary: Deletes a resolved flag
+      description: Admin deletes a resolved flag
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: flagId
+          in: path
+          description: Id of the flag to delete
+          required: true
+          type: number
+      responses:
+        200:
+          description: Flag successfully deleted
+        400:
+          description: Invalid request
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: Order not found or uncompleted
+        

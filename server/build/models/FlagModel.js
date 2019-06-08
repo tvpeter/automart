@@ -1,3 +1,8 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 class Flag {
   constructor() {
     this.flags = [];
@@ -12,7 +17,7 @@ class Flag {
       description: data.description || '',
       reportedBy: data.reportedBy || '',
       status: 'pending',
-      severity: data.severity || 'minor',
+      severity: data.severity || 'minor'
     };
     this.flags.push(newFlag);
     return newFlag;
@@ -37,10 +42,6 @@ class Flag {
     const flagIndex = this.flags.indexOf(flag);
     return this.flags.splice(flagIndex, 1);
   }
-
-  getAllFlags() {
-    return this.flags;
-  }
 }
 
-export default new Flag();
+exports.default = new Flag();

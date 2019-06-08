@@ -51,4 +51,8 @@ Below are the views for each category of user.
 
 View the detailed API documentation [here](https://app.swaggerhub.com/apis/tvpeter/automart/1.0.0)
 
+#### Heroku hosted url
+
+[Here](https://tvpautomart.herokuapp.com/api/v1) is the api host on heroku
+
 _Thanks for checking, you feedback is appreciated_

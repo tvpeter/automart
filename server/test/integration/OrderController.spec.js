@@ -183,8 +183,9 @@ describe('Order transaction', () => {
         });
     });
   });
+  // seller update order price
   describe('Seller update order price while status is still pending', () => {
-    it('should update the price ', (done) => {
+    it('should update the order price ', (done) => {
       UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
@@ -321,6 +322,7 @@ describe('Order transaction', () => {
         });
     });
   });
+  // User retrieves his/her ads
   describe('User get his/her sold ads', () => {
     it('should return an array of the users sold ads', (done) => {
       ordersData[0].sellerId = usersData[0].id;
@@ -332,7 +334,7 @@ describe('Order transaction', () => {
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
 
-      chai.request(server).get('/api/v1/transactions/sold').set('x-auth', token)
+      chai.request(server).get('/api/v1/orders/me').set('x-auth', token)
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.data).to.be.an('Array');
@@ -349,7 +351,7 @@ describe('Order transaction', () => {
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
 
-      chai.request(server).get('/api/v1/transactions/sold').set('x-auth', token)
+      chai.request(server).get('/api/v1/orders/me').set('x-auth', token)
         .end((err, res) => {
           expect(res.status).to.eq(404);
           expect(res.body.message).to.eq('You have not sold on the platform');
@@ -360,10 +362,232 @@ describe('Order transaction', () => {
       UserModel.users = usersData;
       OrderModel.orders = ordersData;
 
-      chai.request(server).get('/api/v1/transactions/sold')
+      chai.request(server).get('/api/v1/orders/me')
         .end((err, res) => {
           expect(res.status).to.eq(401);
           expect(res.body.message).to.eq('No authorization token provided');
+          done();
+        });
+    });
+  });
+
+  // view all orders
+  describe('View all orders', () => {
+    it('should return all orders placed', (done) => {
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get('/api/v1/orders').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data).to.be.an('Array');
+          expect(res.body.data[0]).to.have.property('id').eq(ordersData[0].id);
+          done();
+        });
+    });
+    it('should return error 404 if there are no orders', (done) => {
+      UserModel.users = usersData;
+      OrderModel.orders = [];
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get('/api/v1/orders').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.body.status).to.eq(404);
+          expect(res.body.message).to.eq('There are no orders now. Check back');
+          done();
+        });
+    });
+    it('should return error 401 if user is not logged in', (done) => {
+      OrderModel.orders = ordersData;
+
+      chai.request(server).get('/api/v1/orders')
+        .end((err, res) => {
+          expect(res.body.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+          done();
+        });
+    });
+    it('should return error 401 if user is not admin', (done) => {
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get('/api/v1/orders').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('You dont have the permission to access this resource');
+          done();
+        });
+    });
+  });
+  // view a single order
+  describe('View a single order', () => {
+    it('should return order if it is admin', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          done();
+        });
+    });
+    it('should return order if it is the seller', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].sellerId = usersData[0].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          done();
+        });
+    });
+    it('should return order if it is the buyer', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].buyerId = usersData[0].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          done();
+        });
+    });
+    it('should return error 404 if order is not found', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0] + 1;
+      ordersData[0].buyerId = usersData[0].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Order not found');
+          done();
+        });
+    });
+    it('should return error 403 if it is not buyer or seller or admin', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].buyerId = usersData[1].id;
+      ordersData[0].sellerId = usersData[2].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+
+      chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(403);
+          expect(res.body.message).to.eq('You dont have the permission to view this resource');
+          done();
+        });
+    });
+  });
+
+  // delete an order -  seller and admin can delete a cancelled order
+  describe('deletes a cancelled order', () => {
+    it('should return error 400 if seller attempts to delete an uncancelled order', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].status = 'rejected';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('You cannot delete an incomplete transaction');
+          done();
+        });
+    });
+    it('should return error 404 if order is not found', (done) => {
+      UserModel.users = usersData;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete('/api/v1/orders/1678787878781').set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('The order does not exist');
+          done();
+        });
+    });
+    it('should return error 403 if a logged in user attempts to delete the order', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[2];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(403);
+          expect(res.body.message).to.eq('You dont have permission to delete this resource');
+          done();
+        });
+    });
+    it('seller should delete an order that is cancelled', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].status = 'cancelled';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          done();
+        });
+    });
+    it('admin should delete any order', (done) => {
+      UserModel.users = usersData;
+      const { id } = ordersData[0];
+      ordersData[0].status = 'accepted';
+      OrderModel.orders = ordersData;
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
           done();
         });
     });

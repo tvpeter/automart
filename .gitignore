@@ -31,7 +31,6 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-server/build
 
 # Dependency directories
 node_modules/
@@ -64,6 +63,7 @@ typings/
 */.DS_Store
 UI/.DS_Store
 UI/images/.DS_Store
+server/build
 
 # coveralls
 .coveralls.yml

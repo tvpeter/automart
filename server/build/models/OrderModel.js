@@ -1,3 +1,8 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 class OrderModel {
   constructor() {
     this.orders = [];
@@ -18,7 +23,7 @@ class OrderModel {
       status: data.status || 'pending',
       date: new Date().toLocaleString(),
       priceOffered: data.priceOffered,
-      deliveredDate: data.deliveredDate || new Date().toLocaleString(),
+      deliveredDate: data.deliveredDate || new Date().toLocaleString()
     };
     this.orders.push(newOrder);
     return newOrder;
@@ -30,7 +35,7 @@ class OrderModel {
    * @returns {Object}
    */
   updateOrderPrice(orderId, newPrice) {
-    const order = this.getOrder(orderId);
+    const order = this.getSingleOrder(orderId);
     order.priceOffered = parseFloat(newPrice);
     return order;
   }
@@ -39,7 +44,7 @@ class OrderModel {
    * @param {Number} orderId
    * @returns {Object}
    */
-  getOrder(orderId) {
+  getSingleOrder(orderId) {
     return this.orders.find(order => parseInt(order.id, 10) === parseInt(orderId, 10));
   }
 
@@ -52,7 +57,7 @@ class OrderModel {
   }
 
   updateOrderStatus(orderId, status) {
-    const order = this.getOrder(orderId);
+    const order = this.getSingleOrder(orderId);
     order.status = status || order.status;
     return order;
   }
@@ -62,4 +67,4 @@ class OrderModel {
     return this.orders.splice(orderIndex, 1);
   }
 }
-export default new OrderModel();
+exports.default = new OrderModel();

@@ -48,10 +48,14 @@ router.post('/order', auth, Order.create);
 router.post('/car', auth, upload.single('img'), Car.create);
 
 // User gets all his/her sold ads
-router.get('/order/me', auth, Order.mySoldAds);
+router.get('/orders/me', auth, Order.mySoldAds);
 
 // view an order detail
-router.get('orders/:orderId', auth, Order.getSingleOrder);
+router.get('/orders/:orderId', auth, Order.getSingleOrder);
+
+// delete order seller and admin can delete
+router.delete('/orders/:orderId', auth, Order.deleteAnOrder);
+
 
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
@@ -81,8 +85,6 @@ router.patch('/user/:id', adminAuth, User.makeAdmin);
 // view all orders
 router.get('/orders', adminAuth, Order.getAllOrders);
 
-router.delete('/orders/:orderId', adminAuth, Order.deleteOrder);
-
 // disable a user
 router.patch('/users/:userId', adminAuth, User.disableUser);
 
@@ -94,6 +96,8 @@ router.delete('/flags/:flagId', adminAuth, Flag.deleteFlag);
 
 // admin get all users
 router.get('/users', adminAuth, User.getAll);
+
+router.get('/flags', adminAuth, Flag.getAllFlags);
 
 
 router.get('/', (req, res) => res.status(200).send('Hello world'));

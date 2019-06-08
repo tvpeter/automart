@@ -114,7 +114,7 @@ const Order = {
     const { userId } = req;
     const soldAds = _OrderModel2.default.getSoldAdsByUser(userId);
     if (soldAds.length === 0) {
-      return res.status(404).sepnd({
+      return res.status(404).send({
         status: 404,
         message: 'You have not sold on the platform'
       });

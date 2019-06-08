@@ -30,7 +30,7 @@ class OrderModel {
    * @returns {Object}
    */
   updateOrderPrice(orderId, newPrice) {
-    const order = this.getSingleOrder(orderId);
+    const order = this.getOrder(orderId);
     order.priceOffered = parseFloat(newPrice);
     return order;
   }
@@ -39,7 +39,7 @@ class OrderModel {
    * @param {Number} orderId
    * @returns {Object}
    */
-  getSingleOrder(orderId) {
+  getOrder(orderId) {
     return this.orders.find(order => parseInt(order.id, 10) === parseInt(orderId, 10));
   }
 
@@ -52,7 +52,7 @@ class OrderModel {
   }
 
   updateOrderStatus(orderId, status) {
-    const order = this.getSingleOrder(orderId);
+    const order = this.getOrder(orderId);
     order.status = status || order.status;
     return order;
   }

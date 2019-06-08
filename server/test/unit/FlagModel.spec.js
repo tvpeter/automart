@@ -1,6 +1,7 @@
 import chai from 'chai';
 import usersdata from '../usersData';
 import carsdata from '../carsData';
+import flagsData from '../flagsData';
 import FlagModel from '../../models/FlagModel';
 
 const { expect } = chai;
@@ -43,6 +44,43 @@ describe('Flag model', () => {
       expect(newFlag).to.have.property('reportedBy').eq(data.reportedBy);
       expect(flags.length).to.be.greaterThan(0);
       done();
+    });
+  });
+  describe('Find a single flag', () => {
+    it('should return a single flag with given id', (done) => {
+      FlagModel.flags = flagsData;
+      const flagId = flagsData[0].id;
+
+      const flag = FlagModel.findSingleFlag(flagId);
+      expect(flag).to.have.property('id').eq(flagsData[0].id);
+      expect(flag).to.have.property('carId').eq(flagsData[0].carId);
+      expect(flag).to.have.property('status').eq(flagsData[0].status);
+      expect(flag).to.have.property('severity').eq(flagsData[0].severity);
+      done();
+    });
+  });
+  describe('Update a flag status', () => {
+    it('should update a given flag status to resolved', () => {
+      flagsData[0].status = 'pending';
+      FlagModel.flags = flagsData;
+      const flagId = flagsData[0].id;
+
+      const flag = FlagModel.updateFlagStatus(flagId);
+      expect(flag).to.have.property('id').eq(flagsData[0].id);
+      expect(flag).to.have.property('carId').eq(flagsData[0].carId);
+      expect(flag).to.have.property('status').eq('resolved');
+    });
+  });
+  describe('Deletes a flag', () => {
+    it('should delete a given flag', () => {
+      FlagModel.flags = flagsData;
+      const { length } = flagsData;
+      const flag = flagsData[0];
+
+      FlagModel.deleteFlag(flag);
+      const res = FlagModel.findSingleFlag(flag.id);
+      expect(res).to.eq(undefined);
+      expect(flagsData.length).to.eq(length - 1);
     });
   });
 });

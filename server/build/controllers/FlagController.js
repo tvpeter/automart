@@ -48,6 +48,8 @@ const Flag = {
     });
   },
   updateFlag(req, res) {
+    console.log('got here');
+
     if (!req.params.flagId || !req.role) {
       return res.status(400).send({
         status: 400,

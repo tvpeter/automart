@@ -4,11 +4,10 @@
   "description": "'Automobile online marketplace'",
   "main": "build/index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon --exec babel-node server/index.js",
+    "dev": "npm run lint && npm run build && NODE_ENV=development nodemon --exec babel-node server/index.js",
     "test": "nyc mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
     "build": "babel server --out-dir server/build",
     "prebuild": "rm -rf server/build",
-    "pre-dev": "npm run lint && npm run build",
     "start": "NODE_ENV=production node server/build/index.js",
     "lint": "eslint server",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

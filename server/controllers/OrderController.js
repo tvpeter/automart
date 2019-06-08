@@ -1,14 +1,14 @@
 import CarModel from '../models/CarModel';
 import UserModel from '../models/UserModel';
 import OrderModel from '../models/OrderModel';
-import validatenewCar from '../lib/validateData';
+import validateData from '../lib/validateData';
 
 
 const Order = {
   create(req, res) {
     req.body.buyerId = req.userId;
     const requiredParams = ['carId', 'priceOffered', 'buyerId'];
-    if (validatenewCar(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+    if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
       return res.status(400).send({
         status: 400,
         message: 'Select car and state amount you want to pay',
@@ -52,22 +52,22 @@ const Order = {
     });
   },
   updatePrice(req, res) {
-    // check that req contains the new price and orderid
-    if (!req.body.orderId || !req.body.newPrice) {
+    const requiredParams = ['orderId', 'newPrice'];
+
+    if (validateData(requiredParams, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Ensure to send the order id and new price',
       });
     }
     // check that the order exist and status is still pending
-    const order = OrderModel.getSingleOrder(req.body.orderId);
+    const order = OrderModel.getOrder(req.body.orderId);
     if (!order || order.status.toLowerCase() !== 'pending') {
       return res.status(404).send({
         status: 404,
         message: 'Check that the order is still pending',
       });
     }
-
     // check that the request is coming from the buyer
     const buyer = req.userId;
 
@@ -96,7 +96,7 @@ const Order = {
     const { userId } = req;
     const soldAds = OrderModel.getSoldAdsByUser(userId);
     if (soldAds.length === 0) {
-      return res.status(404).sepnd({
+      return res.status(404).send({
         status: 404,
         message: 'You have not sold on the platform',
       });
@@ -125,8 +125,9 @@ const Order = {
  * completed(buyer), cancelled(buyer)
  */
   updateOrderStatus(req, res) {
+    const reqPerson = parseInt(req.userId, 10);
+
     // get orderid
-    let updatedOrder;
     const { orderId, status } = req.params;
     if (!orderId || !status) {
       return res.status(400).send({
@@ -135,7 +136,7 @@ const Order = {
       });
     }
     // retrieve the order
-    const order = OrderModel.getSingleOrder(orderId);
+    const order = OrderModel.getOrder(orderId);
     if (!order) {
       return res.status(404).send({
         status: 404,
@@ -151,73 +152,63 @@ const Order = {
         message: 'Seller or buyer inactive',
       });
     }
-    if (!parseInt(req.userId, 10) === parseInt(buyer.id, 10)
-      || !parseInt(req.userId, 10) === parseInt(seller.id, 10)) {
+    // buyer
+    if (reqPerson !== parseInt(buyer.id, 10) && reqPerson !== parseInt(seller.id, 10)) {
       return res.status(403).send({
         status: 403,
         message: 'You dont have the permission to modify this resource',
       });
     }
-    if ((order.status === 'pending' && parseInt(req.userId, 10) === parseInt(buyer.id, 10))
-      || (order.status.toLowerCase() === 'accepted' && parseInt(req.userId, 10) === parseInt(buyer.id, 10))) {
-      if (status === 'cancelled' || status === 'completed') {
-        updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-      }
-    }
-    // if its buyer, buyer can cancel or complete order
-    if (parseInt(req.userId, 10) === (seller.id) && order.status.toLowerCase() === 'pending') {
-      if (req.body.status === 'accepted' || req.body.status === 'rejected') {
-        updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-      }
-    }
+    const updatedOrder = OrderModel.updateOrderStatus(orderId, status);
     return res.status(200).send({
       status: 200,
       data: updatedOrder,
     });
   },
 
-  deleteOrder(req, res) {
-    if (!req.params.orderId || !req.userId) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid request',
+  deleteAnOrder(req, res) {
+    const order = OrderModel.getOrder(req.params.orderId);
+    if (!order) {
+      return res.status(404).send({
+        status: 404,
+        message: 'The order does not exist',
+      });
+    }
+    const seller = parseInt(order.sellerId, 10);
+
+    // seller can deleted a cancelled order
+    const requester = parseInt(req.userId, 10);
+    if (requester !== seller && !req.role) {
+      return res.status(403).send({
+        status: 403,
+        message: 'You dont have permission to delete this resource',
       });
     }
 
-    const order = OrderModel.getSingleOrder(req.params.orderId);
-    if (!order || order.status.toLowerCase() !== 'cancelled') {
-      return res.status(404).send({
-        status: 404,
-        message: 'Order not found or uncompleted',
+    if (order.status.toLowerCase() !== 'cancelled' && requester === seller) {
+      return res.status(400).send({
+        status: 400,
+        message: 'You cannot delete an incomplete transaction',
       });
     }
 
     const deletedOrder = OrderModel.deleteOrder(order);
     return res.status(200).send({
       status: 200,
-      data: deletedOrder,
+      data: deletedOrder[0],
     });
   },
   getSingleOrder(req, res) {
-    const requester = parseInt(req.userId, 10);
-
-    const { orderId } = req.params;
-    if (!orderId) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid request',
-      });
-    }
-    const order = OrderModel.getSingleOrder(orderId);
+    const order = OrderModel.getOrder(req.params.orderId);
     if (!order) {
       return res.status(404).send({
         status: 404,
         message: 'Order not found',
       });
     }
-
-    if (requester !== parseInt(order.sellerId, 10) || requester !== parseInt(order.buyerId, 10)
-      || !req.role) {
+    const requester = parseInt(req.userId, 10);
+    if ((requester !== parseInt(order.sellerId, 10)) && (requester !== parseInt(order.buyerId, 10))
+      && !req.role) {
       return res.status(403).send({
         status: 403,
         message: 'You dont have the permission to view this resource',

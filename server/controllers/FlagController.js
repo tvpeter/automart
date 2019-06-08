@@ -32,12 +32,6 @@ const Flag = {
     });
   },
   updateFlag(req, res) {
-    if (!req.params.flagId || !req.role) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid input',
-      });
-    }
     const flag = FlagModel.findSingleFlag(req.params.flagId);
     if (!flag) {
       return res.status(404).send({
@@ -61,18 +55,22 @@ const Flag = {
         message: 'The flag is no longer available',
       });
     }
-    const deletedFlag = FlagModel.deleteFlag(flag);
-
-    if (deletedFlag.length < 1) {
-      return res.status(500).send({
-        status: 500,
-        message: 'Flag not deleted. Please retry',
-      });
-    }
-
     return res.status(200).send({
       status: 200,
       message: 'Flag successfully deleted',
+    });
+  },
+  getAllFlags(req, res) {
+    const flags = FlagModel.getAllFlags();
+    if (flags.length < 1) {
+      return res.status(404).send({
+        status: 404,
+        message: 'There are no flags now.',
+      });
+    }
+    return res.status(200).send({
+      status: 200,
+      data: flags,
     });
   },
 };

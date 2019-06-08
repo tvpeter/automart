@@ -351,7 +351,7 @@ describe('Order transaction', () => {
       user.isAdmin = false;
       const token = (0, _generateToken2.default)(user.id, user.isAdmin);
 
-      _chai2.default.request(_index2.default).get('/api/v1/transactions/sold').set('x-auth', token).end((err, res) => {
+      _chai2.default.request(_index2.default).get('/api/v1/order/me').set('x-auth', token).end((err, res) => {
         expect(res.status).to.eq(200);
         expect(res.body.data).to.be.an('Array');
         expect(res.body.data[0]).to.have.property('sellerId').eq(user.id);
@@ -367,7 +367,7 @@ describe('Order transaction', () => {
       user.isAdmin = false;
       const token = (0, _generateToken2.default)(user.id, user.isAdmin);
 
-      _chai2.default.request(_index2.default).get('/api/v1/transactions/sold').set('x-auth', token).end((err, res) => {
+      _chai2.default.request(_index2.default).get('/api/v1/order/me').set('x-auth', token).end((err, res) => {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('You have not sold on the platform');
         done();
@@ -377,7 +377,7 @@ describe('Order transaction', () => {
       _UserModel2.default.users = _usersData2.default;
       _OrderModel2.default.orders = _ordersData2.default;
 
-      _chai2.default.request(_index2.default).get('/api/v1/transactions/sold').end((err, res) => {
+      _chai2.default.request(_index2.default).get('/api/v1/order/me').end((err, res) => {
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('No authorization token provided');
         done();

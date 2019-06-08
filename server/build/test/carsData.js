@@ -87,18 +87,6 @@ const cars = [{
   body_type: 'SUV',
   description: 'This is the description ',
   img: 'http://res.cloudinary.com/tvpeter/image/upload/v1558943757/qf74sioxdtx4eq4c3whu.png'
-}, {
-  id: 1558943760215,
-  owner: 1558861688503,
-  created_on: '5/27/2019, 8:55:57 AM',
-  state: 'New',
-  status: 'available',
-  price: '8000000',
-  manufacturer: 'Toyota',
-  model: 'Corolla 2005',
-  body_type: 'Hatchback',
-  description: 'This is the description ',
-  img: 'http://res.cloudinary.com/tvpeter/image/upload/v1558943757/qf74sioxdtx4eq4c3whu.png'
 }];
 
 exports.default = cars;

@@ -25,6 +25,6 @@ deploy:
   provider: heroku
   api_key:
     secure: YvKLNfxNWV+yNOnYJt1vhai+/irM7RdyXz5duxBAFYXSoAMNWHwwuzGvflxcuTa43Rz52b8QOzQWOkKEZ8IeVc9r8vgGyj9eSmXIolktynWSZ9MVRPioR8Mv/vLO/b1gIKNXctszoYhhHideiOl+vKK1rXAphdrpb7hBcQp2o1XQVoawVSPK+UHzC+yn9WUTEVJx5uu1GHTAVFnuzcU19cmR+gO6BsD65Tn8Z7l29aR7VxkO5s8bkDz01iNWQlk+JSFOFUCe1Z97KfvByGSUx1LDq2K/XSjNx2k+JHxfqFj6JSsMG1kus0ZHn6pBhMjL5HrOwabKY0TY8aszLXmfUNjGb7eddL20IfLRy/4W6XBTUea6qmNtp/EvC7ALWpMVM2xyuTgSHYU1OExQmpimur6qBxH4VVebQwPIefBjQSu5aqMsmWoRVhNn4Vybp8c88OhJ+wpwwkk2kfbUdQ53q+Bhubi+LB95URx+oyCVxVbE8RyuPXdAp3owDAbCncrxZLDsfvwAm4G/6/JBk8r5oH8qAkMXDJDXUb4iLUlki6QjOmUkUxO4zruQZjbWlI9J2RyqsU9LDXOXqE8wJKHhdenzfz3RcWxLH07G204yGbJI6rW/YFRlck7F5Uhb12ZNfwtY9WKzqD529HUfCtttgtxDIHBUPxO2SS6Gc76+7hc=
-  app: automart
+  app: tvpautomart
   on:
-    all_branches: true
+    branch: develop

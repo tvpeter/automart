@@ -37,6 +37,10 @@ class Flag {
     const flagIndex = this.flags.indexOf(flag);
     return this.flags.splice(flagIndex, 1);
   }
+
+  getAllFlags() {
+    return this.flags;
+  }
 }
 
 export default new Flag();

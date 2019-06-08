@@ -32,16 +32,20 @@ var _usersData = require('../usersData');
 
 var _usersData2 = _interopRequireDefault(_usersData);
 
+var _flagsData = require('../flagsData');
+
+var _flagsData2 = _interopRequireDefault(_flagsData);
+
+var _FlagModel = require('../../models/FlagModel');
+
+var _FlagModel2 = _interopRequireDefault(_FlagModel);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const { expect } = _chai2.default;
 _chai2.default.use(_chaiHttp2.default);
 
 describe('Flags controller', () => {
-  afterEach(() => {
-    _CarModel2.default.cars = [];
-    _UserModel2.default.users = [];
-  });
   describe('Create a flag', () => {
     it('should create a flag on an ad', done => {
       _carsData2.default[0].owner = _usersData2.default[1].id;
@@ -165,6 +169,23 @@ describe('Flags controller', () => {
         expect(res.body.data.severity).to.eq('extreme');
         done();
       });
+    });
+  });
+  describe('Update a flag', () => {
+    it('should update a flag status to resolved', async () => {
+      _flagsData2.default[0].status = 'pending';
+      const { id } = _flagsData2.default[0];
+      _FlagModel2.default.flags = _flagsData2.default;
+      _UserModel2.default.users = _usersData2.default;
+
+      const user = _usersData2.default[0];
+      user.isAdmin = true;
+      const token = (0, _generateToken2.default)(user.id, user.isAdmin);
+
+      const res = await _chai2.default.request(_index2.default).patch(`/flag/${id}`).set('x-auth', token);
+      expect(res.status).to.eq(200);
+      expect(res.body.data.id).to.eq(id);
+      expect(res.body.data.status).to.eq('resolved');
     });
   });
 });

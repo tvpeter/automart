@@ -1,7 +1,5 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-// import request from 'supertest';
-// import fs from 'fs';
 import path from 'path';
 import carsData from '../carsData';
 import server from '../../index';

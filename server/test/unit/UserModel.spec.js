@@ -72,4 +72,24 @@ describe('User Model', () => {
       expect(newAdmin.isAdmin).to.be.true;
     });
   });
+  describe('Check if user is active', () => {
+    it('should return user if user is active', () => {
+      usersdata[0].status = 'active';
+      UserModel.users = usersdata;
+
+      const user = UserModel.isUserActive('id', usersdata[0].id);
+      expect(user.id).to.eq(usersdata[0].id);
+      expect(user).to.be.an('Object');
+    });
+  });
+  describe('Disable User', () => {
+    it('should disable an active user', () => {
+      usersdata[0].status = 'active';
+      UserModel.users = usersdata;
+
+      const disabledUser = UserModel.disableUser(usersdata[0].id);
+      expect(disabledUser.id).to.eq(usersdata[0].id);
+      expect(disabledUser.status).to.eq('disabled');
+    });
+  });
 });

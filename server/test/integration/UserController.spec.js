@@ -375,4 +375,31 @@ describe('User', () => {
         });
     });
   });
+  describe('Admin disable a user', () => {
+    it('should disable a user', () => {
+      usersArray();
+      const { id } = usersData[1];
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/users/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          expect(res.body.data.status).to.eq('disabled');
+        });
+    });
+    it('should return error 404 if user is not found', () => {
+      usersArray();
+      const { id } = usersData[1];
+      const user = usersData[0];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/users/${id + 1}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('User not found or inactive');
+        });
+    });
+  });
 });

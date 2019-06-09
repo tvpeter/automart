@@ -126,9 +126,9 @@ const Order = {
  */
   updateOrderStatus(req, res) {
     const reqPerson = parseInt(req.userId, 10);
-
+    const { status } = req.body;
     // get orderid
-    const { orderId, status } = req.params;
+    const { orderId } = req.params;
     if (!orderId || !status) {
       return res.status(400).send({
         status: 400,
@@ -159,7 +159,25 @@ const Order = {
         message: 'You dont have the permission to modify this resource',
       });
     }
-    const updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+
+    const buyerOptions = ['completed', 'cancelled'];
+    const sellerOptions = ['accepted', 'rejected'];
+    const buyerPerson = parseInt(buyer.id, 10);
+    const sellerPerson = parseInt(seller.id, 10);
+    let updatedOrder;
+
+    if (reqPerson === buyerPerson && buyerOptions.includes(status)
+      && sellerOptions.includes(order.status)) {
+      updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+    } else if (reqPerson === sellerPerson && order.status.toLowerCase() === 'pending'
+      && sellerOptions.includes(status)) {
+      updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+    } else {
+      return res.status(400).send({
+        status: 400,
+        message: 'You cannot update the status of this order at its state',
+      });
+    }
     return res.status(200).send({
       status: 200,
       data: updatedOrder,

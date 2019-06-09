@@ -154,16 +154,8 @@ const User = {
     });
   },
   disableUser(req, res) {
-    // the userid is in the params
-    const userId = req.params.userid;
-    if (!userId) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid request',
-      });
-    }
-
     // check that the user is active
+    const { userId } = req.params;
     const user = UserModel.isUserActive('id', userId);
     if (!user) {
       return res.status(404).send({

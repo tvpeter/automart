@@ -322,7 +322,7 @@ describe('Order transaction', () => {
         });
     });
   });
-  // User retrieves his/her ads
+  // User retrieves his/her completed orders
   describe('User get his/her sold ads', () => {
     it('should return an array of the users sold ads', (done) => {
       ordersData[0].sellerId = usersData[0].id;
@@ -506,6 +506,157 @@ describe('Order transaction', () => {
         .end((err, res) => {
           expect(res.status).to.eq(403);
           expect(res.body.message).to.eq('You dont have the permission to view this resource');
+          done();
+        });
+    });
+  });
+
+  // update order status
+  describe('Seller and Buyer update order status', () => {
+    afterEach(() => {
+      UserModel.users = [];
+      OrderModel.orders = [];
+    });
+    it('should update order status by seller when it is pending', (done) => {
+      const { id } = ordersData[0];
+      ordersData[0].status = 'pending';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      usersData[1].status = 'active';
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'accepted' })
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          expect(res.body.data.status).to.eq('accepted');
+          done();
+        });
+    });
+    it('should update order status by buyer if the status is accepted', (done) => {
+      const { id } = ordersData[0];
+      ordersData[0].status = 'accepted';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.data.id).to.eq(id);
+          expect(res.body.data.status).to.eq('completed');
+          done();
+        });
+    });
+    it('should return error 400 if status is not sent', (done) => {
+      const { id } = ordersData[0];
+      ordersData[0].status = 'accepted';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token)
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('Invalid input');
+          done();
+        });
+    });
+    it('should return error 404 if order id is not found', (done) => {
+      const { id } = ordersData[0];
+      ordersData[0].status = 'accepted';
+      ordersData[0].sellerId = usersData[0].id;
+      ordersData[0].buyerId = usersData[1].id;
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id + 1}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(404);
+          expect(res.body.message).to.eq('Order details not found');
+          done();
+        });
+    });
+    it('should return error 406 if seller or buyer is inactive', (done) => {
+      const { id } = ordersData[1];
+      ordersData[1].sellerId = usersData[1].id;
+      ordersData[1].buyerId = usersData[2].id;
+      usersData[2].status = 'disabled';
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(406);
+          expect(res.body.message).to.eq('Seller or buyer inactive');
+          done();
+        });
+    });
+    it('should return error 403 if another user/admin attempts to update the order status', (done) => {
+      const { id } = ordersData[1];
+      ordersData[1].sellerId = usersData[1].id;
+      ordersData[1].buyerId = usersData[0].id;
+      usersData[0].status = 'active';
+      usersData[1].status = 'active';
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[2];
+      user.isAdmin = true;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(403);
+          expect(res.body.message).to.eq('You dont have the permission to modify this resource');
+          done();
+        });
+    });
+    it('should return error 400 if buyer wants to update a pending order', (done) => {
+      const { id } = ordersData[1];
+      ordersData[1].sellerId = usersData[1].id;
+      ordersData[1].buyerId = usersData[0].id;
+      usersData[0].status = 'active';
+      usersData[1].status = 'active';
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[0];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('You cannot update the status of this order at its state');
+          done();
+        });
+    });
+    it('should return error 400 if seller wants to update a cancelled order', (done) => {
+      const { id } = ordersData[1];
+      ordersData[1].status = 'cancelled';
+      ordersData[1].sellerId = usersData[1].id;
+      ordersData[1].buyerId = usersData[0].id;
+      usersData[0].status = 'active';
+      usersData[1].status = 'active';
+      OrderModel.orders = ordersData;
+      UserModel.users = usersData;
+      const user = usersData[1];
+      user.isAdmin = false;
+      const token = generateToken(user.id, user.isAdmin);
+      chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' })
+        .end((err, res) => {
+          expect(res.status).to.eq(400);
+          expect(res.body.message).to.eq('You cannot update the status of this order at its state');
           done();
         });
     });

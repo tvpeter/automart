@@ -7,7 +7,7 @@ info:
     email: withtvpeter@gmail.com
   license:
     name: ISC
-host: automart
+host: tvpautomart.herokuapp.com
 basePath: /api/v1
 tags:
   - name: auth
@@ -366,6 +366,51 @@ paths:
           description: Unauthorized, invalid token or session have expired
         500:
           description: There's a problem uploading your image
+    get:
+      tags:
+        - car
+      summary: Admin view all cars
+      description: Admin select all cars
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: authorization
+          description: Admin authorization
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrived all ads
+          examples:
+            application/json:
+              data:
+                - id: 1558731607229
+                  owner: 1558730737306
+                  created_on: 5/24/2019, 9:59:37 PM
+                  state: Used
+                  status: available
+                  price: 7000000
+                  manufacturer: Ford
+                  model: 2017 Ford Fiesta
+                  body_type: Hatchback
+                  description: This is the description of the car
+                  img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+                - id: 1558731608259
+                  owner: 1558730737306
+                  created_on: 5/24/2019, 9:59:37 PM
+                  state: Used
+                  status: sold
+                  price: 4500000
+                  manufacturer: Honda
+                  model: Accord LE
+                  body_type: Hatchback
+                  description: This is the description of the car
+                  img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+        400:
+          description: Invalid ad id
+        404:
+          description: Ad with given id not found
   /car/{id}:
     get:
       tags:
@@ -430,6 +475,63 @@ paths:
             expired
         404:
           description: Meal does not exists
+    patch:
+      tags:
+        - car
+      summary: Seller update ad [status, price, description], admin suspend ad
+      description: Seller send ad update and admin can suspend the ad
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: Advert id 
+          required: true
+          type: number
+        - name: status
+          in: formData
+          description: status to update ad to, possible options are sold and suspended.
+          required: true
+          type: string
+        - name: price
+          in: formData
+          description: the price the seller wants to adjust the ad to
+          required: false
+          type: number
+        - name: description
+          in: formData
+          description: the new description the seller want to update the description to
+          required: false
+          type: string
+      responses:
+        200:
+          description: Updated Ad
+          examples:
+            application/json:
+              message: Successfully updated ad
+              car:
+                id: 1558731607229
+                owner: 1558730737306
+                created_on: 5/24/2019, 9:59:37 PM
+                state: Used
+                status: available
+                price: 7000000
+                manufacturer: Ford
+                model: 2017 Ford Fiesta
+                body_type: Hatchback
+                description: This is the updated description with price
+                img: http://res.cloudinary.com/tvpeter/image/upload/v1558731577/uiqu5bj63lyxjhlaxkyu.jpg
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: Ad not found
   /car/price/:
     get:
       tags:
@@ -750,6 +852,48 @@ paths:
           description: Unauthorized, invalid token or session have expired
         404:
           description: There are no orders yet
+  /orders/me:
+    get:
+      tags:
+        - order
+      summary: Get user orders
+      description: Return all users' completed orders
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Orders succesfully retrieved
+          examples:
+            application/json:
+              orders:
+                - id: 1559313537712
+                  carId: 1558731607229
+                  date: 5/31/2019, 3:38:57 PM
+                  status: completed
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558861688503
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+                - id: 1559313537714
+                  carId: 1558731168820
+                  date: 5/31/2019, 3:38:57 PM
+                  status: completed
+                  price: 7000000
+                  priceOffered: 6500000
+                  sellerId: 1558730737306
+                  buyerId: 1558862824484
+                  deliveredDate: 5/31/2019, 3:38:57 PM
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: There are no orders yet
   /orders/{orderId}:
     patch:
       tags:
@@ -896,6 +1040,11 @@ paths:
           description: The reason for flagging an ad
           required: true
           type: string
+        - name: description
+          in: formData
+          description: The full details of the report
+          required: false
+          type: string
       responses:
         200:
           description: Your flag has been recorded
@@ -916,6 +1065,39 @@ paths:
           description: No token provided or sessions expired
         404:
           description: The ad is no longer active
+  /flags:
+    get:
+      tags:
+        - flag
+      summary:  Return all flags 
+      description: Retrieve all flags in the system
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token to identify the admin
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved all flags
+          examples:
+            application/json:
+              data:
+              -  id: 1559972752767
+                 carId: 1558731607229
+                 created_on: 6/8/2019, 6:45:52 AM
+                 reason: suspicious
+                 description: this is the description of the
+                 reportedBy: 1558861688503
+                 status: pending
+                 severity: extreme
+        401:
+          description: Unauthorized, invalid token or session have expired
+        404:
+          description: There are no flags, check back.
+
   /flags/{flagId}:
     patch:
       tags:
@@ -1025,4 +1207,3 @@ paths:
           description: Unauthorized, invalid token or session have expired
         404:
           description: Order not found or uncompleted
-        

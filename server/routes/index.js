@@ -63,7 +63,8 @@ router.patch('/order', auth, Order.updatePrice);
 router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
-// update ad. Possible status include [ available, pending, suspended, accepted, sold]
+
+// update ad. Possible status include [ available, suspended, sold]
 router.patch('/car/:id', auth, Car.updateAdvert);
 
 // change password

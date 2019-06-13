@@ -40,11 +40,10 @@ const Flag = {
   },
   getAllFlags(req, res) {
     const flags = FlagModel.getAllFlags();
-    if (flags.length < 1) {
-      return Flag.errorResponse(res, 404, 'There are no flags now.');
-    }
-    return Flag.successResponse(res, 200, flags);
+    return (flags.length < 1) ? Flag.errorResponse(res, 404, 'There are no flags now.')
+      : Flag.successResponse(res, 200, flags);
   },
+
   errorResponse(res, statuscode, message) {
     return res.status(statuscode).send({
       status: statuscode,

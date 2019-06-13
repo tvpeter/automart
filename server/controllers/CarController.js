@@ -64,10 +64,9 @@ const Car = {
   },
   getAllUnsoldCars(req, res) {
     const cars = CarModel.getAllUnsoldCars();
-    if (cars.length < 1) {
-      return Car.errorResponse(res, 404, 'There are no cars available now. Check back');
-    }
-    return Car.successResponse(res, 200, cars);
+
+    return (cars.length < 1) ? Car.errorResponse(res, 404, 'There are no cars available now. Check back')
+      : Car.successResponse(res, 200, cars);
   },
   getSingleAd(req, res) {
     if (req.params.id.trim().length !== 13) {
@@ -103,11 +102,8 @@ const Car = {
 
     const cars = CarModel.getCarsWithinPriceRange(min, max);
 
-    if (cars.length < 1) {
-      return Car.errorResponse(res, 404, 'There are no cars within the selected range');
-    }
-
-    return Car.successResponse(res, 200, cars);
+    return (cars.length < 1) ? Car.errorResponse(res, 404, 'There are no cars within the selected range')
+      : Car.successResponse(res, 200, cars);
   },
 
   deleteAd(req, res) {

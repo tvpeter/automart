@@ -14,33 +14,21 @@ const User = {
     const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation'];
 
     if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Fill all required fields with a valid email address',
-      });
+      return User.errorResponse(res, 400, 'Fill all required fields with a valid email address');
     }
     if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Password and confirmation does not match',
-      });
+      return User.errorResponse(res, 400, 'Password and confirmation does not match');
     }
 
     if (req.body.password.length < 6 || req.body.email.length >= 30
       || req.body.first_name.length >= 30 || req.body.last_name.length >= 30) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Ensure password is atleast 6 characters, name and email not more than 30 characters',
-      });
+      return User.errorResponse(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters');
     }
     const checkEmailInDb = UserModel.findByProperty('email', req.body.email);
     const checkPhoneInDb = UserModel.findByProperty('phone', req.body.phone);
 
     if (checkEmailInDb || checkPhoneInDb) {
-      return res.status(400).send({
-        status: 400,
-        message: 'User with given email or phone already exist',
-      });
+      return User.errorResponse(res, 400, 'User with given email or phone already exist');
     }
 
     req.body.password = await hashPassword(req.body.password);
@@ -67,33 +55,21 @@ const User = {
 
   getAll(req, res) {
     const users = UserModel.getAllUsers();
-    return res.status(200).send({
-      status: 200,
-      data: users,
-    });
+    return User.successResponse(res, 200, users);
   },
 
   async signIn(req, res) {
     delete req.headers['x-auth'];
     if (validateData(['email', 'password'], req.body)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid login credentials',
-      });
+      return User.errorResponse(res, 400, 'Invalid login credentials');
     }
     const user = UserModel.isUserActive('email', req.body.email);
     if (!user) {
-      return res.status(404).send({
-        status: 404,
-        message: 'Invalid login credentials',
-      });
+      return User.errorResponse(res, 404, 'Invalid login credentials');
     }
     const validPassword = await comparePassword(req.body.password, user.password);
     if (!validPassword) {
-      return res.status(401).send({
-        status: 401,
-        message: 'Wrong username/password',
-      });
+      return User.errorResponse(res, 401, 'Wrong username/password');
     }
 
     user.token = generateToken(user.id, user.isAdmin);
@@ -106,47 +82,32 @@ const User = {
   async changePassword(req, res) {
     const { userId } = req;
     if (!req.body.currentPassword || !req.body.newPassword) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Fill the required fields',
-      });
+      return User.errorResponse(res, 400, 'Fill the required fields');
     }
     const user = UserModel.getUser(userId);
     if (!user) {
-      return res.status(404).send({
-        message: 'User not found',
-        status: 404,
-      });
+      return User.errorResponse(res, 404, 'User not found');
     }
+
     const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
     if (!confirmPassword) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Wrong current password, use password reset link',
-      });
+      return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
     }
     const hashNewPassword = await hashPassword(req.body.newPassword);
     const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
 
-    return res.send({
-      status: 200,
-      data: updatedUserDetails,
-    });
+    return User.successResponse(res, 200, updatedUserDetails);
   },
   makeAdmin(req, res) {
     const user = UserModel.isUserActive('id', req.params.id);
     if (!user) {
-      return res.status(412).send({
-        status: 412,
-        message: 'User not found or inactive',
-      });
+      return User.errorResponse(res, 412, 'User not found or inactive');
     }
     const newAdmin = UserModel.makeUserAdmin(user.id);
-    return res.status(200).send({
-      status: 200,
-      data: newAdmin,
-    });
+
+    return User.successResponse(res, 200, newAdmin);
   },
+
   logout(req, res) {
     return res.status(200).send({
       status: 200,
@@ -158,17 +119,24 @@ const User = {
     const { userId } = req.params;
     const user = UserModel.isUserActive('id', userId);
     if (!user) {
-      return res.status(404).send({
-        status: 404,
-        message: 'User not found or inactive',
-      });
+      return User.errorResponse(res, 404, 'User not found or inactive');
     }
     // disable the user
     const disabledUser = UserModel.disableUser(userId);
     // return the result
-    return res.status(200).send({
-      status: 200,
-      data: disabledUser,
+    return User.successResponse(res, 200, disabledUser);
+  },
+
+  errorResponse(res, statuscode, message) {
+    return res.status(statuscode).send({
+      status: statuscode,
+      message,
+    });
+  },
+  successResponse(res, statuscode, data) {
+    return res.status(statuscode).send({
+      status: statuscode,
+      data,
     });
   },
 };

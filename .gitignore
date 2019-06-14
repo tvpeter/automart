@@ -64,6 +64,7 @@ typings/
 UI/.DS_Store
 UI/images/.DS_Store
 server/build
+./server/build
 
 # coveralls
 .coveralls.yml

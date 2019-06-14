@@ -15,18 +15,12 @@ const Car = {
     const requiredFields = ['owner', 'state', 'status', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
     if (validatenewCar(requiredFields, req.body) || !req.file) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Fill all required fields',
-      });
+      return Car.errorResponse(res, 400, 'Fill all required fields');
     }
 
     const checkInDb = CarModel.similarUserCar(req.body.owner, req.body);
     if (checkInDb) {
-      return res.status(400).send({
-        status: 400,
-        message: 'You have a similar unsold car',
-      });
+      return Car.errorResponse(res, 400, 'You have a similar unsold car');
     }
     try {
       const image = await cloudinary.uploader.upload(req.file.path, {
@@ -35,111 +29,71 @@ const Car = {
       });
       req.body.img = image.url;
       const newCar = CarModel.createCar(req.body);
-      return res.status(201).send({
-        status: 201,
-        data: newCar,
-      });
+      return Car.successResponse(res, 201, newCar);
     } catch (err) {
-      return res.status(500).send({
-        status: 500,
-        message: 'There\'s problem uploading your image, try again',
-      });
+      return Car.errorResponse(res, 500, 'There\'s problem uploading your image, try again');
     }
   },
   getAll(req, res) {
     const cars = CarModel.getAllCars();
+
     if (cars.length < 1) {
-      return res.send({
-        status: 404,
-        message: 'There are no cars available now. Check back',
-      });
+      return Car.errorResponse(res, 404, 'There are no cars available now. Check back');
     }
-    return res.send({
-      status: 200,
-      data: cars,
-    });
+    return Car.successResponse(res, 200, cars);
   },
   getCarsByProperty(req, res) {
     const reqParam = Object.keys(req.params)[0];
     let cars;
 
-    if (reqParam.toLowerCase() === 'manufacturer') {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
-    } else if (reqParam.toLowerCase() === 'body_type') {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
-    } else {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.state);
+    switch (reqParam.toLowerCase()) {
+      case 'manufacturer':
+        cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
+        break;
+      case 'body_type':
+        cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
+        break;
+      default:
+        cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.state);
+        break;
     }
-
-
     if (cars.length < 1) {
-      return res.status(404).send({
-        status: 404,
-        message: `There are no cars for the selected ${reqParam}`,
-      });
+      return Car.errorResponse(res, 404, `There are no cars for the selected ${reqParam}`);
     }
-    return res.status(200).send({
-      status: 'success',
-      data: cars,
-    });
+    return Car.successResponse(res, 200, cars);
   },
   getAllUnsoldCars(req, res) {
     const cars = CarModel.getAllUnsoldCars();
-    if (cars.length < 1) {
-      return res.status(404).send({
-        status: 404,
-        message: 'There are no cars available now. Check back',
-      });
-    }
-    return res.status(200).send({
-      status: 200,
-      data: cars,
-    });
+
+    return (cars.length < 1) ? Car.errorResponse(res, 404, 'There are no cars available now. Check back')
+      : Car.successResponse(res, 200, cars);
   },
   getSingleAd(req, res) {
     if (req.params.id.trim().length !== 13) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid ad id',
-      });
+      return Car.errorResponse(res, 400, 'Invalid ad id');
     }
     const car = CarModel.findSingle(req.params.id);
     if (!car) {
-      return res.status(404).send({
-        status: 404,
-        message: 'The ad you are looking for is no longer available',
-      });
+      return Car.errorResponse(res, 404, 'The ad you are looking for is no longer available');
     }
-    return res.status(200).send({
-      status: 200,
-      data: car,
-    });
+    return Car.successResponse(res, 200, car);
   },
 
   updateAdvert(req, res) {
     const car = CarModel.findSingle(req.body.id);
     if (!car) {
-      return res.status(404).send({
-        status: 404,
-        message: 'The advert you want to update is not available',
-      });
+      return Car.errorResponse(res, 404, 'The advert you want to update is not available');
     }
 
     const { userId, role } = req;
     if (parseInt(userId, 10) !== parseInt(car.owner, 10) && !role) {
-      return res.status(401).send({
-        status: 401,
-        message: 'You do not have the permission to update this data',
-      });
+      return Car.errorResponse(res, 401, 'You do not have the permission to update this data');
     }
     const updatedCar = (parseInt(userId, 10) === parseInt(car.owner, 10))
       ? CarModel.completeUpdate(req.body.id, req.body)
       : CarModel.updateAdStatus(req.body.id, req.body);
 
-    return res.status(200).send({
-      status: 200,
-      data: updatedCar,
-    });
+    return Car.successResponse(res, 200, updatedCar);
   },
 
   getCarsWithinPriceRange(req, res) {
@@ -148,38 +102,32 @@ const Car = {
 
     const cars = CarModel.getCarsWithinPriceRange(min, max);
 
-    if (cars.length < 1) {
-      return res.status(404).send({
-        status: 404,
-        message: 'There are no cars within the selected range',
-      });
-    }
-
-    return res.status(200).send({
-      status: 200,
-      data: cars,
-    });
+    return (cars.length < 1) ? Car.errorResponse(res, 404, 'There are no cars within the selected range')
+      : Car.successResponse(res, 200, cars);
   },
 
   deleteAd(req, res) {
     const car = CarModel.findSingle(req.params.id);
     if (!car) {
-      return res.status(404).send({
-        status: 404,
-        message: 'The ad is no longer available',
-      });
+      return Car.errorResponse(res, 404, 'The ad is no longer available');
     }
     const deleteACarAd = CarModel.deleteCar(car);
     if (deleteACarAd.length < 1) {
-      return res.status(500).send({
-        status: 500,
-        message: 'Ad not deleted, please retry',
-      });
+      return Car.errorResponse(res, 500, 'Ad not deleted, please retry');
     }
 
-    return res.status(200).send({
-      status: 200,
-      message: 'Ad successfully deleted',
+    return Car.errorResponse(res, 200, 'Ad successfully deleted');
+  },
+  errorResponse(res, code, message) {
+    return res.status(code).send({
+      status: code,
+      message,
+    });
+  },
+  successResponse(res, code, data) {
+    return res.status(code).send({
+      status: code,
+      data,
     });
   },
 };

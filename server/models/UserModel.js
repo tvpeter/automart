@@ -1,30 +1,14 @@
-import usersdata from '../test/usersData';
-
 class UserModel {
   constructor() {
-    this.users = usersdata;
+    this.users = [];
   }
 
   /**
    * @param {Object} data
    * @returns {Object}
    */
-  create(data) {
-    const newUser = {
-      id: Math.floor(Math.random() * 100000) + 1 + Date.now(),
-      email: data.email || '',
-      first_name: data.first_name || '',
-      last_name: data.last_name || '',
-      password: data.password || '',
-      address: data.address || '',
-      isAdmin: data.isAdmin || false,
-      phone: data.phone || '',
-      account_number: data.account_number || '',
-      bank: data.bank || '',
-      status: 'active',
-    };
-    this.users.push(newUser);
-    return newUser;
+  static create() {
+    return 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
   }
 
   /**
@@ -96,4 +80,4 @@ class UserModel {
   }
 }
 
-export default new UserModel();
+export default UserModel;

@@ -1,16 +1,16 @@
 import express from 'express';
-import winston from 'winston';
+import morgan from 'morgan';
 import routes from './routes/index';
-import logger from './logging';
+import winston from './logger';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-logger.configure();
+app.use(morgan('tiny', { stream: winston.stream }));
 
 app.use('/api/v1', routes);
 const port = process.env.PORT || 4000;
 
-app.listen(port, () => winston.log('debug', `Listening on port ${port}`));
+app.listen(port, () => winston.log('info', `Listening on port ${port}`));
 
 module.exports = app;

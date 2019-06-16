@@ -1,4 +1,3 @@
-import UserModel from '../models/UserModel';
 import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
@@ -28,7 +27,7 @@ const User = {
 
     req.body.password = await hashPassword(req.body.password);
 
-    const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+    const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
     const values = [
       Date.now(),
       req.body.email,
@@ -39,19 +38,17 @@ const User = {
       req.body.phone,
       req.body.account_number,
       req.body.bank,
-      req.body.isAdmin,
     ];
 
     try {
       const { rows } = await db.query(query, values);
 
-      const data = rows[0];
-
-      const token = generateToken(data.id, data.isAdmin);
       const {
         // eslint-disable-next-line camelcase
-        id, email, first_name, last_name, address, isAdmin, phone, status,
-      } = data;
+        id, email, first_name, last_name, address, isadmin, phone, status,
+      } = rows[0];
+
+      const token = generateToken(id, isadmin);
 
       return res.status(201).set('x-auth', token).send({
         status: 201,
@@ -62,7 +59,7 @@ const User = {
           first_name,
           last_name,
           address,
-          isAdmin,
+          isadmin,
           phone,
           status,
         },
@@ -71,7 +68,7 @@ const User = {
       if (error.routine === '_bt_check_unique') {
         return User.errorResponse(res, 400, 'User with given email or phone already exist');
       }
-      return User.errorResponse(res, 400, error.details);
+      return User.errorResponse(res, 400, error);
     }
   },
 
@@ -116,11 +113,12 @@ const User = {
     if (!req.body.currentPassword || !req.body.newPassword) {
       return User.errorResponse(res, 400, 'Fill the required fields');
     }
-
+    // 'UPDATE users SET password=$1 WHERE id=$2 AND password=$3 returning *;
     // const user = UserModel.getUser(userId);
-    const query = 'SELECT * FROM users WHERE id=$1';
+    const query = 'SELECT password FROM users WHERE id=$1 AND password=$2';
+    const oldpassword = await hashPassword(req.body.currentPassword);
     try {
-      const { rows } = await db.query(query, [userId]);
+      const { rows } = await db.query(query, [userId, oldpassword]);
       const user = rows[0];
       const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
       if (!confirmPassword) {
@@ -129,29 +127,26 @@ const User = {
 
       const hashNewPassword = await hashPassword(req.body.newPassword);
 
-      const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING *';
+      const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
       const result = await db.query(updateQuery, [hashNewPassword, userId]);
-      const updatedUserDetails = result.rows[0];
       // const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
-      const {
-        // eslint-disable-next-line camelcase
-        id, email, first_name, last_name, phone, status,
-      } = updatedUserDetails;
-      return User.successResponse(res, 200, {
-        id, email, first_name, last_name, phone, status,
-      });
+      return User.successResponse(res, 200, result.rows[0]);
     } catch (error) {
       return User.errorResponse(res, 404, error);
     }
   },
-  makeAdmin(req, res) {
-    const user = UserModel.isUserActive('id', req.params.id);
-    if (!user) {
+  async makeAdmin(req, res) {
+    if (!req.params.id) {
+      return User.errorResponse(res, 400, 'Request does not contain required fields');
+    }
+
+    const makeAdminQuery = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
+    try {
+      const { rows } = await db.query(makeAdminQuery, [true, req.params.id, 'active']);
+      return User.successResponse(res, 200, rows[0]);
+    } catch (error) {
       return User.errorResponse(res, 412, 'User not found or inactive');
     }
-    const newAdmin = UserModel.makeUserAdmin(user.id);
-
-    return User.successResponse(res, 200, newAdmin);
   },
 
   logout(req, res) {
@@ -160,17 +155,15 @@ const User = {
       message: 'You have been logged out successfully',
     });
   },
-  disableUser(req, res) {
-    // check that the user is active
+  async disableUser(req, res) {
     const { userId } = req.params;
-    const user = UserModel.isUserActive('id', userId);
-    if (!user) {
+    const disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
+    try {
+      const { rows } = await db.query(disableQuery, ['disabled', userId, 'active']);
+      return User.successResponse(res, 200, rows[0]);
+    } catch (error) {
       return User.errorResponse(res, 404, 'User not found or inactive');
     }
-    // disable the user
-    const disabledUser = UserModel.disableUser(userId);
-    // return the result
-    return User.successResponse(res, 200, disabledUser);
   },
 
   errorResponse(res, statuscode, message) {

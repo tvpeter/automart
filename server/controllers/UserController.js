@@ -101,8 +101,7 @@ const User = {
       if (!validPassword) {
         return User.errorResponse(res, 401, 'Wrong username/password');
       }
-
-      user.token = generateToken(user.id, user.isAdmin);
+      user.token = generateToken(user.id, user.isadmin);
       return res.status(200).header('x-auth', user.token).send({
         status: 200,
         data: user,
@@ -117,19 +116,33 @@ const User = {
     if (!req.body.currentPassword || !req.body.newPassword) {
       return User.errorResponse(res, 400, 'Fill the required fields');
     }
-    const user = UserModel.getUser(userId);
-    if (!user) {
-      return User.errorResponse(res, 404, 'User not found');
-    }
 
-    const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
-    if (!confirmPassword) {
-      return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
-    }
-    const hashNewPassword = await hashPassword(req.body.newPassword);
-    const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
+    // const user = UserModel.getUser(userId);
+    const query = 'SELECT * FROM users WHERE id=$1';
+    try {
+      const { rows } = await db.query(query, [userId]);
+      const user = rows[0];
+      const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
+      if (!confirmPassword) {
+        return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
+      }
 
-    return User.successResponse(res, 200, updatedUserDetails);
+      const hashNewPassword = await hashPassword(req.body.newPassword);
+
+      const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING *';
+      const result = await db.query(updateQuery, [hashNewPassword, userId]);
+      const updatedUserDetails = result.rows[0];
+      // const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
+      const {
+        // eslint-disable-next-line camelcase
+        id, email, first_name, last_name, phone, status,
+      } = updatedUserDetails;
+      return User.successResponse(res, 200, {
+        id, email, first_name, last_name, phone, status,
+      });
+    } catch (error) {
+      return User.errorResponse(res, 404, error);
+    }
   },
   makeAdmin(req, res) {
     const user = UserModel.isUserActive('id', req.params.id);

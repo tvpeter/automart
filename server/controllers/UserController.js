@@ -85,14 +85,14 @@ const User = {
 
   async signIn(req, res) {
     delete req.headers['x-auth'];
-    if (validateData(['email', 'password'], req.body)) {
+    if (validateData(['email', 'password'], req.body) || !validEmail(req.body.email)) {
       return User.errorResponse(res, 400, 'Invalid login credentials');
     }
 
     // const user = UserModel.isUserActive('email', req.body.email);
-    const query = 'SELECT * FROM users WHERE email=$1';
+    const query = `SELECT * FROM users WHERE email='${req.body.email}'`;
     try {
-      const { rows } = await db.query(query, [req.body.email]);
+      const { rows } = await db.query(query);
       const user = rows[0];
       const validPassword = await comparePassword(req.body.password, user.password);
       if (!validPassword) {
@@ -113,14 +113,11 @@ const User = {
     if (!req.body.currentPassword || !req.body.newPassword) {
       return User.errorResponse(res, 400, 'Fill the required fields');
     }
-    // 'UPDATE users SET password=$1 WHERE id=$2 AND password=$3 returning *;
-    // const user = UserModel.getUser(userId);
-    const query = 'SELECT password FROM users WHERE id=$1 AND password=$2';
-    const oldpassword = await hashPassword(req.body.currentPassword);
+
+    const query = `SELECT password FROM users WHERE id=${userId}`;
     try {
-      const { rows } = await db.query(query, [userId, oldpassword]);
-      const user = rows[0];
-      const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
+      const { rows } = await db.query(query);
+      const confirmPassword = await comparePassword(req.body.currentPassword, rows[0].password);
       if (!confirmPassword) {
         return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
       }
@@ -129,7 +126,6 @@ const User = {
 
       const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
       const result = await db.query(updateQuery, [hashNewPassword, userId]);
-      // const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
       return User.successResponse(res, 200, result.rows[0]);
     } catch (error) {
       return User.errorResponse(res, 404, error);
@@ -150,6 +146,7 @@ const User = {
   },
 
   logout(req, res) {
+    delete req.headers['x-auth'];
     return res.status(200).send({
       status: 200,
       message: 'You have been logged out successfully',

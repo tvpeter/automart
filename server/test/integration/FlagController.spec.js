@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import carsData from '../carsData';
 import server from '../../index';
 import CarModel from '../../models/CarModel';
-import UserModel from '../../models/UserModel';
+// import UserModel from '../../models/UserModel';
 import generateToken from '../../lib/generateToken';
 import usersData from '../usersData';
 import flagsData from '../flagsData';
@@ -18,7 +18,7 @@ describe('Flags controller', () => {
     it('should create a flag on an ad', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -41,7 +41,7 @@ describe('Flags controller', () => {
     it('should return error 400 if reason is not stated', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -62,7 +62,7 @@ describe('Flags controller', () => {
     it('should return error 400 if ad id is not stateds', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -83,7 +83,7 @@ describe('Flags controller', () => {
     it('should return error 404 if ad is not found', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -104,7 +104,7 @@ describe('Flags controller', () => {
     it('should return error 404 if the status of the ad is not equal available', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       carsData[1].status = 'sold';
 
       const user = usersData[0];
@@ -126,7 +126,7 @@ describe('Flags controller', () => {
     it('should create an extreme flag if car is flag as stolen or fake or suspicious', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -150,7 +150,7 @@ describe('Flags controller', () => {
       flagsData[0].status = 'pending';
       const { id } = flagsData[0];
       FlagModel.flags = flagsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = true;
@@ -178,7 +178,7 @@ describe('Flags controller', () => {
       flagsData[0].status = 'pending';
       const { id } = flagsData[0];
       FlagModel.flags = flagsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -193,7 +193,7 @@ describe('Flags controller', () => {
       flagsData[0].status = 'pending';
       const { id } = flagsData[0];
       FlagModel.flags = flagsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = true;

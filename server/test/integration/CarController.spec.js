@@ -4,7 +4,7 @@ import path from 'path';
 import carsData from '../carsData';
 import server from '../../index';
 import Cars from '../../models/CarModel';
-import UserModel from '../../models/UserModel';
+// import UserModel from '../../models/UserModel';
 import generateToken from '../../lib/generateToken';
 import usersData from '../usersData';
 
@@ -17,12 +17,12 @@ describe('Cars', () => {
   const carsArray = () => {
     Cars.cars = carsData;
   };
-  const usersArray = () => {
-    UserModel.users = usersData;
-  };
+  // const usersArray = () => {
+  //   UserModel.users = usersData;
+  // };
   describe('Create Ad', () => {
     it('should return error 400 if request does not contain all required fields', (done) => {
-      usersArray();
+      //  usersArray();
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -47,7 +47,7 @@ describe('Cars', () => {
     });
 
     it('should return error 400 if user has the same car that is available', (done) => {
-      usersArray();
+      // usersArray();
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -74,7 +74,7 @@ describe('Cars', () => {
         });
     });
     it('should return error 400 if there is no image', (done) => {
-      usersArray();
+      // usersArray();
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -290,7 +290,7 @@ describe('Cars', () => {
     });
     it('should return error 401 if another user attempts update an ad', () => {
       carsArray();
-      usersArray();
+      // usersArray();
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);

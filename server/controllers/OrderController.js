@@ -1,47 +1,47 @@
-import CarModel from '../models/CarModel';
-import UserModel from '../models/UserModel';
+// import CarModel from '../models/CarModel';
+// import UserModel from '../models/UserModel';
 import OrderModel from '../models/OrderModel';
 import validateData from '../lib/validateData';
 
 
 const Order = {
-  create(req, res) {
-    req.body.buyerId = req.userId;
-    const requiredParams = ['carId', 'priceOffered', 'buyerId'];
-    if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
-      return Order.errorResponse(res, 400, 'Select car and state amount you want to pay');
-    }
-    // verify the car and its status
-    const car = CarModel.carIsEligible(req.body.carId);
-    if (!car) {
-      return Order.errorResponse(res, 404, 'This car is not available for purchase');
-    }
+  // create(req, res) {
+  //   req.body.buyerId = req.userId;
+  //   const requiredParams = ['carId', 'priceOffered', 'buyerId'];
+  //   if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+  //     return Order.errorResponse(res, 400, 'Select car and state amount you want to pay');
+  //   }
+  //   // verify the car and its status
+  //   const car = CarModel.carIsEligible(req.body.carId);
+  //   if (!car) {
+  //     return Order.errorResponse(res, 404, 'This car is not available for purchase');
+  //   }
 
-    const seller = UserModel.isUserActive('id', car.owner);
-    if (!seller) {
-      return Order.errorResponse(res, 404, 'Unverified seller. Kindly check back');
-    }
-    const order = OrderModel.createOrder({
-      buyerId: req.body.buyerId,
-      sellerId: car.owner,
-      carId: req.body.carId,
-      price: car.price,
-      priceOffered: req.body.priceOffered,
-    });
-    return res.status(200).send({
-      status: 200,
-      data: {
-        id: order.id,
-        carId: req.body.carId,
-        date: order.date,
-        status: order.status,
-        price: order.price,
-        priceOffered: order.priceOffered,
-        sellerId: seller.id,
-        buyerId: order.buyerId,
-      },
-    });
-  },
+  //   const seller = UserModel.isUserActive('id', car.owner);
+  //   if (!seller) {
+  //     return Order.errorResponse(res, 404, 'Unverified seller. Kindly check back');
+  //   }
+  //   const order = OrderModel.createOrder({
+  //     buyerId: req.body.buyerId,
+  //     sellerId: car.owner,
+  //     carId: req.body.carId,
+  //     price: car.price,
+  //     priceOffered: req.body.priceOffered,
+  //   });
+  //   return res.status(200).send({
+  //     status: 200,
+  //     data: {
+  //       id: order.id,
+  //       carId: req.body.carId,
+  //       date: order.date,
+  //       status: order.status,
+  //       price: order.price,
+  //       priceOffered: order.priceOffered,
+  //       sellerId: seller.id,
+  //       buyerId: order.buyerId,
+  //     },
+  //   });
+  // },
   updatePrice(req, res) {
     const requiredParams = ['orderId', 'newPrice'];
 
@@ -91,48 +91,50 @@ const Order = {
  * status could be pending, accepted (by seller), rejected(by seller),
  * completed(buyer), cancelled(buyer)
  */
-  updateOrderStatus(req, res) {
-    const reqPerson = parseInt(req.userId, 10);
-    const { status } = req.body;
-    // get orderid
-    const { orderId } = req.params;
-    if (!orderId || !status) {
-      return Order.errorResponse(res, 400, 'Invalid input');
-    }
-    // retrieve the order
-    const order = OrderModel.getOrder(orderId);
-    if (!order) {
-      return Order.errorResponse(res, 404, 'Order details not found');
-    }
-    // check if seller and buyer are active
-    const seller = UserModel.isUserActive('id', order.sellerId);
-    const buyer = UserModel.isUserActive('id', order.buyerId);
-    if (!seller || !buyer) {
-      return Order.errorResponse(res, 406, 'Seller or buyer inactive');
-    }
-    // buyer
-    if (reqPerson !== parseInt(buyer.id, 10) && reqPerson !== parseInt(seller.id, 10)) {
-      return Order.errorResponse(res, 403, 'You dont have the permission to modify this resource');
-    }
+  // updateOrderStatus(req, res) {
+  //   const reqPerson = parseInt(req.userId, 10);
+  //   const { status } = req.body;
+  //   // get orderid
+  //   const { orderId } = req.params;
+  //   if (!orderId || !status) {
+  //     return Order.errorResponse(res, 400, 'Invalid input');
+  //   }
+  //   // retrieve the order
+  //   const order = OrderModel.getOrder(orderId);
+  //   if (!order) {
+  //     return Order.errorResponse(res, 404, 'Order details not found');
+  //   }
+  //   // check if seller and buyer are active
+  //   const seller = UserModel.isUserActive('id', order.sellerId);
+  //   const buyer = UserModel.isUserActive('id', order.buyerId);
+  //   if (!seller || !buyer) {
+  //     return Order.errorResponse(res, 406, 'Seller or buyer inactive');
+  //   }
+  //   // buyer
+  //   if (reqPerson !== parseInt(buyer.id, 10) && reqPerson !== parseInt(seller.id, 10)) {
+  // eslint-disable-next-line max-len
+  //     return Order.errorResponse(res, 403, 'You dont have the permission to modify this resource');
+  //   }
 
-    const buyerOptions = ['completed', 'cancelled'];
-    const sellerOptions = ['accepted', 'rejected'];
-    const buyerPerson = parseInt(buyer.id, 10);
-    const sellerPerson = parseInt(seller.id, 10);
-    let updatedOrder;
+  //   const buyerOptions = ['completed', 'cancelled'];
+  //   const sellerOptions = ['accepted', 'rejected'];
+  //   const buyerPerson = parseInt(buyer.id, 10);
+  //   const sellerPerson = parseInt(seller.id, 10);
+  //   let updatedOrder;
 
-    if (reqPerson === buyerPerson && buyerOptions.includes(status)
-      && sellerOptions.includes(order.status)) {
-      updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-    } else if (reqPerson === sellerPerson && order.status.toLowerCase() === 'pending'
-      && sellerOptions.includes(status)) {
-      updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-    } else {
-      return Order.errorResponse(res, 400, 'You cannot update the status of this order at its state');
-    }
+  //   if (reqPerson === buyerPerson && buyerOptions.includes(status)
+  //     && sellerOptions.includes(order.status)) {
+  //     updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+  //   } else if (reqPerson === sellerPerson && order.status.toLowerCase() === 'pending'
+  //     && sellerOptions.includes(status)) {
+  //     updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+  //   } else {
+  // eslint-disable-next-line max-len
+  //     return Order.errorResponse(res, 400, 'You cannot update the status of this order at its state');
+  //   }
 
-    return Order.successResponse(res, 200, updatedOrder);
-  },
+  //   return Order.successResponse(res, 200, updatedOrder);
+  // },
 
   deleteAnOrder(req, res) {
     const order = OrderModel.getOrder(req.params.orderId);

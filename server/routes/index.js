@@ -10,7 +10,6 @@ import upload from '../lib/upload';
 
 
 const router = express.Router();
-
 // user signup
 router.post('/auth/signup', User.create);
 
@@ -21,28 +20,28 @@ router.post('/auth/signin', User.signIn);
 router.get('/auth/logout', logout, User.logout);
 
 // get cars within a price range
-router.get('/car/price/', Car.getCarsWithinPriceRange);
+// router.get('/car/price/', Car.getCarsWithinPriceRange);
 
 // get cars by manufacturer
-router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
+// router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 
 // get cars by body type
-router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
+// router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
 
 // get cars by state
-router.get('/car/state/:state', Car.getCarsByProperty);
+// router.get('/car/state/:state', Car.getCarsByProperty);
 
 // get a single ad
-router.get('/car/:id', Car.getSingleAd);
+// router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-router.get('/cars/status/available', Car.getAllUnsoldCars);
+// router.get('/cars/status/available', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users
  */
 // user make an order
-router.post('/order', auth, Order.create);
+// router.post('/order', auth, Order.create);
 
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
@@ -60,12 +59,12 @@ router.delete('/orders/:orderId', auth, Order.deleteAnOrder);
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
 
-router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
+// router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
 
 // update ad. Possible status include [ available, suspended, sold]
-router.patch('/car/:id', auth, Car.updateAdvert);
+// router.patch('/car/:id', auth, Car.updateAdvert);
 
 // change password
 router.patch('/user', auth, User.changePassword);
@@ -78,7 +77,7 @@ router.patch('/user', auth, User.changePassword);
 router.get('/car', adminAuth, Car.getAll);
 
 // admin delete an ad
-router.delete('/car/:id', adminAuth, Car.deleteAd);
+// router.delete('/car/:id', adminAuth, Car.deleteAd);
 
 // make user an admin
 router.patch('/user/:id', adminAuth, User.makeAdmin);

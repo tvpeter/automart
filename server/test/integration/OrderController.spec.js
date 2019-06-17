@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import carsData from '../carsData';
 import server from '../../index';
 import CarModel from '../../models/CarModel';
-import UserModel from '../../models/UserModel';
+// import UserModel from '../../models/UserModel';
 import generateToken from '../../lib/generateToken';
 import usersData from '../usersData';
 import ordersData from '../ordersData';
@@ -18,7 +18,7 @@ describe('Order transaction', () => {
     it('should create an order', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -46,7 +46,7 @@ describe('Order transaction', () => {
     it('should return error 400 if carId or price is not supplied', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -68,7 +68,7 @@ describe('Order transaction', () => {
     it('should return error 400 if car id is invalid', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -91,7 +91,7 @@ describe('Order transaction', () => {
     it('should return error 404 if car is not found', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -114,7 +114,7 @@ describe('Order transaction', () => {
     it('should return error 404 if car status is not == available', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -138,7 +138,7 @@ describe('Order transaction', () => {
     it('should return 404 if seller is not active', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -163,7 +163,7 @@ describe('Order transaction', () => {
     it('should return 401 if user is not logged in', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
 
       const user = usersData[0];
       user.isAdmin = false;
@@ -186,7 +186,7 @@ describe('Order transaction', () => {
   // seller update order price
   describe('Seller update order price while status is still pending', () => {
     it('should update the order price ', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       ordersData[0].sellerId = user.id;
@@ -211,7 +211,7 @@ describe('Order transaction', () => {
     it('should return error 400 if newprice is not stated ', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       ordersData[0].buyerId = user.id;
@@ -232,7 +232,7 @@ describe('Order transaction', () => {
     it('should return error 400 if order id is not supplied ', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       ordersData[0].buyerId = user.id;
@@ -254,7 +254,7 @@ describe('Order transaction', () => {
     it('should return error 404 if order is not found', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       ordersData[0].buyerId = user.id;
@@ -278,7 +278,7 @@ describe('Order transaction', () => {
     it('should return error 404 if order is no longer pending', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       ordersData[0].buyerId = user.id;
@@ -303,7 +303,7 @@ describe('Order transaction', () => {
     it('should return error 400 if old and new prices are the same ', (done) => {
       carsData[0].owner = usersData[1].id;
       CarModel.cars = carsData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
 
@@ -327,7 +327,7 @@ describe('Order transaction', () => {
     it('should return an array of the users sold ads', (done) => {
       ordersData[0].sellerId = usersData[0].id;
       ordersData[0].status = 'completed';
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
 
@@ -345,7 +345,7 @@ describe('Order transaction', () => {
     });
     it('should return error 404 if user has not sold on the platform', (done) => {
       ordersData[0].sellerId = usersData[1].id;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[0];
 
       user.isAdmin = false;
@@ -359,7 +359,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 401 if user is not logged in', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
 
       chai.request(server).get('/api/v1/orders/me')
@@ -374,7 +374,7 @@ describe('Order transaction', () => {
   // view all orders
   describe('View all orders', () => {
     it('should return all orders placed', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       user.isAdmin = true;
@@ -389,7 +389,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 404 if there are no orders', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = [];
       const user = usersData[0];
       user.isAdmin = true;
@@ -413,7 +413,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 401 if user is not admin', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       user.isAdmin = false;
@@ -430,7 +430,7 @@ describe('Order transaction', () => {
   // view a single order
   describe('View a single order', () => {
     it('should return order if it is admin', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       OrderModel.orders = ordersData;
       const user = usersData[0];
@@ -445,7 +445,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return order if it is the seller', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].sellerId = usersData[0].id;
       OrderModel.orders = ordersData;
@@ -461,7 +461,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return order if it is the buyer', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].buyerId = usersData[0].id;
       OrderModel.orders = ordersData;
@@ -477,7 +477,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 404 if order is not found', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0] + 1;
       ordersData[0].buyerId = usersData[0].id;
       OrderModel.orders = ordersData;
@@ -493,7 +493,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 403 if it is not buyer or seller or admin', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].buyerId = usersData[1].id;
       ordersData[0].sellerId = usersData[2].id;
@@ -514,7 +514,7 @@ describe('Order transaction', () => {
   // update order status
   describe('Seller and Buyer update order status', () => {
     afterEach(() => {
-      UserModel.users = [];
+      // UserModel.users = [];
       OrderModel.orders = [];
     });
     it('should update order status by seller when it is pending', (done) => {
@@ -524,7 +524,7 @@ describe('Order transaction', () => {
       ordersData[0].buyerId = usersData[1].id;
       usersData[1].status = 'active';
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -542,7 +542,7 @@ describe('Order transaction', () => {
       ordersData[0].sellerId = usersData[0].id;
       ordersData[0].buyerId = usersData[1].id;
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[1];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -560,7 +560,7 @@ describe('Order transaction', () => {
       ordersData[0].sellerId = usersData[0].id;
       ordersData[0].buyerId = usersData[1].id;
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[1];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -577,7 +577,7 @@ describe('Order transaction', () => {
       ordersData[0].sellerId = usersData[0].id;
       ordersData[0].buyerId = usersData[1].id;
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[1];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -594,7 +594,7 @@ describe('Order transaction', () => {
       ordersData[1].buyerId = usersData[2].id;
       usersData[2].status = 'disabled';
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[1];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -612,7 +612,7 @@ describe('Order transaction', () => {
       usersData[0].status = 'active';
       usersData[1].status = 'active';
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[2];
       user.isAdmin = true;
       const token = generateToken(user.id, user.isAdmin);
@@ -630,7 +630,7 @@ describe('Order transaction', () => {
       usersData[0].status = 'active';
       usersData[1].status = 'active';
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[0];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -649,7 +649,7 @@ describe('Order transaction', () => {
       usersData[0].status = 'active';
       usersData[1].status = 'active';
       OrderModel.orders = ordersData;
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const user = usersData[1];
       user.isAdmin = false;
       const token = generateToken(user.id, user.isAdmin);
@@ -665,7 +665,7 @@ describe('Order transaction', () => {
   // delete an order -  seller and admin can delete a cancelled order
   describe('deletes a cancelled order', () => {
     it('should return error 400 if seller attempts to delete an uncancelled order', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].status = 'rejected';
       ordersData[0].sellerId = usersData[0].id;
@@ -682,7 +682,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 404 if order is not found', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       OrderModel.orders = ordersData;
       const user = usersData[0];
       user.isAdmin = true;
@@ -695,7 +695,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 403 if a logged in user attempts to delete the order', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].sellerId = usersData[0].id;
       ordersData[0].buyerId = usersData[1].id;
@@ -711,7 +711,7 @@ describe('Order transaction', () => {
         });
     });
     it('seller should delete an order that is cancelled', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].status = 'cancelled';
       ordersData[0].sellerId = usersData[0].id;
@@ -728,7 +728,7 @@ describe('Order transaction', () => {
         });
     });
     it('admin should delete any order', (done) => {
-      UserModel.users = usersData;
+      // UserModel.users = usersData;
       const { id } = ordersData[0];
       ordersData[0].status = 'accepted';
       OrderModel.orders = ordersData;

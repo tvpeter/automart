@@ -23,19 +23,19 @@ router.get('/auth/logout', logout, User.logout);
 // router.get('/car/price/', Car.getCarsWithinPriceRange);
 
 // get cars by manufacturer
-// router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
+router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 
 // get cars by body type
-// router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
+router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
 
 // get cars by state
-// router.get('/car/state/:state', Car.getCarsByProperty);
+router.get('/car/state/:state', Car.getCarsByProperty);
 
 // get a single ad
-// router.get('/car/:id', Car.getSingleAd);
+router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-// router.get('/cars/status/available', Car.getAllUnsoldCars);
+router.get('/cars', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users
@@ -64,7 +64,7 @@ router.patch('/order', auth, Order.updatePrice);
 router.post('/flag', auth, Flag.createFlag);
 
 // update ad. Possible status include [ available, suspended, sold]
-// router.patch('/car/:id', auth, Car.updateAdvert);
+router.patch('/car/:id', auth, Car.updateAdvert);
 
 // change password
 router.patch('/user', auth, User.changePassword);

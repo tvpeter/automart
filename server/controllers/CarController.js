@@ -57,60 +57,92 @@ const Car = {
     }
   },
 
-  // getCarsByProperty(req, res) {
-  //   const reqParam = Object.keys(req.params)[0];
-  //   let cars;
+  async getCarsByProperty(req, res) {
+    const reqParam = Object.keys(req.params)[0];
+    let ppty;
 
-  //   switch (reqParam.toLowerCase()) {
-  //     case 'manufacturer':
-  //       cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
-  //       break;
-  //     case 'body_type':
-  //       cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
-  //       break;
-  //     default:
-  //       cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.state);
-  //       break;
-  //   }
-  //   if (cars.length < 1) {
-  //     return Car.errorResponse(res, 404, `There are no cars for the selected ${reqParam}`);
-  //   }
-  //   return Car.successResponse(res, 200, cars);
-  // },
-  // getAllUnsoldCars(req, res) {
-  //   const cars = CarModel.getAllUnsoldCars();
+    switch (reqParam.toLowerCase()) {
+      case 'manufacturer':
+        ppty = req.params.manufacturer;
+        break;
+      case 'body_type':
+        ppty = req.params.body_type;
+        break;
+      default:
+        ppty = req.params.state;
+        break;
+    }
+    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status='available' AND ${reqParam}='${ppty}' LIMIT 100`;
+    try {
+      console.log(query);
+      const { rows } = await db.query(query);
+      if (rows.length < 1) {
+        return Car.errorResponse(res, 200, `There are no cars for the selected ${reqParam}`);
+      }
+      return Car.successResponse(res, 200, rows);
+    } catch (err) {
+      return Car.errorResponse(res, 500, err);
+    }
+  },
 
-  // eslint-disable-next-line max-len
-  //   return (cars.length < 1) ? Car.errorResponse(res, 404, 'There are no cars available now. Check back')
-  //     : Car.successResponse(res, 200, cars);
-  // },
-  // getSingleAd(req, res) {
-  //   if (req.params.id.trim().length !== 13) {
-  //     return Car.errorResponse(res, 400, 'Invalid ad id');
-  //   }
-  //   const car = CarModel.findSingle(req.params.id);
-  //   if (!car) {
-  //     return Car.errorResponse(res, 404, 'The ad you are looking for is no longer available');
-  //   }
-  //   return Car.successResponse(res, 200, car);
-  // },
+  async getAllUnsoldCars(req, res) {
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE status=\'available\'';
+    try {
+      const { rows } = await db.query(query);
+      return (rows.length < 1) ? Car.errorResponse(res, 404, 'There are no cars available now. Check back')
+        : Car.successResponse(res, 200, rows);
+    } catch (err) {
+      return Car.errorResponse(res, 500, err);
+    }
+  },
 
-  // updateAdvert(req, res) {
-  //   const car = CarModel.findSingle(req.body.id);
-  //   if (!car) {
-  //     return Car.errorResponse(res, 404, 'The advert you want to update is not available');
-  //   }
+  async getSingleAd(req, res) {
+    if (req.params.id.trim().length !== 13) {
+      return Car.errorResponse(res, 400, 'Invalid ad id');
+    }
+    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE id=${req.params.id}`;
+    try {
+      const { rows } = await db.query(query);
+      const car = rows[0];
+      if (!car) {
+        return Car.errorResponse(res, 404, 'The ad you are looking for is no longer available');
+      }
+      return Car.successResponse(res, 200, car);
+    } catch (err) {
+      return Car.errorResponse(res, 500, err);
+    }
+  },
 
-  //   const { userId, role } = req;
-  //   if (parseInt(userId, 10) !== parseInt(car.owner, 10) && !role) {
-  //     return Car.errorResponse(res, 401, 'You do not have the permission to update this data');
-  //   }
-  //   const updatedCar = (parseInt(userId, 10) === parseInt(car.owner, 10))
-  //     ? CarModel.completeUpdate(req.body.id, req.body)
-  //     : CarModel.updateAdStatus(req.body.id, req.body);
+  async updateAdvert(req, res) {
+    const reqFields = ['status', 'price', 'description'];
+    if (validatenewCar(reqFields, req.body)) {
+      Car.errorResponse(res, 400, 'Fill all fields');
+    }
+    const query = `SELECT * FROM cars WHERE id=${req.params.id}`;
+    try {
+      const { rows } = await db.query(query);
+      if (rows.length < 1) {
+        return Car.errorResponse(res, 404, 'The advert you want to update is not available');
+      }
 
-  //   return Car.successResponse(res, 200, updatedCar);
-  // },
+      const { userId, role } = req;
+      if (parseInt(userId, 10) !== parseInt(rows[0].owner, 10) && !role) {
+        return Car.errorResponse(res, 401, 'You do not have the permission to update this data');
+      }
+
+      // if it's seller update status, price & desc. else if its admin only the status
+      const text = (parseInt(userId, 10) === parseInt(rows[0].owner, 10))
+        ? `UPDATE cars SET status='${req.body.status}', price=${req.body.price}, description='${req.body.description}' WHERE id=${req.params.id} RETURNING *`
+        : `UPDATE cars SET status='${req.body.status}' WHERE id=${req.params.id} RETURNING *`;
+      console.log(text);
+      const result = await db.query(text);
+      const updatedCar = result.rows[0];
+
+      return Car.successResponse(res, 200, updatedCar);
+    } catch (err) {
+      return Car.errorResponse(res, 500, err);
+    }
+  },
 
   // getCarsWithinPriceRange(req, res) {
   //   const min = req.query.min ? req.query.min : 0;
@@ -135,6 +167,7 @@ const Car = {
 
   //   return Car.errorResponse(res, 200, 'Ad successfully deleted');
   // },
+
   errorResponse(res, code, message) {
     return res.status(code).send({
       status: code,

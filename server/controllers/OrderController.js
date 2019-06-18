@@ -1,4 +1,3 @@
-import OrderModel from '../models/OrderModel';
 import validateData from '../lib/validateData';
 import db from '../services/db';
 
@@ -35,49 +34,53 @@ const Order = {
       return Order.errorResponse(res, 500, err);
     }
   },
-  updatePrice(req, res) {
+  async updatePrice(req, res) {
     const requiredParams = ['orderId', 'newPrice'];
-
-    if (validateData(requiredParams, req.body)) {
+    const newPrice = parseFloat(req.body.newPrice);
+    if (validateData(requiredParams, req.body) || req.body.orderId.trim().length !== 13) {
       return Order.errorResponse(res, 400, 'Ensure to send the order id and new price');
     }
-    // check that the order exist and status is still pending
-    const order = OrderModel.getOrder(req.body.orderId);
-    if (!order || order.status.toLowerCase() !== 'pending') {
-      return Order.errorResponse(res, 404, 'Check that the order is still pending');
-    }
-    // check that the request is coming from the buyer
+
+    // check that the request is coming from the buyer with a different price
+    // and the order is still paying
     const buyer = req.userId;
+    const text = `SELECT price FROM orders WHERE id=${req.body.orderId} AND buyerid=${buyer} AND status='pending'`;
 
-    if (parseInt(buyer, 10) !== parseInt(order.buyerId, 10)) {
-      return Order.errorResponse(res, 403, 'You dont have the permission to modify this order');
+    try {
+      const { rows } = await db.query(text);
+      // the comparison is not working as expected
+      if (rows.length !== 1 && parseFloat(rows[0].price) !== parseFloat(newPrice)) {
+        return Order.errorResponse(res, 400, 'Check that the order is valid and still pending and your new price is different');
+      }
+      // update the price and return the response
+      const tm = new Date().toLocaleString();
+      const query = `UPDATE orders SET priceoffered=${newPrice}, updated_at='${tm}' WHERE id=${req.body.orderId} AND buyerid=${buyer} returning *`;
+      const result = await db.query(query);
+      return Order.successResponse(res, 200, result.rows[0]);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
     }
-
-    // check that the new price is diff from the former
-    if (parseFloat(req.body.newPrice) === parseFloat(order.priceOffered)) {
-      return Order.errorResponse(res, 400, 'The new offered price and the old are the same');
-    }
-    // update the price and return the response
-    const updatedPriceOrder = OrderModel.updateOrderPrice(req.body.orderId, req.body.newPrice);
-    return Order.successResponse(res, 200, updatedPriceOrder);
   },
-  mySoldAds(req, res) {
+  async mySoldAds(req, res) {
     const { userId } = req;
-    const soldAds = OrderModel.getSoldAdsByUser(userId);
-    if (soldAds.length === 0) {
-      return Order.errorResponse(res, 404, 'You have not sold on the platform');
+    const text = `SELECT * FROM orders WHERE sellerid=${userId}`;
+    try {
+      const { rows } = await db.query(text);
+      return (rows.length < 1) ? Order.errorResponse(res, 200, 'You do not have any transaction yet')
+        : Order.successResponse(res, 200, rows);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
     }
-    return res.status(200).send({
-      status: 200,
-      data: soldAds,
-    });
   },
-  getAllOrders(req, res) {
-    const orders = OrderModel.getAllOrders();
-    if (orders < 1) {
-      return Order.errorResponse(res, 404, 'There are no orders now. Check back');
+  async getAllOrders(req, res) {
+    const text = 'SELECT * FROM orders ORDER BY updated_at DESC';
+    try {
+      const { rows } = await db.query(text);
+      return (rows.length < 1) ? Order.errorResponse(res, 404, 'There are no orders now. Check back')
+        : Order.successResponse(res, 200, rows);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
     }
-    return Order.successResponse(res, 200, orders);
   },
 
   /**
@@ -129,39 +132,44 @@ const Order = {
   //   return Order.successResponse(res, 200, updatedOrder);
   // },
 
-  deleteAnOrder(req, res) {
-    const order = OrderModel.getOrder(req.params.orderId);
-    if (!order) {
-      return Order.errorResponse(res, 404, 'The order does not exist');
+  async deleteAnOrder(req, res) {
+    if (req.params.orderId.toString().length !== 13) {
+      return Order.errorResponse(res, 400, 'Wrong order id');
     }
-    const seller = parseInt(order.sellerId, 10);
+    const { userId, role } = req;
 
-    // seller can deleted a cancelled order
-    const requester = parseInt(req.userId, 10);
-    if (requester !== seller && !req.role) {
-      return Order.errorResponse(res, 403, 'You dont have permission to delete this resource');
+    const query = (role) ? `DELETE FROM orders WHERE id=${req.params.orderId} RETURNING *`
+      : `DELETE FROM orders WHERE id=${req.params.orderId} AND sellerId=${userId} AND status='cancelled' RETURNING *`;
+
+    try {
+      const { rows } = await db.query(query);
+      return (rows.length < 1) ? Order.errorResponse(res, 403, 'Only admins and seller (when order is cancelled) can delete an order')
+        : Order.successResponse(res, 200, rows[0]);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
     }
-
-    if (order.status.toLowerCase() !== 'cancelled' && requester === seller) {
-      return Order.errorResponse(res, 400, 'You cannot delete an incomplete transaction');
-    }
-
-    const deletedOrder = OrderModel.deleteOrder(order);
-
-    return Order.successResponse(res, 200, deletedOrder[0]);
   },
-  getSingleOrder(req, res) {
-    const order = OrderModel.getOrder(req.params.orderId);
-    if (!order) {
-      return Order.errorResponse(res, 404, 'Order not found');
+  async getSingleOrder(req, res) {
+    if (req.params.orderId.toString().length !== 13) {
+      return Order.errorResponse(res, 400, 'Invalid order id');
     }
-    const requester = parseInt(req.userId, 10);
-    if ((requester !== parseInt(order.sellerId, 10)) && (requester !== parseInt(order.buyerId, 10))
-      && !req.role) {
-      return Order.errorResponse(res, 403, 'You dont have the permission to view this resource');
-    }
+    const { userId, role } = req;
+    const query = `SELECT buyerid, sellerid FROM orders WHERE id=${req.params.orderId}`;
+    try {
+      const { rows } = await db.query(query);
+      // eslint-disable-next-line max-len
+      if (!role && rows[0].buyerid !== userId && rows[0].sellerid !== userId) {
+        return Order.errorResponse(res, 401, 'You dont have the permission to view this resource');
+      }
 
-    return Order.successResponse(res, 200, order);
+      const text = `SELECT * FROM orders WHERE id=${req.params.orderId}`;
+
+      const result = await db.query(text);
+      return (result.rows.length !== 1) ? Order.errorResponse(res, 200, 'Order not found')
+        : Order.successResponse(res, 200, result.rows[0]);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
+    }
   },
 
   errorResponse(res, statuscode, msg) {

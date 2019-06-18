@@ -59,7 +59,7 @@ router.delete('/orders/:orderId', auth, Order.deleteAnOrder);
 // seller update offer price
 router.patch('/order', auth, Order.updatePrice);
 
-// router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
+router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
 

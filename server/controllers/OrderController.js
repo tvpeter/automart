@@ -87,50 +87,41 @@ const Order = {
  * status could be pending, accepted (by seller), rejected(by seller),
  * completed(buyer), cancelled(buyer)
  */
-  // updateOrderStatus(req, res) {
-  //   const reqPerson = parseInt(req.userId, 10);
-  //   const { status } = req.body;
-  //   // get orderid
-  //   const { orderId } = req.params;
-  //   if (!orderId || !status) {
-  //     return Order.errorResponse(res, 400, 'Invalid input');
-  //   }
-  //   // retrieve the order
-  //   const order = OrderModel.getOrder(orderId);
-  //   if (!order) {
-  //     return Order.errorResponse(res, 404, 'Order details not found');
-  //   }
-  //   // check if seller and buyer are active
-  //   const seller = UserModel.isUserActive('id', order.sellerId);
-  //   const buyer = UserModel.isUserActive('id', order.buyerId);
-  //   if (!seller || !buyer) {
-  //     return Order.errorResponse(res, 406, 'Seller or buyer inactive');
-  //   }
-  //   // buyer
-  //   if (reqPerson !== parseInt(buyer.id, 10) && reqPerson !== parseInt(seller.id, 10)) {
-  // eslint-disable-next-line max-len
-  //     return Order.errorResponse(res, 403, 'You dont have the permission to modify this resource');
-  //   }
+  async updateOrderStatus(req, res) {
+    let newStatus = req.body.status;
+    newStatus = newStatus.toLowerCase();
 
-  //   const buyerOptions = ['completed', 'cancelled'];
-  //   const sellerOptions = ['accepted', 'rejected'];
-  //   const buyerPerson = parseInt(buyer.id, 10);
-  //   const sellerPerson = parseInt(seller.id, 10);
-  //   let updatedOrder;
+    // get orderid
+    const { orderId } = req.params;
+    if (!orderId || !newStatus) {
+      return Order.errorResponse(res, 400, 'Invalid input');
+    }
+    const reqPerson = req.userId;
 
-  //   if (reqPerson === buyerPerson && buyerOptions.includes(status)
-  //     && sellerOptions.includes(order.status)) {
-  //     updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-  //   } else if (reqPerson === sellerPerson && order.status.toLowerCase() === 'pending'
-  //     && sellerOptions.includes(status)) {
-  //     updatedOrder = OrderModel.updateOrderStatus(orderId, status);
-  //   } else {
-  // eslint-disable-next-line max-len
-  //     return Order.errorResponse(res, 400, 'You cannot update the status of this order at its state');
-  //   }
+    const query = `SELECT buyerid, sellerid, status FROM orders WHERE id=${orderId}`;
+    const updateQuery = `UPDATE orders SET status='${newStatus}' WHERE id=${orderId} RETURNING *`;
+    try {
+      const { rows } = await db.query(query);
+      if (rows.length !== 1) {
+        return Order.errorResponse(res, 404, 'The order is not available');
+      }
+      const buyer = rows[0].buyerid;
+      const seller = rows[0].sellerid;
+      const statusInDb = rows[0].status.toLowerCase();
+      if (reqPerson !== buyer && reqPerson !== seller) {
+        return Order.errorResponse(res, 403, 'You dont have the permission to modify this resource');
+      }
 
-  //   return Order.successResponse(res, 200, updatedOrder);
-  // },
+      if (!Order.userUpdateStatus(reqPerson, buyer, newStatus, seller, statusInDb)) {
+        return Order.errorResponse(res, 400, 'You cannot update the status of this order at its state');
+      }
+
+      const updatedOrder = await db.query(updateQuery);
+      return Order.successResponse(res, 200, updatedOrder.rows[0]);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
+    }
+  },
 
   async deleteAnOrder(req, res) {
     if (req.params.orderId.toString().length !== 13) {
@@ -149,6 +140,7 @@ const Order = {
       return Order.errorResponse(res, 500, err);
     }
   },
+
   async getSingleOrder(req, res) {
     if (req.params.orderId.toString().length !== 13) {
       return Order.errorResponse(res, 400, 'Invalid order id');
@@ -172,12 +164,35 @@ const Order = {
     }
   },
 
+  userUpdateStatus(reqPerson, buyer, newStatus, seller, statusInDb) {
+    const sellerOptions = ['accepted', 'rejected'];
+    let result = false;
+    // buyer can cancel an accepted or rejected offer
+    // buyer cannot complete a rejected offer
+    if (reqPerson === buyer && newStatus === 'cancelled'
+      && sellerOptions.includes(statusInDb)) {
+      result = true;
+    } else if (reqPerson === buyer && newStatus === 'completed'
+      && statusInDb === 'accepted') {
+      result = true;
+      // seller can accept or reject a pending transaction
+    } else if (reqPerson === seller && statusInDb === 'pending'
+      && sellerOptions.includes(newStatus)) {
+      result = true;
+      // seller can change a rejected offer to accepted
+    } else if (reqPerson === seller && statusInDb === 'rejected' && newStatus === 'accepted') {
+      result = true;
+    }
+    return result;
+  },
+
   errorResponse(res, statuscode, msg) {
     return res.status(statuscode).send({
       status: statuscode,
       message: msg,
     });
   },
+
   successResponse(res, statuscode, data) {
     return res.status(statuscode).send({
       status: statuscode,

@@ -1,6 +1,5 @@
 import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
-// import CarModel from '../models/CarModel';
 import validatenewCar from '../lib/validateData';
 import db from '../services/db';
 
@@ -82,7 +81,7 @@ const Car = {
   },
 
   async getAllUnsoldCars(req, res) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE status=\'available\'';
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status=\'available\'';
     try {
       const { rows } = await db.query(query);
       return (rows.length < 1) ? Car.errorResponse(res, 404, 'There are no cars available now. Check back')

@@ -1,47 +1,40 @@
-// import CarModel from '../models/CarModel';
-// import UserModel from '../models/UserModel';
 import OrderModel from '../models/OrderModel';
 import validateData from '../lib/validateData';
+import db from '../services/db';
 
 
 const Order = {
-  // create(req, res) {
-  //   req.body.buyerId = req.userId;
-  //   const requiredParams = ['carId', 'priceOffered', 'buyerId'];
-  //   if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
-  //     return Order.errorResponse(res, 400, 'Select car and state amount you want to pay');
-  //   }
-  //   // verify the car and its status
-  //   const car = CarModel.carIsEligible(req.body.carId);
-  //   if (!car) {
-  //     return Order.errorResponse(res, 404, 'This car is not available for purchase');
-  //   }
+  async create(req, res) {
+    req.body.buyerId = req.userId;
+    const requiredParams = ['carId', 'priceOffered', 'buyerId'];
+    if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+      return Order.errorResponse(res, 400, 'Select car and state amount you want to pay');
+    }
+    const query = `select cars.id, cars.status carstatus, cars.price, cars.owner, users.status sellerstatus from cars inner join users on cars.owner=users.id where cars.id=${req.body.carId}`;
+    try {
+      const { rows } = await db.query(query);
+      if (rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
+        return Order.errorResponse(res, 400, 'The car is not available or the seller is not active. Check back');
+      }
 
-  //   const seller = UserModel.isUserActive('id', car.owner);
-  //   if (!seller) {
-  //     return Order.errorResponse(res, 404, 'Unverified seller. Kindly check back');
-  //   }
-  //   const order = OrderModel.createOrder({
-  //     buyerId: req.body.buyerId,
-  //     sellerId: car.owner,
-  //     carId: req.body.carId,
-  //     price: car.price,
-  //     priceOffered: req.body.priceOffered,
-  //   });
-  //   return res.status(200).send({
-  //     status: 200,
-  //     data: {
-  //       id: order.id,
-  //       carId: req.body.carId,
-  //       date: order.date,
-  //       status: order.status,
-  //       price: order.price,
-  //       priceOffered: order.priceOffered,
-  //       sellerId: seller.id,
-  //       buyerId: order.buyerId,
-  //     },
-  //   });
-  // },
+      // check that the buyer doesn't have the order in pending, accepted or completed state
+      const checkOrderInDb = `SELECT id FROM orders WHERE carid=${req.body.carId} AND buyerid=${req.body.buyerId} AND status NOT IN ('rejected', 'cancelled')`;
+
+      const noInDb = await db.query(checkOrderInDb);
+      if (noInDb.rows.length > 0) {
+        return Order.errorResponse(res, 400, 'You have a similar uncompleted/completed order ');
+      }
+
+      const text = 'INSERT INTO orders (id, buyerid, carid, sellerid, price, priceoffered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+      // eslint-disable-next-line max-len
+      const values = [Date.now(), req.userId, req.body.carId, rows[0].owner, rows[0].price, req.body.priceOffered];
+
+      const result = await db.query(text, values);
+      return Order.successResponse(res, 201, result.rows[0]);
+    } catch (err) {
+      return Order.errorResponse(res, 500, err);
+    }
+  },
   updatePrice(req, res) {
     const requiredParams = ['orderId', 'newPrice'];
 

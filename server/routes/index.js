@@ -41,7 +41,7 @@ router.get('/cars', Car.getAllUnsoldCars);
  * Protected routes - users
  */
 // user make an order
-// router.post('/order', auth, Order.create);
+router.post('/order', auth, Order.create);
 
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);

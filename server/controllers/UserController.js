@@ -89,10 +89,12 @@ const User = {
       return User.errorResponse(res, 400, 'Invalid login credentials');
     }
 
-    // const user = UserModel.isUserActive('email', req.body.email);
     const query = `SELECT * FROM users WHERE email='${req.body.email}'`;
     try {
       const { rows } = await db.query(query);
+      if (rows.length < 1) {
+        return User.errorResponse(res, 404, 'Wrong username/password');
+      }
       const user = rows[0];
       const validPassword = await comparePassword(req.body.password, user.password);
       if (!validPassword) {
@@ -128,7 +130,7 @@ const User = {
       const result = await db.query(updateQuery, [hashNewPassword, userId]);
       return User.successResponse(res, 200, result.rows[0]);
     } catch (error) {
-      return User.errorResponse(res, 404, error);
+      return User.errorResponse(res, 500, error);
     }
   },
   async makeAdmin(req, res) {
@@ -139,27 +141,26 @@ const User = {
     const makeAdminQuery = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
     try {
       const { rows } = await db.query(makeAdminQuery, [true, req.params.id, 'active']);
-      return User.successResponse(res, 200, rows[0]);
+      return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
+        : User.successResponse(res, 200, rows[0]);
     } catch (error) {
-      return User.errorResponse(res, 412, 'User not found or inactive');
+      return User.errorResponse(res, 500, error);
     }
   },
 
   logout(req, res) {
-    delete req.headers['x-auth'];
-    return res.status(200).send({
-      status: 200,
-      message: 'You have been logged out successfully',
-    });
+    delete req.header('x-auth');
+    return User.errorResponse(res, 200, 'You have been logged out successfully');
   },
   async disableUser(req, res) {
     const { userId } = req.params;
     const disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
     try {
       const { rows } = await db.query(disableQuery, ['disabled', userId, 'active']);
-      return User.successResponse(res, 200, rows[0]);
+      return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
+        : User.successResponse(res, 200, rows[0]);
     } catch (error) {
-      return User.errorResponse(res, 404, 'User not found or inactive');
+      return User.errorResponse(res, 404, error);
     }
   },
 

@@ -126,6 +126,7 @@ const Car = {
       }
 
       // if it's seller update status, price & desc. else if its admin only the status
+      // status can be available, sold or suspended;
       const text = (parseInt(userId, 10) === parseInt(rows[0].owner, 10))
         ? `UPDATE cars SET status='${req.body.status}', price=${req.body.price}, description='${req.body.description}' WHERE id=${req.params.id} RETURNING *`
         : `UPDATE cars SET status='${req.body.status}' WHERE id=${req.params.id} RETURNING *`;

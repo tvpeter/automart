@@ -263,12 +263,11 @@ describe('User', () => {
     });
   });
 
-  // user logout
+  // // user logout
   // describe('User logout', () => {
   //   it('should log a user out of the app', async () => {
   //     const token = await genToken();
   //     const res = chai.request(server).get('/api/v1/auth/logout').set('x-auth', token);
-  //     console.log(res);
   //     expect(res.status).to.eq(200);
   //     // eslint-disable-next-line no-unused-expressions
   //     expect(res).not.to.have.header('x-auth');

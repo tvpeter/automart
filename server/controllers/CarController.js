@@ -47,7 +47,7 @@ const Car = {
     try {
       const { rows } = await db.query(query);
       if (rows.length < 1) {
-        return Car.errorResponse(res, 200, 'There are no cars available now. Check back');
+        return Car.errorResponse(res, 404, 'There are no cars available now. Check back');
       }
       return Car.successResponse(res, 200, rows);
     } catch (err) {
@@ -73,7 +73,7 @@ const Car = {
     const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status='available' AND ${reqParam}='${ppty}' LIMIT 100`;
     try {
       const { rows } = await db.query(query);
-      return (rows.length < 1) ? Car.errorResponse(res, 200, `There are no cars for the selected ${reqParam}`)
+      return (rows.length < 1) ? Car.errorResponse(res, 404, `There are no cars for the selected ${reqParam}`)
         : Car.successResponse(res, 200, rows);
     } catch (err) {
       return Car.errorResponse(res, 500, err);
@@ -141,14 +141,11 @@ const Car = {
 
   async getCarsWithinPriceRange(req, res) {
     const min = req.query.min ? req.query.min : 0;
-    const max = req.query.max ? req.query.max : 3000000;
-
-    // const cars = CarModel.getCarsWithinPriceRange(min, max);
+    const max = req.query.max ? req.query.max : 30000000;
     const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where price BETWEEN ${min} AND ${max}`;
     try {
       const { rows } = await db.query(query);
-
-      return (rows.length < 1) ? Car.errorResponse(res, 200, 'There are no cars within the selected range')
+      return (rows.length < 1) ? Car.errorResponse(res, 404, 'There are no cars within the selected range')
         : Car.successResponse(res, 200, rows);
     } catch (err) {
       return Car.errorResponse(res, 500, err);
@@ -163,7 +160,7 @@ const Car = {
     const query = `DELETE FROM cars WHERE id=${req.params.id} RETURNING *`;
     try {
       const { rows } = await db.query(query);
-      return (rows.length < 1) ? Car.errorResponse(res, 200, 'Selected ad not available')
+      return (rows.length < 1) ? Car.errorResponse(res, 404, 'Selected ad not available')
         : Car.successResponse(res, 200, rows[0]);
     } catch (err) {
       return Car.errorResponse(res, 500, err);

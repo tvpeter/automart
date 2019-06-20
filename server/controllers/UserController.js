@@ -149,7 +149,6 @@ const User = {
   },
 
   logout(req, res) {
-    delete req.header('x-auth');
     return User.errorResponse(res, 200, 'You have been logged out successfully');
   },
   async disableUser(req, res) {

@@ -2,10 +2,23 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv');
 
 dotenv.config();
-const pool = (process.env.NODE_ENV === 'test') ? new Pool({ connectionString: process.env.PG_URL_TEST })
-  : new Pool({ connectionString: process.env.PG_URL });
+
+let connection; let envt;
+if (process.env.NODE_ENV === 'test') {
+  connection = process.env.PG_URL_TEST;
+  envt = 'test';
+} else if (process.env.NODE_ENV === 'development') {
+  connection = process.env.PG_URL;
+  envt = 'development';
+} else if (process.env.NODE_ENV === 'production') {
+  connection = process.env.DATABASE_URL;
+  envt = 'production';
+}
+
+const pool = new Pool({ connectionString: connection });
+
 pool.on('connect', () => {
-  console.log('info', `Connected to ${process.env.NODE_ENV} Database`);
+  console.log('info', `Connected to ${envt} Database`);
 });
 const createTriggerFn = () => {
   const query = 'CREATE OR REPLACE FUNCTION trigger_set_timestamp() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at= NOW(); RETURN NEW; END;';
@@ -126,10 +139,14 @@ const createTriggerOnTable = (table) => {
 const createAllTables = () => {
   createTriggerFn();
   createUsersTable();
+  createUsersTable();
+  createCarsTable();
   createCarsTable();
   createTriggerOnTable('cars');
   createOrdersTable();
+  createOrdersTable();
   createTriggerOnTable('orders');
+  createFlagsTable();
   createFlagsTable();
 };
 

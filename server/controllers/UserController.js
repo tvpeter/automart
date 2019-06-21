@@ -65,10 +65,8 @@ const User = {
         },
       });
     } catch (error) {
-      if (error.routine === '_bt_check_unique') {
-        return User.errorResponse(res, 400, 'User with given email or phone already exist');
-      }
-      return User.errorResponse(res, 400, error);
+      return (error.routine === '_bt_check_unique') ? User.errorResponse(res, 400, 'User with given email or phone already exist')
+        : User.errorResponse(res, 400, error);
     }
   },
 

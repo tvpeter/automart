@@ -6,11 +6,11 @@
   "scripts": {
     "predev": "export NODE_ENV=development && npm run createdb",
     "dev": "npm run lint && npm run build && nodemon --exec babel-node server/index.js",
-    "pretest": "NODE_ENV=test && npm run createdb",
+    "pretest": "export NODE_ENV=test && npm run createdb",
     "test": "nyc mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
     "build": "babel server --out-dir server/build",
     "prebuild": "rm -rf server/build",
-    "prestart": "export NODE_ENV=production && npm run createdb && cat ../migrations/db.js | heroku pg:psql",
+    "prestart": "export NODE_ENV=production && npm run createdb",
     "start": "node server/build/index.js",
     "lint": "eslint server",
     "coverage": "nyc report --reporter=text-lcov | coveralls",

@@ -1,20 +1,10 @@
 import { Pool } from 'pg';
 import winston from '../logger';
+import connection from '../../config';
 
-let connection; let envt;
-if (process.env.NODE_ENV === 'test') {
-  connection = process.env.PG_URL_TEST;
-  envt = 'test';
-} else if (process.env.NODE_ENV === 'development') {
-  connection = process.env.PG_URL;
-  envt = 'development';
-} else if (process.env.NODE_ENV === 'production') {
-  connection = process.env.DATABASE_URL;
-  envt = 'production';
-}
 const pool = new Pool({ connectionString: connection });
-winston.log('info', `Connected to ${envt} database`);
-
+const db = connection.split('/');
+winston.log('info', `Connected to ${db[db.length - 1]} database`);
 export default {
   query(text, params) {
     return new Promise((resolve, reject) => {

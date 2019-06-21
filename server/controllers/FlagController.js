@@ -1,47 +1,79 @@
-import CarModel from '../models/CarModel';
-import FlagModel from '../models/FlagModel';
 import validateData from '../lib/validateData';
-import Car from './CarController';
+import db from '../services/db';
 
 const Flag = {
-  createFlag(req, res) {
+  async createFlag(req, res) {
     req.body.reportedBy = req.userId;
     const flagsReqs = ['carId', 'reason', 'reportedBy'];
     if (validateData(flagsReqs, req.body)) {
       return Flag.errorResponse(res, 400, 'Ensure to indicate the ad id and reason for the report');
     }
+    const description = (req.body.description) ? req.body.description : 'none';
+    const { carId } = req.body;
+    const reason = req.body.reason.toLowerCase();
+    let severity = 'minor';
+    if (reason === 'fake' || reason === 'stolen' || reason === 'suspicious') {
+      severity = 'extreme';
+    }
 
-    const cartoFlag = CarModel.carIsEligible(req.body.carId);
-    if (!cartoFlag) {
-      return Flag.errorResponse(res, 404, 'The ad is not longer active. Thank you.');
+    const query = `SELECT id FROM flags WHERE carid=${carId} AND reportedby=${req.body.reportedBy}`;
+    const text = `SELECT owner FROM cars WHERE id=${carId} AND status='available'`;
+    const createQuery = 'INSERT INTO flags(id, carid, reason, description, reportedby, severity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    try {
+      const { rows } = await db.query(query);
+      if (rows.length > 0) {
+        return Flag.errorResponse(res, 406, 'Your report on this ad is already recorded');
+      }
+      const result = await db.query(text);
+      if (result.rows.length < 1) {
+        return Flag.errorResponse(res, 406, 'This ad is no longer available');
+      }
+
+      const values = [Date.now(), carId, reason, description, req.userId, severity];
+      const newFlag = await db.query(createQuery, values);
+      return Flag.successResponse(res, 201, newFlag.rows[0]);
+    } catch (err) {
+      return Flag.errorResponse(res, 500, err);
     }
-    if (req.body.reason.toLowerCase() === 'fake' || req.body.reason.toLowerCase() === 'stolen' || req.body.reason === 'suspicious') {
-      req.body.severity = 'extreme';
-    }
-    // send the report
-    const newFlag = FlagModel.createFlag(req.body);
-    return Flag.successResponse(res, 200, newFlag);
   },
-  updateFlag(req, res) {
-    const flag = FlagModel.findSingleFlag(req.params.flagId);
-    if (!flag) {
-      return Flag.errorResponse(res, 404, 'Flag not found');
+  async updateFlag(req, res) {
+    if (req.params.flagId.trim().length !== 13) {
+      return Flag.errorResponse(res, 400, 'Invalid flag id');
     }
-    const updatedFlag = FlagModel.updateFlagStatus(req.params.flagId);
-    return Car.successResponse(res, 200, updatedFlag);
+    const text = `UPDATE flags SET status='resolved' WHERE id=${req.params.flagId} AND status='pending' RETURNING *`;
+
+    try {
+      const { rows } = await db.query(text);
+      return (rows.length < 1) ? Flag.errorResponse(res, 404, 'Flag already updated or not available')
+        : Flag.successResponse(res, 200, rows[0]);
+    } catch (err) {
+      return Flag.errorResponse(res, 500, err);
+    }
   },
 
-  deleteFlag(req, res) {
-    const flag = FlagModel.findSingleFlag(req.params.flagId);
-    if (!flag) {
-      return Flag.errorResponse(res, 404, 'The flag is no longer available');
+  async deleteFlag(req, res) {
+    if (req.params.flagId.trim().length !== 13) {
+      return Flag.errorResponse(res, 400, 'Invalid flag id');
     }
-    return Flag.errorResponse(res, 200, 'Flag successfully deleted');
+    const query = `DELETE FROM flags WHERE id=${req.params.flagId} RETURNING *`;
+    try {
+      const { rows } = await db.query(query);
+      return (rows.length < 1) ? Flag.errorResponse(res, 404, 'Flag not found')
+        : Flag.successResponse(res, 200, rows[0]);
+    } catch (err) {
+      return Flag.errorResponse(res, 500, err);
+    }
   },
-  getAllFlags(req, res) {
-    const flags = FlagModel.getAllFlags();
-    return (flags.length < 1) ? Flag.errorResponse(res, 404, 'There are no flags now.')
-      : Flag.successResponse(res, 200, flags);
+
+  async getAllFlags(req, res) {
+    const query = 'SELECT * FROM flags GROUP BY status, id';
+    try {
+      const { rows } = await db.query(query);
+      return (rows.length < 1) ? Flag.errorResponse(res, 200, 'There are no flags today')
+        : Flag.successResponse(res, 200, rows);
+    } catch (err) {
+      return Flag.errorResponse(res, 500, err);
+    }
   },
 
   errorResponse(res, statuscode, message) {

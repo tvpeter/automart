@@ -10,7 +10,6 @@ import upload from '../lib/upload';
 
 
 const router = express.Router();
-
 // user signup
 router.post('/auth/signup', User.create);
 
@@ -20,7 +19,7 @@ router.post('/auth/signin', User.signIn);
 // user log out
 router.get('/auth/logout', logout, User.logout);
 
-// get cars within a price range
+// get cars within a price range => /car/price?min=$min&max=$max
 router.get('/car/price/', Car.getCarsWithinPriceRange);
 
 // get cars by manufacturer
@@ -36,7 +35,7 @@ router.get('/car/state/:state', Car.getCarsByProperty);
 router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-router.get('/cars/status/available', Car.getAllUnsoldCars);
+router.get('/cars', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users

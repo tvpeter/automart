@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import winston from '../logger';
-import connection from '../../config';
+import connection from './config';
 
 const pool = new Pool({ connectionString: connection });
 winston.log('info', `Connected to ${connection} database`);

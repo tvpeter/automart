@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const connection = require('./config');
+const connection = require('./server/services/config');
 
 const pool = new Pool({ connectionString: connection });
 pool.on('connect', () => {

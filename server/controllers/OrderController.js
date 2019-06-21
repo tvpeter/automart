@@ -12,7 +12,7 @@ const Order = {
     const query = `select cars.id, cars.status carstatus, cars.price, cars.owner, users.status sellerstatus from cars inner join users on cars.owner=users.id where cars.id=${req.body.carId}`;
     try {
       const { rows } = await db.query(query);
-      if (rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
+      if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
         return Order.errorResponse(res, 400, 'The car is not available or the seller is not active. Check back');
       }
 
@@ -42,16 +42,17 @@ const Order = {
     }
 
     // check that the request is coming from the buyer with a different price
-    // and the order is still paying
+    // and the order is still pending
     const buyer = req.userId;
-    const text = `SELECT price FROM orders WHERE id=${req.body.orderId} AND buyerid=${buyer} AND status='pending'`;
+    const text = `SELECT price FROM orders WHERE id=${req.body.orderId} AND buyerid=${buyer} AND status NOT IN ('pending', 'cancelled')`;
 
     try {
       const { rows } = await db.query(text);
-      // the comparison is not working as expected
-      if (rows.length !== 1 && parseFloat(rows[0].price) !== parseFloat(newPrice)) {
-        return Order.errorResponse(res, 400, 'Check that the order is valid and still pending and your new price is different');
+
+      if (rows.length !== 1 || parseFloat(rows[0].price) === parseFloat(newPrice)) {
+        return Order.errorResponse(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
       }
+
       // update the price and return the response
       const tm = new Date().toLocaleString();
       const query = `UPDATE orders SET priceoffered=${newPrice}, updated_at='${tm}' WHERE id=${req.body.orderId} AND buyerid=${buyer} returning *`;
@@ -66,7 +67,7 @@ const Order = {
     const text = `SELECT * FROM orders WHERE sellerid=${userId}`;
     try {
       const { rows } = await db.query(text);
-      return (rows.length < 1) ? Order.errorResponse(res, 200, 'You do not have any transaction yet')
+      return (rows.length < 1) ? Order.errorResponse(res, 404, 'You do not have any transaction yet')
         : Order.successResponse(res, 200, rows);
     } catch (err) {
       return Order.errorResponse(res, 500, err);
@@ -134,7 +135,7 @@ const Order = {
 
     try {
       const { rows } = await db.query(query);
-      return (rows.length < 1) ? Order.errorResponse(res, 403, 'Only admins and seller (when order is cancelled) can delete an order')
+      return (rows.length < 1) ? Order.errorResponse(res, 404, 'The order does not exist')
         : Order.successResponse(res, 200, rows[0]);
     } catch (err) {
       return Order.errorResponse(res, 500, err);
@@ -151,7 +152,7 @@ const Order = {
       const { rows } = await db.query(query);
       // eslint-disable-next-line max-len
       if (!role && rows[0].buyerid !== userId && rows[0].sellerid !== userId) {
-        return Order.errorResponse(res, 401, 'You dont have the permission to view this resource');
+        return Order.errorResponse(res, 403, 'You dont have the permission to view this resource');
       }
 
       const text = `SELECT * FROM orders WHERE id=${req.params.orderId}`;

@@ -24,7 +24,6 @@ const Flag = {
       if (rows.length > 0) {
         return Flag.errorResponse(res, 406, 'Your report on this ad is already recorded');
       }
-
       const result = await db.query(text);
       if (result.rows.length < 1) {
         return Flag.errorResponse(res, 406, 'This ad is no longer available');

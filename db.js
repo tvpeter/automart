@@ -2,10 +2,10 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-const pool = new Pool({ connectionString: process.env.PG_URL });
+const pool = (process.env.NODE_ENV === 'test') ? new Pool({ connectionString: process.env.PG_URL_TEST })
+  : new Pool({ connectionString: process.env.PG_URL });
 pool.on('connect', () => {
-  console.log('error', 'Connected to Database');
+  console.log('info', `Connected to ${process.env.NODE_ENV} Database`);
 });
 const createTriggerFn = () => {
   const query = 'CREATE OR REPLACE FUNCTION trigger_set_timestamp() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at= NOW(); RETURN NEW; END;';

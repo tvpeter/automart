@@ -3,8 +3,7 @@ const connection = require('./config');
 
 const pool = new Pool({ connectionString: connection });
 pool.on('connect', () => {
-  const db = connection.split('/');
-  console.log('info', `Connected to ${db[db.length - 1]} database`);
+  console.log('info', `Connected to ${connection} database`);
 });
 const createTriggerFn = () => {
   const query = 'CREATE OR REPLACE FUNCTION trigger_set_timestamp() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at= NOW(); RETURN NEW; END;';

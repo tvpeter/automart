@@ -2,7 +2,7 @@ import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
-import db from '../services/db';
+import UserService from '../services/UserService';
 
 const User = {
   /*
@@ -27,7 +27,6 @@ const User = {
 
     req.body.password = await hashPassword(req.body.password);
 
-    const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
     const values = [
       Date.now(),
       req.body.email,
@@ -40,45 +39,34 @@ const User = {
       req.body.bank,
     ];
 
-    try {
-      const { rows } = await db.query(query, values);
+    const { rows } = await UserService.createUser(values);
 
-      const {
-        // eslint-disable-next-line camelcase
-        id, email, first_name, last_name, address, isadmin, phone, status,
-      } = rows[0];
+    const {
+      // eslint-disable-next-line camelcase
+      id, email, first_name, last_name, address, isadmin, phone, status,
+    } = rows[0];
 
-      const token = generateToken(id, isadmin);
+    const token = generateToken(id, isadmin);
 
-      return res.status(201).set('x-auth', token).send({
-        status: 201,
-        data: {
-          token,
-          id,
-          email,
-          first_name,
-          last_name,
-          address,
-          isadmin,
-          phone,
-          status,
-        },
-      });
-    } catch (error) {
-      return (error.routine === '_bt_check_unique') ? User.errorResponse(res, 400, 'User with given email or phone already exist')
-        : User.errorResponse(res, 400, error);
-    }
+    return res.status(201).set('x-auth', token).send({
+      status: 201,
+      data: {
+        token,
+        id,
+        email,
+        first_name,
+        last_name,
+        address,
+        isadmin,
+        phone,
+        status,
+      },
+    });
   },
 
   async getAll(req, res) {
-    // const users = UserModel.getAllUsers();
-    const selectAllUsers = 'SELECT (id, email, first_name, last_name, address, isAdmin, phone, status) FROM users LIMIT 50';
-    try {
-      const { rows } = await db.query(selectAllUsers);
-      return User.successResponse(res, 200, rows);
-    } catch (error) {
-      return User.errorResponse(res, 400, error.details);
-    }
+    const { rows } = await UserService.getAllUsers();
+    return User.successResponse(res, 200, rows);
   },
 
   async signIn(req, res) {
@@ -87,25 +75,20 @@ const User = {
       return User.errorResponse(res, 400, 'Invalid login credentials');
     }
 
-    const query = `SELECT * FROM users WHERE email='${req.body.email}'`;
-    try {
-      const { rows } = await db.query(query);
-      if (rows.length < 1) {
-        return User.errorResponse(res, 404, 'Wrong username/password');
-      }
-      const user = rows[0];
-      const validPassword = await comparePassword(req.body.password, user.password);
-      if (!validPassword) {
-        return User.errorResponse(res, 401, 'Wrong username/password');
-      }
-      user.token = generateToken(user.id, user.isadmin);
-      return res.status(200).header('x-auth', user.token).send({
-        status: 200,
-        data: user,
-      });
-    } catch (error) {
-      return User.errorResponse(res, 404, error);
+    const { rows } = await UserService.getUserByEmail(req.body.email);
+    if (rows.length < 1) {
+      return User.errorResponse(res, 404, 'Wrong username/password');
     }
+    const user = rows[0];
+    const validPassword = await comparePassword(req.body.password, user.password);
+    if (!validPassword) {
+      return User.errorResponse(res, 401, 'Wrong username/password');
+    }
+    user.token = generateToken(user.id, user.isadmin);
+    return res.status(200).header('x-auth', user.token).send({
+      status: 200,
+      data: user,
+    });
   },
 
   async changePassword(req, res) {
@@ -114,36 +97,24 @@ const User = {
       return User.errorResponse(res, 400, 'Fill the required fields');
     }
 
-    const query = `SELECT password FROM users WHERE id=${userId}`;
-    try {
-      const { rows } = await db.query(query);
-      const confirmPassword = await comparePassword(req.body.currentPassword, rows[0].password);
-      if (!confirmPassword) {
-        return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
-      }
-
-      const hashNewPassword = await hashPassword(req.body.newPassword);
-
-      const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
-      const result = await db.query(updateQuery, [hashNewPassword, userId]);
-      return User.successResponse(res, 200, result.rows[0]);
-    } catch (error) {
-      return User.errorResponse(res, 500, error);
+    const { rows } = await UserService.selectPassword(userId);
+    const confirmPassword = await comparePassword(req.body.currentPassword, rows[0].password);
+    if (!confirmPassword) {
+      return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
     }
+
+    const hashNewPassword = await hashPassword(req.body.newPassword);
+
+    const result = await UserService.updateUserPassword([hashNewPassword, userId]);
+    return User.successResponse(res, 200, result.rows[0]);
   },
   async makeAdmin(req, res) {
     if (!req.params.id) {
       return User.errorResponse(res, 400, 'Request does not contain required fields');
     }
-
-    const makeAdminQuery = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
-    try {
-      const { rows } = await db.query(makeAdminQuery, [true, req.params.id, 'active']);
-      return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
-        : User.successResponse(res, 200, rows[0]);
-    } catch (error) {
-      return User.errorResponse(res, 500, error);
-    }
+    const { rows } = await UserService.makeUserAdmin([true, req.params.id, 'active']);
+    return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
+      : User.successResponse(res, 200, rows[0]);
   },
 
   logout(req, res) {
@@ -151,14 +122,9 @@ const User = {
   },
   async disableUser(req, res) {
     const { userId } = req.params;
-    const disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
-    try {
-      const { rows } = await db.query(disableQuery, ['disabled', userId, 'active']);
-      return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
-        : User.successResponse(res, 200, rows[0]);
-    } catch (error) {
-      return User.errorResponse(res, 404, error);
-    }
+    const { rows } = await UserService.disableUser(['disabled', userId, 'active']);
+    return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive')
+      : User.successResponse(res, 200, rows[0]);
   },
 
   errorResponse(res, statuscode, message) {

@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import winston from '../logger';
 import connection from './config';
 
+console.log(connection);
 const pool = new Pool({ connectionString: connection });
 winston.log('info', `Connected to ${connection} database`);
 export default {

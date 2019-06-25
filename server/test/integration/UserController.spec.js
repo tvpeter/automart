@@ -116,25 +116,25 @@ describe('User', () => {
       });
     });
 
-    // it('should return error if user email has been used', async () => {
-    //   const { rows } = await db.query('SELECT email from users limit 1');
-    //   const data = dataValues();
-    //   data.email = `${rows[0].email}`;
-    //   chai.request(server).post(signupUrl).send(data).then((res) => {
-    //     expect(res.status).to.eq(400);
-    //     expect(res.body.message).to.eq('User with given email or phone already exist');
-    //   });
-    // });
+    it('should return error if user email has been used', async () => {
+      const { rows } = await db.query('SELECT email from users limit 1');
+      const data = dataValues();
+      data.email = `${rows[0].email}`;
+      chai.request(server).post(signupUrl).send(data).then((res) => {
+        expect(res.status).to.eq(400);
+        expect(res.body.message).to.eq('User with given email or phone already exist');
+      });
+    });
 
-    // it('should return error if given phone has been used', async () => {
-    //   const { rows } = await db.query('SELECT phone from users limit 1');
-    //   const data = dataValues();
-    //   data.phone = `${rows[0].phone}`;
+    it('should return error if given phone has been used', async () => {
+      const { rows } = await db.query('SELECT phone from users limit 1');
+      const data = dataValues();
+      data.phone = `${rows[0].phone}`;
 
-    //   const res = await chai.request(server).post(signupUrl).send(data);
-    //   expect(res.status).to.eq(400);
-    //   expect(res.body.message).to.eq('User with given email or phone already exist');
-    // });
+      const res = await chai.request(server).post(signupUrl).send(data);
+      expect(res.status).to.eq(400);
+      expect(res.body.message).to.eq('User with given email or phone already exist');
+    });
   });
 
   // user sign in

@@ -1,4 +1,4 @@
-/* eslint-disable no-return-assign */
+/* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
 const confirmAction = (btn, msg) => {
   const btnClick = document.querySelector(`#${btn}`);
@@ -15,23 +15,19 @@ const confirmAction = (btn, msg) => {
   const no = document.querySelector('#no');
 
   yes.addEventListener('click', () => {
-    // eslint-disable-next-line no-alert
     alert(`You agreed to ${msg}`);
     modal.style.display = 'none';
   });
 
   no.addEventListener('click', () => {
-    // eslint-disable-next-line no-alert
     alert('Alright, that\'s a no');
     modal.style.display = 'none';
   });
 };
 
-const emailIsValid = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
 const filterTable = (table) => {
-  const search = document.querySelector('.search');
   let status;
+  const search = document.querySelector('.search');
   const filter = search.value.toUpperCase();
   const tr = table.getElementsByTagName('tr');
 
@@ -54,7 +50,6 @@ const filterTable = (table) => {
 const displayImages = document.querySelectorAll('.imgslide');
 const switchImage = (imgId) => {
   let imgIndex = parseInt(imgId.charAt(imgId.length - 1), 10) - 1;
-
   if (imgIndex < 0) {
     imgIndex = 0;
   }
@@ -66,8 +61,9 @@ const switchImage = (imgId) => {
   }
 };
 
-const passwordReset = () => {
+const emailIsValid = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const passwordReset = () => {
   const modal = document.querySelector('.modal');
   modal.style.display = 'block';
 
@@ -78,19 +74,19 @@ const passwordReset = () => {
   subm.addEventListener('click', () => {
     email = email.value;
     if (emailIsValid(email)) {
-      // eslint-disable-next-line no-alert
       alert(`Password reset mail has been sent to ${email}`);
+      // eslint-disable-next-line no-return-assign
       return (modal.style.display = 'none');
     }
 
-    // eslint-disable-next-line no-alert
     alert('Supply a valid email address');
+    // eslint-disable-next-line no-return-assign
     return (modal.style.display = 'none');
   });
 
   cancel.addEventListener('click', () => {
-    // eslint-disable-next-line no-alert
     alert('Ok good');
+    // eslint-disable-next-line no-return-assign
     return (modal.style.display = 'none');
   });
 };

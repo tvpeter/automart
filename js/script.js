@@ -54,6 +54,7 @@ const filterTable = (table) => {
 const displayImages = document.querySelectorAll('.imgslide');
 const switchImage = (imgId) => {
   let imgIndex = parseInt(imgId.charAt(imgId.length - 1), 10) - 1;
+
   if (imgIndex < 0) {
     imgIndex = 0;
   }
@@ -66,6 +67,7 @@ const switchImage = (imgId) => {
 };
 
 const passwordReset = () => {
+
   const modal = document.querySelector('.modal');
   modal.style.display = 'block';
 

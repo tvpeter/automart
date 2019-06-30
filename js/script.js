@@ -1,5 +1,7 @@
-/* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-alert */
+
 const confirmAction = (btn, msg) => {
   const btnClick = document.querySelector(`#${btn}`);
   const modal = document.querySelector('.modal');
@@ -75,18 +77,15 @@ const passwordReset = () => {
     email = email.value;
     if (emailIsValid(email)) {
       alert(`Password reset mail has been sent to ${email}`);
-      // eslint-disable-next-line no-return-assign
       return (modal.style.display = 'none');
     }
 
     alert('Supply a valid email address');
-    // eslint-disable-next-line no-return-assign
     return (modal.style.display = 'none');
   });
 
   cancel.addEventListener('click', () => {
     alert('Ok good');
-    // eslint-disable-next-line no-return-assign
     return (modal.style.display = 'none');
   });
 };

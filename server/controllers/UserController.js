@@ -13,7 +13,7 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
-    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation'];
+    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation', 'address'];
 
     if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
       return util.sendError(res, 400, 'Fill all required fields with a valid email address');

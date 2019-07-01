@@ -62,7 +62,6 @@ const switchImage = (imgId) => {
     }
   }
 };
-
 const emailIsValid = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const passwordReset = () => {

@@ -67,7 +67,6 @@ const switchImage = (imgId) => {
 };
 
 const passwordReset = () => {
-
   const modal = document.querySelector('.modal');
   modal.style.display = 'block';
 

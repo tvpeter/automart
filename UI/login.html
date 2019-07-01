@@ -157,8 +157,25 @@
         email: elements.namedItem('email').value,
         password: elements.namedItem('password').value,
       };
-
-      await postResource(signInUrl, data, '/profile', displayError, 200);
+      try {
+        const response = await fetch(signInUrl, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        const responseToJson = await response.json();
+        if (responseToJson.status !== 200) {
+          // eslint-disable-next-line no-return-assign
+          return (`${displayError.textContent = responseToJson.message}`);
+        }
+        return window.location.href = '/profile';
+      } catch (error) {
+        // eslint-disable-next-line no-return-assign
+        return (`${displayError.textContent = error.message}`);
+      }
+      // await postResource(signInUrl, data, '/profile', displayError, 200);
 
     });
   </script>

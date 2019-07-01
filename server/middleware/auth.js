@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const auth = (req, res, next) => {
-  const token = req.header('x-auth');
+  const token = req.cookies['x-auth'] || req.header('x-auth');
   if (!token) {
     return res.status(401).send({
       status: 401,
@@ -22,6 +22,9 @@ const auth = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
     req.role = decoded.role;
+    res.locals.userId = decoded.id;
+    res.locals.role = decoded.role;
+
     return next();
   } catch (err) {
     return res.status(401).send({

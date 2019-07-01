@@ -96,9 +96,17 @@ const User = {
         return util.sendError(res, 401, 'Wrong username/password');
       }
       user.token = generateToken(user.id, user.isadmin);
+      const data = {
+        email: user.email,
+        firstname: user.first_name,
+        lastname: user.last_name,
+        status: user.status,
+        token: user.token,
+      };
+      res.cookie('x-auth', user.token, { httpOnly: true });
       return res.status(200).header('x-auth', user.token).send({
         status: 200,
-        data: user,
+        data,
       });
     } catch (error) {
       return util.sendError(res, 500, error.message);

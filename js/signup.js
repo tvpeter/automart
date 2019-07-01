@@ -30,7 +30,7 @@ form.addEventListener('submit', async (e) => {
     if (responseToJson.status !== 201) {
       display.textContent = responseToJson.message;
     } else {
-      window.location.href = '/userprofile';
+      window.location.href = '/profile';
     }
   } catch (error) {
     display.textContent = error.message;

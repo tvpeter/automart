@@ -1,145 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>AutoMart | User Signup</title>
-    <link href="./css/styles.css" rel="stylesheet" type="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Automart User signup">
-  </head>
-  <body>
-    <div class="header">
-		<!-- start of top header-->
-      <div class="top-header">
-        <div class="wrap">
-          <div class="top-header-center">
-            <div class="top-header-center-alert-right">
-              <div class="txt-center">
-                    <span id="info">Your #1 Automobile Market Place.</span>
-              </div>
+
+<head>
+  <title>AutoMart | User Signup</title>
+  <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="/images/caricon.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Automart User signup">
+</head>
+
+<body>
+  <div class="header">
+    <!-- start of top header-->
+    <div class="top-header">
+      <div class="wrap">
+        <div class="top-header-center">
+          <div class="top-header-center-alert-right">
+            <div class="txt-center">
+              <span id="info">Your #1 Automobile Market Place.</span>
             </div>
-            <div class="clear"></div>
-		  </div>
-		  
-          <div class="top-header-right">
-            <ul>
-                <li><a href="products.html">Products</a><span></span></li>    
-                <li><a href="login.html" >Login</a><span> </span></li>
-                <li><a href="signup.html">Register</a></li>
-            </ul>
           </div>
           <div class="clear"></div>
         </div>
-      </div>
-      <!----start-mid-head---->
-      <div class="mid-header">
-          <div class="wrap">
-            <div class="mid-grid-left">
-                <a class="logo" href="index.html"><span> </span></a>
-            </div>
-            <div class="mid-grid-right">
-                <form>
-                  <label for="search"></label>
-                    <input type="text" placeholder="Search..." class="search" />
-                  </form>
-            </div>
-            <div class="clear"></div>
-          </div>
-        </div>
-  </div>
-  
-  
-	
-    <div class="content">
-        <div class="wrap">
-          <h1 class="txt-center">CREATE ACCOUNT</h1>
-          <div class="container">
-            <form action="">
-              <div class="form">
-                <div>
-                  <span>First Name<label>*</label></span>
-                  <input type="text"  name="firstname"/>
-                </div>
-                <div>
-                  <span>Last Name<label>*</label></span>
-                  <input type="text"  name="lastname"/>
-                </div>
-                <div>
-                  <span>Email Address<label>*</label></span>
-                  <input type="email"  name="email"/>
-                </div>
-                <div>
-                  <span>Phone Number<label>*</label></span>
-                  <input type="text"  name="phone"/>
-                </div>
-                <div>
-                    <span>Bank Account<label>*</label></span>
-                    <input type="number"  name="account"/>
-                  </div>
-                <div>
-                    <span>Address<label>*</label></span>
-                    <input type="text" />
-                  </div> 
-                  <div>
-                      <span>Bank<label>*</label></span>
-                      <select name="bank" id="">
-                        <option value="uba">UBA</option>
-                        <option value="fbn">FBN</option>
-                        <option value="zenith">Zenith</option>
-                        <option value="gtb">GTB</option>
-                      </select>
-                    </div> 
-                  <div>
-                      <span>Password<label>*</label></span>
-                      <input type="text" />
-                    </div> 
-                    <div>
-                        <span>Confirm Password<label>*</label></span>
-                        <input type="text" />
-                      </div>
-                      <div>
-                        <span>Passport</span>
-                        <input type="file"  name="passport"/>
-                      </div>
-              <input type="submit" value="Submit"  class="btn"/>
-                
-              </div>
-              <div class="clear"></div>
-            </form>
-          </div>
-            
-        </div>
-    </div>
-    
-   
-     <!---- footer---->
-     <div class="bottom-cols">
-      <div class="wrap">
-        <div class="bottom-col">
-          <h6>Terms of Use</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Return Policy</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Contact Support Team</h6>
-          <a href="#">Contact us here</a>
-        </div>
-        <div class="clear"></div>
-      </div>
-    </div>
-    <!--End of upper footer -->
 
-    <footer class="footer">
-      <div class="wrap">
-        <div class="footer-left">
+        <div class="top-header-right">
           <ul>
-            <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
-            <li><a href="#">Cookie Settings</a></li>
+            <li><a href="products.html">Products</a><span></span></li>
+            <li><a href="login.html">Login</a><span> </span></li>
+            <li><a href="signup.html">Register</a></li>
           </ul>
         </div>
         <div class="clear"></div>
       </div>
-    </footer>
+    </div>
+    <!----start-mid-head---->
+    <div class="mid-header">
+      <div class="wrap">
+        <div class="mid-grid-left">
+          <a class="logo" href="index.html"><span> </span></a>
+        </div>
+        <div class="mid-grid-right">
+          <form>
+            <label for="search"></label>
+            <input type="text" placeholder="Search..." class="search" />
+          </form>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="wrap">
+      <h1 class="txt-center">CREATE ACCOUNT</h1>
+      <div class="container">
+        <form id="form1">
+          <div class="txt-center">
+            <span class="txt-warning" id="errorDisplay"></span>
+          </div>
+          <div class="form">
+            <div>
+              <span>First Name<label>*</label></span>
+              <input type="text" name="firstname" required />
+            </div>
+            <div>
+              <span>Last Name<label>*</label></span>
+              <input type="text" name="lastname" required />
+            </div>
+            <div>
+              <span>Email Address<label>*</label></span>
+              <input type="email" name="email" required />
+            </div>
+            <div>
+              <span>Phone Number<label>*</label></span>
+              <input type="text" name="phone" required />
+            </div>
+            <div>
+              <span>Bank Account<label>*</label></span>
+              <input type="number" name="account" required />
+            </div>
+
+            <div>
+              <span>Bank<label>*</label></span>
+              <select name="bank" required>
+                <option value="" selected disabled>Select</option>
+                <option value="uba">UBA</option>
+                <option value="fbn">FBN</option>
+                <option value="zenith">Zenith</option>
+                <option value="gtb">GTB</option>
+              </select>
+            </div>
+            <div>
+              <span>Password<label>*</label></span>
+              <input type="password" name="password" required />
+            </div>
+            <div>
+              <span>Confirm Password<label>*</label></span>
+              <input type="password" name="password_confirmation" required />
+            </div>
+            <div>
+              <span>Address<label>*</label></span>
+              <input type="text" name="address" required />
+            </div>
+            <input type="submit" value="Submit" class="btn" />
+
+          </div>
+          <div class="clear"></div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!---- footer---->
+  <div class="bottom-cols">
+    <div class="wrap">
+      <div class="bottom-col">
+        <h6>Terms of Use</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Return Policy</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Contact Support Team</h6>
+        <a href="#">Contact us here</a>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--End of upper footer -->
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-left">
+        <ul>
+          <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
+          <li><a href="#">Cookie Settings</a></li>
+        </ul>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </footer>
+  <script src="/js/script.js"></script>
+  <script src="/js/signup.js"></script>
+
 </html>

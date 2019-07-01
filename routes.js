@@ -9,6 +9,6 @@ router.get('/signin', (req, res) => res.status(200).sendFile(path.join(`${__dirn
 router.get('/details', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/details.html`)));
 router.get('/products', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/products.html`)));
 router.get('/contact', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/contact.html`)));
-router.get('/userprofile', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/userprofile.html`)));
+router.get('/profile', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/userprofile.html`)));
 
 export default router;

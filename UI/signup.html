@@ -145,6 +145,32 @@
     </div>
   </footer>
   <script src="/js/script.js"></script>
-  <script src="/js/signup.js"></script>
+  <script src="/js/postResource.js"></script>
+
+  <script>
+    const signupUrl = '/api/v1/auth/signup';
+    const form = document.getElementById('form1');
+    const display = document.getElementById('errorDisplay');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const { elements } = form;
+      const formdata = {
+        first_name: elements.namedItem('firstname').value,
+        last_name: elements.namedItem('lastname').value,
+        email: elements.namedItem('email').value,
+        phone: elements.namedItem('phone').value,
+        account_number: elements.namedItem('account').value,
+        bank: elements.namedItem('bank').value,
+        address: elements.namedItem('address').value,
+        password: elements.namedItem('password').value,
+        password_confirmation: elements.namedItem('password_confirmation').value,
+      };
+
+      await postResource(signupUrl, formdata, '/profile', display, 201);
+    });
+
+  </script>
 
 </html>

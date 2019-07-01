@@ -136,12 +136,30 @@
   </div>
 
   <script src="/js/script.js"></script>
-  <script src="/js/login.js"></script>
+  <script src="/js/postResource.js"></script>
   <script>
     //password reset request
     const passwordRes = document.querySelector("#passwordReset");
     passwordRes.addEventListener("click", () => {
       passwordReset();
+    });
+
+    // login a user
+    const signInUrl = '/api/v1/auth/signin';
+    const loginForm = document.getElementById('loginForm');
+    const displayError = document.getElementById('errorDisplay');
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const { elements } = loginForm;
+      const data = {
+        email: elements.namedItem('email').value,
+        password: elements.namedItem('password').value,
+      };
+
+      await postResource(signInUrl, data, '/profile', displayError, 200);
+
     });
   </script>
 

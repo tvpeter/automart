@@ -5,14 +5,12 @@ const displayError = document.getElementById('errorDisplay');
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  console.log(loginForm);
-
   const { elements } = loginForm;
   const data = {
     email: elements.namedItem('email').value,
     password: elements.namedItem('password').value,
   };
-  console.log(data);
+
   try {
     const response = await fetch(signInUrl, {
       method: 'post',

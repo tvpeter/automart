@@ -12,6 +12,6 @@ router.get('/details', (req, res) => res.status(200).sendFile(path.join(`${__dir
 router.get('/products', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/products.html`)));
 router.get('/contact', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/contact.html`)));
 router.get('/profile', auth, (req, res) => res.status(200).sendFile(path.join(`${__dirname}/userprofile.html`)));
-router.get('/createad', (req, res) => res.status(200).sendFile(path.join(`${__dirname}/createad.html`)));
+router.get('/createad', auth, (req, res) => res.status(200).sendFile(path.join(`${__dirname}/createad.html`)));
 
 export default router;

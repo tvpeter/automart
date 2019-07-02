@@ -48,8 +48,9 @@ const User = {
         id, email, first_name, last_name, address, isadmin, phone, status,
       } = rows[0];
 
-      const token = generateToken(id, isadmin);
+      const token = generateToken(id, isadmin, first_name);
 
+      res.cookie('x-auth', token, { httpOnly: true });
       return res.status(201).set('x-auth', token).send({
         status: 201,
         data: {
@@ -95,7 +96,7 @@ const User = {
       if (!validPassword) {
         return util.sendError(res, 401, 'Wrong username/password');
       }
-      user.token = generateToken(user.id, user.isadmin);
+      user.token = generateToken(user.id, user.isadmin, user.first_name);
       const data = {
         email: user.email,
         firstname: user.first_name,
@@ -149,7 +150,13 @@ const User = {
   },
 
   logout(req, res) {
-    return util.sendError(res, 200, 'You have been logged out successfully');
+    res.cookie('x-auth', '', { expires: new Date(0) });
+    res.clearCookie('x-auth');
+    res.cookie('fn', '', { expires: new Date(0) });
+    res.clearCookie('fn');
+    res.cookie('email', '', { expires: new Date(0) });
+    res.clearCookie('email');
+    return res.status(200).redirect('/');
   },
   async disableUser(req, res) {
     const { userId } = req.params;

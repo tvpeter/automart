@@ -9,9 +9,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const generateToken = (id, userRole) => {
+const generateToken = (id, userRole, fn) => {
   const token = jwt.sign({
-    id, role: userRole,
+    id, role: userRole, fn,
   }, process.env.JWT_SECRET, { expiresIn: '12h' });
   return token;
 };

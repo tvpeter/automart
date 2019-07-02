@@ -4,12 +4,12 @@
 <head>
   <title>AutoMart | User Profile</title>
   <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="/images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
   <div class="header">
-    <!-- start of top header-->
     <div class="top-header">
       <div class="wrap">
         <div class="top-header-center">
@@ -22,22 +22,23 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello, John</span>
+          <span>
+          </span>
           <li class="dropdown">
             <div class="links">
-              <a href="/">Logout</a>
-              <a href="profile.html">Profile</a>
+              <a href="/api/v1/auth/logout">Logout</a>
+              <a href="/profile">Profile</a>
             </div>
           </li>
         </div>
         <div class="clear"></div>
       </div>
     </div>
-    <!----start-mid-head---->
+
     <div class="mid-header">
       <div class="wrap">
         <div class="mid-grid-left">
-          <a class="logo" href="index.html"></a>
+          <a class="logo" href="/"></a>
         </div>
         <div class="mid-grid-right">
           <form>
@@ -53,9 +54,9 @@
       <div class="wrap">
         <nav>
           <ul>
-            <li><a href="createad.html">Create Ad</a></li>
-            <li><a href="userads.html">My Ads</a></li>
-            <li><a href="mytransactions.html">Transactions</a></li>
+            <li><a href="/createad">Create Ad</a></li>
+            <li><a href="/userads">My Ads</a></li>
+            <li><a href="/mytransactions">Transactions</a></li>
           </ul>
         </nav>
       </div>
@@ -73,7 +74,7 @@
             <div class="clear"></div>
 
             <span id="passport">
-              <img src="../UI/images/user.png" alt="user image">
+              <img src="/images/user.png" alt="user image">
             </span>
           </div>
           <div class="row">
@@ -187,5 +188,9 @@
       <div class="clear"></div>
     </div>
   </footer>
+  <script>
+    const welcome = document.querySelector('.top-header-right span');
+    welcome.textContent = `Hello ${document.cookie.split('=')[1]}`;
+  </script>
 
 </html>

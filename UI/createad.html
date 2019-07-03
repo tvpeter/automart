@@ -26,7 +26,7 @@
           <span>Hello Peter</span>
           <li class="dropdown">
             <div class="links">
-              <a href="/">Logout</a>
+              <a href="/api/v1/auth/logout">Logout</a>
               <a href="/profile">Profile</a>
             </div>
           </li>
@@ -83,7 +83,7 @@
             </div>
             <div>
               <span>Price:<label>*</label></span>
-              <input type="text" name="price" />
+              <input type="number" name="price" />
             </div>
             <div>
               <span>Body Type<label>*</label></span>
@@ -156,30 +156,6 @@
       <div class="clear"></div>
     </div>
   </footer>
-  <script src="/js/postResource.js"></script>
-  <script>
-    const createadUrl = '/api/v1/car';
-    const createadForm = document.getElementById('createadForm');
-    const displayError = document.getElementById('errorDisplay');
-
-    createadForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const { elements } = createadForm;
-      const data = {
-        state: elements.namedItem('state').value,
-        price: elements.namedItem('price').value,
-        manufacturer: elements.namedItem('manufacturer').value,
-        model: elements.namedItem('model').value,
-        body_type: elements.namedItem('bodytype').value,
-        description: elements.namedItem('description').value,
-        img: elements.namedItem('img').value
-      };
-      await postResource(createadUrl, data, '/profile', displayError, 201);
-
-    });
-
-
-  </script>
+  <script src="/js/createad.js"></script>
 
 </html>

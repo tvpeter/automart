@@ -73,31 +73,31 @@ describe('Cars', () => {
   });
 
   describe('Create Ad', () => {
-    it('should create a new ad', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      const token = await generateToken(data.id, false);
+    // it('should create a new ad', async () => {
+    //   const data = await userId();
+    //   const newAd = await newAdValues();
+    //   const token = await generateToken(data.id, false);
 
-      chai.request(server)
-        .post(adUrl)
-        .set('x-auth', token)
-        .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
-        .set('Content-Type', 'Multipart/form-data')
-        .field('id', Date.now())
-        .field('price', 8000000)
-        .field('owner', data.id)
-        .field('state', newAd.state)
-        .field('model', newAd.model)
-        .field('manufacturer', newAd.manufacturer)
-        .field('body_type', newAd.body_type)
-        .field('description', newAd.description)
-        .then((res) => {
-          expect(res.status).to.eq(201);
-          expect(res.body.data).to.have.property('id');
-          expect(res.body.data.price).to.eq(8000000);
-          expect(res.body.data.state).to.eq(newAd.state);
-        });
-    });
+    //   chai.request(server)
+    //     .post(adUrl)
+    //     .set('x-auth', token)
+    //     .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
+    //     .set('Content-Type', 'Multipart/form-data')
+    //     .field('id', Date.now())
+    //     .field('price', 8000000)
+    //     .field('owner', data.id)
+    //     .field('state', newAd.state)
+    //     .field('model', newAd.model)
+    //     .field('manufacturer', newAd.manufacturer)
+    //     .field('body_type', newAd.body_type)
+    //     .field('description', newAd.description)
+    //     .then((res) => {
+    //       expect(res.status).to.eq(201);
+    //       expect(res.body.data).to.have.property('id');
+    //       expect(res.body.data.price).to.eq(8000000);
+    //       expect(res.body.data.state).to.eq(newAd.state);
+    //     });
+    // });
     it('should return error 400 if request does not contain all required fields', async () => {
       const token = await genToken();
       chai.request(server)
@@ -154,11 +154,11 @@ describe('Cars', () => {
       expect(res.status).to.eq(400);
     });
 
-    it('should return error 401 if token is not provided', async () => {
+    it('should redirect to signup page if token is not provided', async () => {
       const data = newAdValues();
       const res = await chai.request(server).post(adUrl).send(data);
-      expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.status).to.eq(200);
+      // expect(res.body.message).to.eq('No authorization token provided');
     });
   });
 
@@ -322,7 +322,7 @@ describe('Cars', () => {
       expect(res.status).to.eq(401);
       expect(res.body.message).to.eq('You do not have the permission to update this data');
     });
-    it('should return error 401 if user is not logged in', async () => {
+    it('should redirect to signin page if user is not logged in', async () => {
       const data = await userId();
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
@@ -331,8 +331,7 @@ describe('Cars', () => {
       const { id } = rows[0];
 
       const res = await chai.request(server).patch(`/api/v1/car/${id}`).send(updateInfo);
-      expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.status).to.eq(200);
     });
     // it('should update ad status if its admin', async () => {
     //   const data = await userId();

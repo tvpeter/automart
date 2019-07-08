@@ -210,10 +210,10 @@ describe('User', () => {
       expect(res.status).to.eq(400);
       expect(res.body.message).to.eq('Fill the required fields');
     });
-
-    it('should redirect to signin page if user is not logged in', async () => {
+    it('should return error 401 if user is not logged in', async () => {
       const res = await chai.request(server).patch('/api/v1/user').send({ currentPassword: 'password', newPassword: 'newpassword' });
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eq(401);
+      expect(res.body.message).to.eq('No authorization token provided');
     });
   });
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-return-assign */
 // login a user
-const signInUrl = '/api/v1/auth/signin';
+const signInUrl = 'http://localhost:5000/api/v1/auth/signin';
 const loginForm = document.getElementById('loginForm');
 const displayError = document.getElementById('errorDisplay');
 
@@ -25,7 +25,7 @@ loginForm.addEventListener('submit', async (event) => {
       // eslint-disable-next-line no-return-assign
       return (`${displayError.textContent = responseToJson.message}`);
     }
-    return window.location.href = '/profile';
+    return window.location.href = './userprofile.html';
   } catch (error) {
     // eslint-disable-next-line no-return-assign
     return (`${displayError.textContent = error.message}`);

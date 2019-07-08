@@ -1,5 +1,5 @@
 /* eslint-disable no-return-assign */
-const createadUrl = '/api/v1/car';
+const createadUrl = 'http://localhost:5000/api/v1/car';
 const displayError = document.getElementById('errorDisplay');
 const createadForm = document.getElementById('createadForm');
 
@@ -25,7 +25,7 @@ createadForm.addEventListener('submit', async (e) => {
     if (responseToJson.status !== 201) {
       return displayError.textContent = responseToJson.message;
     }
-    return (window.location.href = '/userads');
+    return (window.location.href = './userads.html');
   } catch (error) {
     return displayError.textContent = error.message;
   }

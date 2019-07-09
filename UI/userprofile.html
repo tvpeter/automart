@@ -7,6 +7,12 @@
   <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
+<script>
+  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name')) {
+    localStorage.clear();
+    window.location.href = './login.html';
+  }
+</script>
 
 <body>
   <div class="header">
@@ -26,7 +32,7 @@
           </span>
           <li class="dropdown">
             <div class="links">
-              <a href="http://localhost:5000/api/v1/auth/logout">Logout</a>
+              <a href="./logout.html">Profile</a>
               <a href="./userprofile">Profile</a>
             </div>
           </li>
@@ -68,11 +74,9 @@
 
       <div class="container">
         <h3 class="txt-center">Profile Update</h3>
-
         <form action="">
           <div class="row">
             <div class="clear"></div>
-
             <span id="passport">
               <img src="./images/user.png" alt="user image">
             </span>
@@ -190,7 +194,7 @@
   </footer>
   <script>
     const welcome = document.querySelector('.top-header-right span');
-    welcome.textContent = `Hello ${document.cookie.split('=')[1]}`;
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
   </script>
 
 </html>

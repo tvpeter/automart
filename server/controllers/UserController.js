@@ -4,6 +4,7 @@ import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
 import UserService from '../services/UserService';
 import util from '../lib/Util';
+import Util from '../lib/Util';
 
 
 const User = {
@@ -45,12 +46,11 @@ const User = {
 
       const {
         // eslint-disable-next-line camelcase
-        id, email, first_name, last_name, address, isadmin, phone, status,
+        id, email, first_name, last_name, address, is_admin, phone, status,
       } = rows[0];
 
-      const token = generateToken(id, isadmin, first_name);
+      const token = generateToken(id, is_admin, first_name);
 
-      res.cookie('x-auth', token, { httpOnly: true });
       return res.status(201).set('x-auth', token).send({
         status: 201,
         data: {
@@ -60,7 +60,7 @@ const User = {
           first_name,
           last_name,
           address,
-          isadmin,
+          is_admin,
           phone,
           status,
         },
@@ -96,15 +96,14 @@ const User = {
       if (!validPassword) {
         return util.sendError(res, 401, 'Wrong username/password');
       }
-      user.token = generateToken(user.id, user.isadmin, user.first_name);
+      user.token = generateToken(user.id, user.is_admin);
       const data = {
         email: user.email,
-        firstname: user.first_name,
-        lastname: user.last_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         status: user.status,
         token: user.token,
       };
-      res.cookie('x-auth', user.token, { httpOnly: true });
       return res.status(200).header('x-auth', user.token).send({
         status: 200,
         data,
@@ -150,13 +149,7 @@ const User = {
   },
 
   logout(req, res) {
-    res.cookie('x-auth', '', { expires: new Date(0) });
-    res.clearCookie('x-auth');
-    res.cookie('fn', '', { expires: new Date(0) });
-    res.clearCookie('fn');
-    res.cookie('email', '', { expires: new Date(0) });
-    res.clearCookie('email');
-    return res.status(200).redirect('/');
+    return Util.sendSuccess(res, 200, 'Successfully logged out');
   },
   async disableUser(req, res) {
     const { userId } = req.params;

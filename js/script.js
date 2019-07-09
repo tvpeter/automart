@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-alert */
-
 const confirmAction = (btn, msg) => {
   const btnClick = document.querySelector(`#${btn}`);
   const modal = document.querySelector('.modal');

@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "predev": "export NODE_ENV=development && npm run createdb",
-    "dev": "npm run lint && npm run build --env.API_URL=http://localhost:5000 && nodemon --exec babel-node server/index.js",
+    "dev": "npm run lint && npm run build && nodemon --exec babel-node server/index.js",
     "pretest": "export NODE_ENV=test && npm run createdb",
     "test": "nyc mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
     "build": "babel server --out-dir server/build",

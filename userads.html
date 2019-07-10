@@ -78,7 +78,7 @@
   <script src="./js/script.js"></script>
   <script src="./js/userads.js"></script>
   <script>
-    if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
+    if (localStorage.length < 1 || localStorage.getItem('uid') === null || localStorage.getItem('name') === null || localStorage.getItem('auth') === null) {
       localStorage.clear();
       window.location.href = './login.html';
     }

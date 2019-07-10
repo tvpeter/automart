@@ -8,6 +8,12 @@
   <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="description" content="Create an ad on Automart">
 </head>
+<script>
+  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
+    localStorage.clear();
+    window.location.href = './login.html';
+  }
+</script>
 
 <body>
   <div class="header">
@@ -24,10 +30,10 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello Peter</span>
+          <span></span>
           <li class="dropdown">
             <div class="links">
-              <a href="http.localhost:5000/api/v1/auth/logout">Logout</a>
+              <a href="./logout.html">Logout</a>
               <a href="./profile.html">Profile</a>
             </div>
           </li>

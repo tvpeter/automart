@@ -23,6 +23,7 @@
         localStorage.clear();
         return window.location.href = './index.html';
       } catch (error) {
+        localStorage.clear();
         return window.history.back();
       }
     });

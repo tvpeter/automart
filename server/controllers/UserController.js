@@ -4,7 +4,6 @@ import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
 import UserService from '../services/UserService';
 import util from '../lib/Util';
-import Util from '../lib/Util';
 
 
 const User = {
@@ -98,7 +97,9 @@ const User = {
       }
       user.token = generateToken(user.id, user.is_admin);
       const data = {
+        id: user.id,
         email: user.email,
+        is_admin: user.isadmin,
         first_name: user.first_name,
         last_name: user.last_name,
         status: user.status,
@@ -149,7 +150,7 @@ const User = {
   },
 
   logout(req, res) {
-    return Util.sendSuccess(res, 200, 'Successfully logged out');
+    return util.sendSuccess(res, 200, 'Successfully logged out');
   },
   async disableUser(req, res) {
     const { userId } = req.params;

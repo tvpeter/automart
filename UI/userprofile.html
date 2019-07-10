@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <script>
-  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name')) {
+  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
     localStorage.clear();
     window.location.href = './login.html';
   }
@@ -32,7 +32,7 @@
           </span>
           <li class="dropdown">
             <div class="links">
-              <a href="./logout.html">Profile</a>
+              <a href="./logout.html">Logout</a>
               <a href="./userprofile">Profile</a>
             </div>
           </li>

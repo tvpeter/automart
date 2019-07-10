@@ -98,7 +98,6 @@ describe('Cars', () => {
     //       expect(res.body.data.state).to.eq(newAd.state);
     //     });
     // });
-
     it('should return error 400 if request does not contain all required fields', async () => {
       const token = await genToken();
       chai.request(server)
@@ -154,7 +153,8 @@ describe('Cars', () => {
       expect(res.body.message).to.eq('Fill all required fields');
       expect(res.status).to.eq(400);
     });
-    it('should return error 401 if token is not provided', async () => {
+
+    it('should return error 401 if user is not logged in', async () => {
       const data = newAdValues();
       const res = await chai.request(server).post(adUrl).send(data);
       expect(res.status).to.eq(401);
@@ -486,6 +486,33 @@ describe('Cars', () => {
       const res = await chai.request(server).delete('/api/v1/car/1783782738238').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('Selected ad not available');
+    });
+  });
+
+  describe('User retrieves all his/her posted ads', () => {
+    it('should return error 404 if user has no ads', async () => {
+      const user = await userId();
+      const { rows } = await db.query('SELECT id from users');
+      const { id } = rows[rows.length - 1];
+
+      await db.query(`UPDATE cars SET owner=${id} WHERE owner=${user.id}`);
+      const token = generateToken(user.id, false);
+
+      const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
+      expect(res.status).to.eq(404);
+      expect(res.body.message).to.eq('You do not have ads yet');
+    });
+    it('should return array of a users ads', async () => {
+      const user = await userId();
+      const token = generateToken(user.id, false);
+
+      const newAd = await newAdValues();
+      await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    '${newAd.img}', ${user.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+
+      const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
+      expect(res.status).to.eq(200);
+      expect(res.body.data).to.be.an('Array');
     });
   });
 });

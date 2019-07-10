@@ -2,7 +2,7 @@ import db from './db';
 
 class UserService {
   static getAllUsers() {
-    return db.query('SELECT (id, email, first_name, last_name, address, is_admin, phone, status) FROM users LIMIT 50');
+    return db.query('SELECT (id, email, first_name, last_name, address, isadmin, phone, status) FROM users LIMIT 50');
   }
 
   static getUserByEmail(email) {
@@ -11,12 +11,12 @@ class UserService {
   }
 
   static makeUserAdmin(data) {
-    const text = 'UPDATE users SET is_admin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
+    const text = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
     return db.query(text, data);
   }
 
   static disableUser(data) {
-    const text = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, is_admin, phone, status';
+    const text = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
     return db.query(text, data);
   }
 
@@ -31,7 +31,7 @@ class UserService {
   }
 
   static createUser(data) {
-    const text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
+    const text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
     return db.query(text, data);
   }
 }

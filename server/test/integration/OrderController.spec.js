@@ -119,7 +119,8 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(400);
       expect(res.body.message).to.eq('The car is not available or the seller is not active. Check back');
     });
-    it('should return error 401 if user is not logged in', (done) => {
+
+    it('should return error 401  if user is not logged in', (done) => {
       chai.request(server).post('/api/v1/order').send(orderData)
         .end((err, res) => {
           expect(res.status).to.eq(401);
@@ -216,6 +217,14 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
       expect(res.body.data[0]).to.have.property('sellerid').eq(sellerid);
+    });
+    it('should return error 401 if user is not logged in', (done) => {
+      chai.request(server).get('/api/v1/orders/me')
+        .end((err, res) => {
+          expect(res.status).to.eq(401);
+          expect(res.body.message).to.eq('No authorization token provided');
+          done();
+        });
     });
   });
   // view all orders

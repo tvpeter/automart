@@ -210,6 +210,7 @@ describe('User', () => {
       expect(res.status).to.eq(400);
       expect(res.body.message).to.eq('Fill the required fields');
     });
+
     it('should return error 401 if user is not logged in', async () => {
       const res = await chai.request(server).patch('/api/v1/user').send({ currentPassword: 'password', newPassword: 'newpassword' });
       expect(res.status).to.eq(401);
@@ -273,16 +274,14 @@ describe('User', () => {
     });
   });
 
-  // // user logout
-  // describe('User logout', () => {
-  //   it('should log a user out of the app', async () => {
-  //     const token = await genToken();
-  //     const res = chai.request(server).get('/api/v1/auth/logout').set('x-auth', token);
-  //     expect(res.status).to.eq(200);
-  //     // eslint-disable-next-line no-unused-expressions
-  //     expect(res).not.to.have.header('x-auth');
-  //   });
-  // });
+  // user logout
+  describe('User logout', () => {
+    it('should log a user out of the app', async () => {
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/auth/logout').set('x-auth', token);
+      expect(res.status).to.eq(200);
+    });
+  });
 
   describe('Admin disable a user', () => {
     it('should disable a user', async () => {

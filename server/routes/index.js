@@ -46,6 +46,9 @@ router.post('/order', auth, Order.create);
 // create an advert
 router.post('/car', auth, upload.single('img'), Car.create);
 
+// user gets all orders
+router.get('/ads/me', auth, Car.getMyAds);
+
 // User gets all his/her sold ads
 router.get('/orders/me', auth, Order.mySoldAds);
 

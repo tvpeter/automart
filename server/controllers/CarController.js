@@ -148,6 +148,17 @@ const Car = {
       return util.sendError(res, 500, error.message);
     }
   },
+
+  async getMyAds(req, res) {
+    const { userId } = req;
+    try {
+      const { rows } = await CarService.gerUserAds(userId);
+      return (rows.length < 1) ? util.sendError(res, 404, 'You do not have ads yet')
+        : util.sendSuccess(res, 200, rows);
+    } catch (error) {
+      return util.sendError(res, 500, error.message);
+    }
+  },
 };
 
 export default Car;

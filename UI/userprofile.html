@@ -3,10 +3,16 @@
 
 <head>
   <title>AutoMart | User Profile</title>
-  <link href="/css/styles.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="/images/caricon.png" type="image/x-icon">
+  <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
+<script>
+  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
+    localStorage.clear();
+    window.location.href = './login.html';
+  }
+</script>
 
 <body>
   <div class="header">
@@ -26,8 +32,8 @@
           </span>
           <li class="dropdown">
             <div class="links">
-              <a href="/api/v1/auth/logout">Logout</a>
-              <a href="/profile">Profile</a>
+              <a href="./logout.html">Logout</a>
+              <a href="./userprofile">Profile</a>
             </div>
           </li>
         </div>
@@ -54,9 +60,9 @@
       <div class="wrap">
         <nav>
           <ul>
-            <li><a href="/createad">Create Ad</a></li>
-            <li><a href="/userads">My Ads</a></li>
-            <li><a href="/mytransactions">Transactions</a></li>
+            <li><a href="./createad.html">Create Ad</a></li>
+            <li><a href="./userads.html">My Ads</a></li>
+            <li><a href="./mytransactions.html">Transactions</a></li>
           </ul>
         </nav>
       </div>
@@ -68,13 +74,11 @@
 
       <div class="container">
         <h3 class="txt-center">Profile Update</h3>
-
         <form action="">
           <div class="row">
             <div class="clear"></div>
-
             <span id="passport">
-              <img src="/images/user.png" alt="user image">
+              <img src="./images/user.png" alt="user image">
             </span>
           </div>
           <div class="row">
@@ -190,7 +194,7 @@
   </footer>
   <script>
     const welcome = document.querySelector('.top-header-right span');
-    welcome.textContent = `Hello ${document.cookie.split('=')[1]}`;
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
   </script>
 
 </html>

@@ -2,7 +2,7 @@ import db from './db';
 
 class UserService {
   static getAllUsers() {
-    return db.query('SELECT (id, email, first_name, last_name, address, isAdmin, phone, status) FROM users LIMIT 50');
+    return db.query('SELECT (id, email, first_name, last_name, address, isadmin, phone, status) FROM users LIMIT 50');
   }
 
   static getUserByEmail(email) {

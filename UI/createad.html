@@ -3,10 +3,17 @@
 
 <head>
   <title>AutoMart | Create Ad</title>
-  <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+  <link href="./css/styles.css" rel="stylesheet" type="text/css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="description" content="Create an ad on Automart">
 </head>
+<script>
+  if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
+    localStorage.clear();
+    window.location.href = './login.html';
+  }
+</script>
 
 <body>
   <div class="header">
@@ -23,11 +30,11 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello Peter</span>
+          <span></span>
           <li class="dropdown">
             <div class="links">
-              <a href="/api/v1/auth/logout">Logout</a>
-              <a href="/profile">Profile</a>
+              <a href="./logout.html">Logout</a>
+              <a href="./profile.html">Profile</a>
             </div>
           </li>
         </div>
@@ -54,9 +61,9 @@
       <div class="wrap">
         <nav>
           <ul>
-            <li><a href="/createad" class="active">Create Ad</a></li>
-            <li><a href="/userads">My Ads</a></li>
-            <li><a href="mytransactions">Transactions</a></li>
+            <li><a href="./createad.html" class="active">Create Ad</a></li>
+            <li><a href="./userads.html">My Ads</a></li>
+            <li><a href="./mytransactions.html">Transactions</a></li>
           </ul>
         </nav>
       </div>
@@ -156,6 +163,6 @@
       <div class="clear"></div>
     </div>
   </footer>
-  <script src="/js/createad.js"></script>
+  <script src="./js/createad.js"></script>
 
 </html>

@@ -154,11 +154,11 @@ describe('Cars', () => {
       expect(res.status).to.eq(400);
     });
 
-    it('should redirect to signup page if token is not provided', async () => {
+    it('should return error 401 if user is not logged in', async () => {
       const data = newAdValues();
       const res = await chai.request(server).post(adUrl).send(data);
-      expect(res.status).to.eq(200);
-      // expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.status).to.eq(401);
+      expect(res.body.message).to.eq('No authorization token provided');
     });
   });
 
@@ -322,7 +322,7 @@ describe('Cars', () => {
       expect(res.status).to.eq(401);
       expect(res.body.message).to.eq('You do not have the permission to update this data');
     });
-    it('should redirect to signin page if user is not logged in', async () => {
+    it('should return error 401 if user is not logged in', async () => {
       const data = await userId();
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
@@ -331,7 +331,8 @@ describe('Cars', () => {
       const { id } = rows[0];
 
       const res = await chai.request(server).patch(`/api/v1/car/${id}`).send(updateInfo);
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eq(401);
+      expect(res.body.message).to.eq('No authorization token provided');
     });
     // it('should update ad status if its admin', async () => {
     //   const data = await userId();
@@ -485,6 +486,33 @@ describe('Cars', () => {
       const res = await chai.request(server).delete('/api/v1/car/1783782738238').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('Selected ad not available');
+    });
+  });
+
+  describe('User retrieves all his/her posted ads', () => {
+    it('should return error 404 if user has no ads', async () => {
+      const user = await userId();
+      const { rows } = await db.query('SELECT id from users');
+      const { id } = rows[rows.length - 1];
+
+      await db.query(`UPDATE cars SET owner=${id} WHERE owner=${user.id}`);
+      const token = generateToken(user.id, false);
+
+      const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
+      expect(res.status).to.eq(404);
+      expect(res.body.message).to.eq('You do not have ads yet');
+    });
+    it('should return array of a users ads', async () => {
+      const user = await userId();
+      const token = generateToken(user.id, false);
+
+      const newAd = await newAdValues();
+      await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    '${newAd.img}', ${user.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+
+      const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
+      expect(res.status).to.eq(200);
+      expect(res.body.data).to.be.an('Array');
     });
   });
 });

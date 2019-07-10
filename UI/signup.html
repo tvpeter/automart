@@ -3,8 +3,8 @@
 
 <head>
   <title>AutoMart | User Signup</title>
-  <link href="/css/styles.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="/images/caricon.png" type="image/x-icon">
+  <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Automart User signup">
 </head>
@@ -25,9 +25,9 @@
 
         <div class="top-header-right">
           <ul>
-            <li><a href="/products">Products</a><span></span></li>
-            <li><a href="/signin">Login</a><span> </span></li>
-            <li><a href="/signup">Register</a></li>
+            <li><a href="./products.html">Products</a><span></span></li>
+            <li><a href="./login.html">Login</a><span> </span></li>
+            <li><a href="./signup.html">Register</a></li>
           </ul>
         </div>
         <div class="clear"></div>
@@ -144,11 +144,11 @@
       <div class="clear"></div>
     </div>
   </footer>
-  <script src="/js/script.js"></script>
-  <script src="/js/postResource.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="./js/postResource.js"></script>
 
   <script>
-    const signupUrl = '/api/v1/auth/signup';
+    const signupUrl = 'http://localhost:5000/api/v1/auth/signup';
     const form = document.getElementById('form1');
     const display = document.getElementById('errorDisplay');
 
@@ -168,7 +168,7 @@
         password_confirmation: elements.namedItem('password_confirmation').value,
       };
 
-      await postResource(signupUrl, formdata, '/profile', display, 201);
+      await postResource(signupUrl, formdata, './userprofile.html', display, 201);
     });
 
   </script>

@@ -5,20 +5,9 @@ const pool = new Pool({ connectionString: connection });
 pool.on('connect', () => {
   console.log('info', `Connected to ${connection} database`);
 });
-const createTriggerFn = () => {
-  const query = 'CREATE OR REPLACE FUNCTION trigger_set_timestamp() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at= NOW(); RETURN NEW; END;';
-  pool.query(query).then((res) => {
-    console.log('info', res);
-    pool.end();
-  })
-    .catch((err) => {
-      console.log('error', err);
-      pool.end();
-    });
-};
 
 const createUsersTable = () => {
-  const query = 'CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()) ';
+  const query = 'CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isadmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()) ';
   pool.query(query).then((res) => {
     console.log('info', res);
     pool.end();
@@ -111,26 +100,13 @@ const dropFlagsTable = async () => {
   }
 };
 
-const createTriggerOnTable = (table) => {
-  const query = `CREATE TRIGGER set_timestamp BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp()`;
-  pool.query(query).then((res) => {
-    console.log('info', res);
-  })
-    .catch((err) => {
-      console.log('error', err);
-    });
-};
-
 const createAllTables = () => {
-  createTriggerFn();
   createUsersTable();
   createUsersTable();
   createCarsTable();
   createCarsTable();
-  createTriggerOnTable('cars');
   createOrdersTable();
   createOrdersTable();
-  createTriggerOnTable('orders');
   createFlagsTable();
   createFlagsTable();
 };
@@ -148,7 +124,6 @@ pool.on('remove', () => {
 });
 
 module.exports = {
-  createTriggerFn,
   createUsersTable,
   createCarsTable,
   createOrdersTable,

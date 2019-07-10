@@ -53,6 +53,6 @@ View the detailed API documentation [here](https://app.swaggerhub.com/apis/tvpet
 
 #### Heroku hosted url
 
-[Here](https://tvpautomart.herokuapp.com/api/v1) is the api host on heroku
+[Here](https://tvpautomart.herokuapp.com/api/v1) is the api hosted on heroku
 
-_Thanks for checking, you feedback is appreciated_
+_Thanks for checking, your feedback is appreciated_

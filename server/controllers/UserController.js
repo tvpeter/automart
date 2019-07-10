@@ -45,10 +45,10 @@ const User = {
 
       const {
         // eslint-disable-next-line camelcase
-        id, email, first_name, last_name, address, isadmin, phone, status,
+        id, email, first_name, last_name, address, is_admin, phone, status,
       } = rows[0];
 
-      const token = generateToken(id, isadmin, first_name);
+      const token = generateToken(id, is_admin, first_name);
 
       return res.status(201).set('x-auth', token).send({
         status: 201,
@@ -59,7 +59,7 @@ const User = {
           first_name,
           last_name,
           address,
-          isadmin,
+          is_admin,
           phone,
           status,
         },
@@ -95,11 +95,11 @@ const User = {
       if (!validPassword) {
         return util.sendError(res, 401, 'Wrong username/password');
       }
-      user.token = generateToken(user.id, user.isadmin);
+      user.token = generateToken(user.id, user.is_admin);
       const data = {
         id: user.id,
         email: user.email,
-        isadmin: user.isadmin,
+        is_admin: user.is_admin,
         first_name: user.first_name,
         last_name: user.last_name,
         status: user.status,

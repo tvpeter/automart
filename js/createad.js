@@ -1,4 +1,5 @@
 /* eslint-disable no-return-assign */
+
 const createadUrl = 'http://localhost:5000/api/v1/car';
 const displayError = document.getElementById('errorDisplay');
 const createadForm = document.getElementById('createadForm');
@@ -19,12 +20,18 @@ createadForm.addEventListener('submit', async (e) => {
   try {
     const response = await fetch(createadUrl, {
       method: 'post',
+      headers: {
+        'x-auth': `${localStorage.getItem('auth')}`,
+      },
       body: data,
     });
     const responseToJson = await response.json();
     if (responseToJson.status !== 201) {
       return displayError.textContent = responseToJson.message;
     }
+    localStorage.setItem('name', responseToJson.data.first_name);
+    localStorage.setItem('uid', responseToJson.data.id);
+    localStorage.setItem('auth', responseToJson.data.token);
     return (window.location.href = './userads.html');
   } catch (error) {
     return displayError.textContent = error.message;

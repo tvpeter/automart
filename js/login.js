@@ -30,6 +30,7 @@ loginForm.addEventListener('submit', async (event) => {
     }
     localStorage.setItem('name', responseToJson.data.first_name);
     localStorage.setItem('uid', responseToJson.data.id);
+    localStorage.setItem('auth', responseToJson.data.token);
     return window.location.href = './userprofile.html';
   } catch (error) {
     // eslint-disable-next-line no-return-assign

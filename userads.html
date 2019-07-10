@@ -25,10 +25,10 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello Peter</span>
+          <span></span>
           <li class="dropdown">
             <div class="links">
-              <a href="http://localhost:5000/api/v1/auth/logout">Logout</a>
+              <a href="./logout.html">Logout</a>
               <a href="./profile.html">Profile</a>
             </div>
           </li>
@@ -67,53 +67,30 @@
     <div class="wrap">
       <div class="resize-table">
         <h3 class="txt-center">ALL MY POSTED ADs</h3>
+        <div id="errorDisplay"></div>
         <input type="text" name="search" placeholder="Search table" class="search" id="search" />
-
         <table class="table">
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>Ad ID</th>
-              <th>Name</th>
-              <th>State</th>
-              <th>Status</th>
-              <th>Change Status</th>
-              <th>Transaction Id</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>#12d8aud7ed8</td>
-              <td>BMW X6, 2018</td>
-              <td>Used</td>
-              <td>Sold</td>
-              <td><button disabled>Change</button></td>
-              <td>#837hdye737348</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><a href="updatead.html">#38d7ahdid83</a></td>
-              <td>Peugeot 407, 2.7 Hdi </td>
-              <td>New</td>
-              <td>Available</td>
-              <td><button> <a href="updatestatus.html">Change</a></button></td>
-              <td>none</td>
-            </tr>
         </table>
       </div>
     </div>
     <div class="clear"> </div>
   </div>
-  <script src="./js/table.js"></script>
   <script src="./js/script.js"></script>
   <script src="./js/userads.js"></script>
   <script>
+    if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
+      localStorage.clear();
+      window.location.href = './login.html';
+    }
+
     const search = document.querySelector("#search");
     const table = document.querySelector(".table");
     search.addEventListener('keyup', () => {
       filterTable(table);
     });
+
+    const welcome = document.querySelector('.top-header-right span');
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
   </script>
 
   <!---- footer---->

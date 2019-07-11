@@ -81,7 +81,7 @@ paths:
                phone: 09098392839
                account_number: 1293023839
                address: this is the address
-               isAdmin: false
+               is_admin: false
         400:
           description: Invalid input
   /auth/signin:
@@ -125,7 +125,7 @@ paths:
               phone: 09098392839
               account_number: 0392383923
               address: this is the address
-              isAdmin: false
+              is_admin: false
         400:
           description: Invalid login credentials
   /auth/logout:
@@ -178,7 +178,7 @@ paths:
                 last_name: tyonum
                 password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
                 address: This is the address of the user
-                isAdmin: false
+                is_admin: false
                 phone: 08137277480
                 account_number: 0020600555
                 bank: GTBank
@@ -223,7 +223,7 @@ paths:
                 last_name: tyonum
                 password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
                 address: This is the address of the user
-                isAdmin: false
+                is_admin: false
                 phone: 08137277480
                 account_number: 0020600555
                 bank: GTBank
@@ -260,7 +260,7 @@ paths:
                 last_name: Doe
                 password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
                 address: my address
-                isAdmin: false
+                is_admin: false
                 phone: 09023928389
                 account_number: 2081769837
                 bank: UBA
@@ -271,7 +271,7 @@ paths:
                 last_name: Johnson
                 password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
                 address: my address
-                isAdmin: true
+                is_admin: true
                 phone: 09023928389
                 account_number: 2081769837
                 bank: UBA

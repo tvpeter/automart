@@ -29,9 +29,6 @@ createadForm.addEventListener('submit', async (e) => {
     if (responseToJson.status !== 201) {
       return displayError.textContent = responseToJson.message;
     }
-    localStorage.setItem('name', responseToJson.data.first_name);
-    localStorage.setItem('uid', responseToJson.data.id);
-    localStorage.setItem('auth', responseToJson.data.token);
     return (window.location.href = './userads.html');
   } catch (error) {
     return displayError.textContent = error.message;

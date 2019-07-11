@@ -35,7 +35,7 @@ router.get('/car/state/:state', Car.getCarsByProperty);
 router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-router.get('/cars', Car.getAllUnsoldCars);
+router.get('/car/', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users

@@ -14,20 +14,20 @@ const generateTableCells = (data) => {
     const idCell = row.insertCell();
     idCell.innerHTML = `<a href='./updatead.html'>${element.id}</a>`;
     const modelCell = row.insertCell();
-    modelCell.textContent = element.model;
+    modelCell.textContent = `${element.model}`.charAt(0).toUpperCase() + `${element.model}`.slice(1);
     const stateCell = row.insertCell();
-    stateCell.textContent = element.state;
+    stateCell.textContent = `${element.state}`.charAt(0).toUpperCase() + `${element.state}`.slice(1);
     const cState = row.insertCell();
     cState.innerHTML = '<button><a href=\'./updatestatus.html\'>Change</a></button>';
     const statusCell = row.insertCell();
-    statusCell.textContent = element.status;
+    statusCell.textContent = `${element.status}`.charAt(0).toUpperCase() + `${element.status}`.slice(1);
     const priceCell = row.insertCell();
     priceCell.textContent = `N${element.price}`;
   });
 };
 
 const generateTable = (data) => {
-  const tableHeaders = ['SN', 'AD ID', 'NAME', 'STATE', 'CHANGE STATE', 'TRANSACTION ID', 'PRICE'];
+  const tableHeaders = ['SN', 'AD ID', 'NAME', 'STATE', 'CHANGE STATE', 'AD STATUS', 'PRICE'];
 
   const thead = tableToCreate.createTHead();
   const row = thead.insertRow();

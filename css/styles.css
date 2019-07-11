@@ -606,7 +606,7 @@ body {
 .product-info-cust {
   float: left;
   border-left: #fc4861 2px solid;
-  width: 53%;
+  width: 40%;
   padding: 0.5em 1em;
   text-align: center;
 }
@@ -614,18 +614,19 @@ body {
 .product-info-cust a {
   color: #2a2323;
   text-transform: uppercase;
-  font-size: 0.875em;
+  font-size: 0.7em;
   font-weight: 600;
 }
 
 .product-info-price {
   float: right;
   background: #fff;
-  width: 27%;
+  width: 57%;
   text-align: center;
   padding: 0.545em;
+  font-size: 0.8em;
   color: #2a2323;
-  font-weight: 700;
+  font-weight: 300;
 }
 
 .product-info {

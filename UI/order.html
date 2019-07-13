@@ -23,9 +23,10 @@
         </div>
 
         <div class="top-header-right">
+          <span></span>
           <li class="dropdown">
             <div class="links">
-              <a href="./index.html">Logout</a>
+              <a href="./logout.html">Logout</a>
               <a href="./userprofile.html">Profile</a>
             </div>
           </li>
@@ -71,25 +72,15 @@
         <table id="table">
           <thead>
             <th>SN</th>
-            <th>Item No.</th>
             <th>Vehicle</th>
             <th>Name</th>
             <th>State</th>
-            <th>Owner Name</th>
+            <th>Price</th>
+            <!-- <th>Owner Name</th>
             <th>Email</th>
-            <th>Phone</th>
+            <th>Phone</th> -->
           </thead>
           <tbody>
-            <td>1</td>
-            <td>#1837382jd23w</td>
-            <td>
-              <img src="./images/products/bmwx6.jpg" alt="vehicle" width="150">
-            </td>
-            <td> BMW X6, 2018 </td>
-            <td>Used</td>
-            <td>Tyonum Peter</td>
-            <td>example@email.com</td>
-            <td>09039283928</td>
           </tbody>
         </table>
       </div>
@@ -98,33 +89,17 @@
     <div class="wrap">
       <p id="note">Before making payment, do confirm the state of the vehicle, test and be satisfied.</p>
       <div class="container">
-        <form action="">
-
+        <div id="errorDisplay"></div>
+        <form id="createOrderForm">
           <div class="flex-row">
             <div class="flex-col-50">
-              <h3>BILLING ADDRESS</h3>
-              <label for="fname"> Full Name</label>
-              <input type="text" id="fname" name="firstname" placeholder="Tyonum Peter">
-              <label for="email">Email</label>
-              <input type="text" id="email" name="email" placeholder="john@example.com">
-              <label for="adr">Address</label>
-              <input type="text" id="adr" name="address" placeholder="16 Akanbi Street">
-              <label for="city">City</label>
-              <input type="text" id="city" name="city" placeholder="Lagos">
-
-              <div class="flex-row">
-                <div class="flex-col-50">
-                  <label for="state">State</label>
-                  <input type="text" id="state" name="state" placeholder="Lagos">
-                </div>
-              </div>
-              <input type="submit" value="Continue to checkout" class="btn">
-
-            </div>
-
-            <div class="flex-col-50">
-              <h3>PAYMENT</h3>
-              <label for="fname">Accepted Cards</label>
+              <h3>PAYMENT DETAILS</h3>
+              <label for="pid"> Product ID</label>
+              <input type="number" id="pid" name="pid" placeholder="1302930493929">
+              <label for="email">Price Offer</label>
+              <input type="number" id="price" name="priceoffer" placeholder="priceoffer" required>
+              <!-- <h3>PAYMENT</h3>
+              <label for="card">Accepted Cards</label>
               <div id="cards">
                 <img src="./images/paystack.png" alt="">
               </div>
@@ -143,21 +118,18 @@
                   <label for="cvv">CVV</label>
                   <input type="text" id="cvv" name="cvv" placeholder="352">
                 </div>
-              </div>
-
+              </div> -->
+              <input type="submit" value="Make Offer" class="btn">
             </div>
-
-
+            <!-- <div class="flex-col-50">
+            </div> -->
           </div>
         </form>
       </div>
-
     </div>
     <div class="clear"> </div>
-
   </div>
-
-
+  <script src="./js/order.js"></script>
   <!---- footer---->
   <div class="bottom-cols">
     <div class="wrap">

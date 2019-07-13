@@ -235,7 +235,7 @@ describe('Cars', () => {
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
       '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/cars');
+      const res = await chai.request(server).get('/api/v1/car');
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
     });
@@ -243,7 +243,7 @@ describe('Cars', () => {
     it('should return 404 when there are no unsold cars', async () => {
       await db.query('UPDATE cars SET status=\'sold\'');
 
-      const res = await chai.request(server).get('/api/v1/cars');
+      const res = await chai.request(server).get('/api/v1/car');
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('There are no cars available now. Check back');
     });
@@ -427,7 +427,7 @@ describe('Cars', () => {
     '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
 
       const token = generateToken(data.id, true);
-      const res = await chai.request(server).get('/api/v1/car').set('x-auth', token);
+      const res = await chai.request(server).get('/api/v1/cars').set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
       expect(res.body.data[0]).to.be.an('Object');
@@ -438,12 +438,12 @@ describe('Cars', () => {
       await db.query('DELETE FROM orders');
       await db.query('DELETE FROM cars');
       const token = generateToken(data.id, true);
-      const res = await chai.request(server).get('/api/v1/car').set('x-auth', token);
+      const res = await chai.request(server).get('/api/v1/cars').set('x-auth', token);
       expect(res.body.status).to.eq(404);
       expect(res.body.message).to.eq('There are no cars available now. Check back');
     });
     it('should return error 401 if user is not logged in', async () => {
-      const res = await chai.request(server).get('/api/v1/car');
+      const res = await chai.request(server).get('/api/v1/cars');
       expect(res.body.status).to.eq(401);
       expect(res.body.message).to.eq('No authorization token provided');
     });

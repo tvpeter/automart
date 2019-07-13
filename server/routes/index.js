@@ -77,7 +77,7 @@ router.patch('/user', auth, User.changePassword);
  */
 
 // get all cars
-router.get('/car', adminAuth, Car.getAll);
+router.get('/cars', adminAuth, Car.getAll);
 
 // admin delete an ad
 router.delete('/car/:id', adminAuth, Car.deleteAd);

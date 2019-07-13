@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', async (e) => {
   e.preventDefault();
 
   try {
-    const adDetail = await fetch(`http://localhost:5000/api/v1/car/${productId}`, {
+    const adDetail = await fetch(`https://tvpautomart.herokuapp.com/api/v1/car/${productId}`, {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',

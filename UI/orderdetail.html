@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
-  <title>AutoMart | User Profile</title>
+  <title>AutoMart | Notification detail</title>
   <link href="./css/styles.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
+  <meta name="description" content="Notification detail">
 </head>
 <script>
   if (localStorage.length < 1 || !localStorage.getItem('uid') || !localStorage.getItem('name') || !localStorage.getItem('auth')) {
@@ -16,6 +17,7 @@
 
 <body>
   <div class="header">
+    <!-- start of top header-->
     <div class="top-header">
       <div class="wrap">
         <div class="top-header-center">
@@ -28,23 +30,22 @@
         </div>
 
         <div class="top-header-right">
-          <span>
-          </span>
+          <span>Hello, John</span>
           <li class="dropdown">
             <div class="links">
-              <a href="./logout.html">Logout</a>
-              <a href="./userprofile">Profile</a>
+              <a href="index.html">Logout</a>
+              <a href="profile.html">Profile</a>
             </div>
           </li>
         </div>
         <div class="clear"></div>
       </div>
     </div>
-
+    <!----start-mid-head---->
     <div class="mid-header">
       <div class="wrap">
         <div class="mid-grid-left">
-          <a class="logo" href="/"></a>
+          <a class="logo" href="index.html"></a>
         </div>
         <div class="mid-grid-right">
           <form>
@@ -62,7 +63,7 @@
           <ul>
             <li><a href="./createad.html">Create Ad</a></li>
             <li><a href="./userads.html">My Ads</a></li>
-            <li><a href="./mytransactions.html">Transactions</a></li>
+            <li><a href="./mytransactions.html" class="active">Transactions</a></li>
             <li><a href="./products.html">Ads</a></li>
           </ul>
         </nav>
@@ -72,95 +73,91 @@
 
   <div class="content">
     <div class="wrap">
-
       <div class="container">
-        <h3 class="txt-center">Profile Update</h3>
+        <div id="errorDisplay"></div>
         <form action="">
           <div class="row">
-            <div class="clear"></div>
-            <span id="passport">
-              <img src="./images/user.png" alt="user image">
-            </span>
+            <h3 class="txt-center">ORDER DETAILS</h3>
+            <div class="col-25">
+              <label>Order ID</label>
+            </div>
+            <div class="col-75 white">
+              <span id="orderid"></span>
+            </div>
           </div>
           <div class="row">
             <div class="col-25">
-              <label>Name</label>
+              <label>Buyer ID</label>
             </div>
             <div class="col-75 white">
-              Tyonum Peter
+              <a href="details.html">
+                <span id="buyerid"></span>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-25">
+              <label>Car ID</label>
+            </div>
+            <div class="col-75 white">
+              <a href="">
+                <span id="carid"> </span>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-25">
+              <label>Seller ID</label>
+            </div>
+            <div class="col-75 white">
+              <a href="">
+                <span id="sellerid"></span>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-25">
+              <label>Price Offered</label>
+            </div>
+            <div class="col-75 white">
+              <span id="priceoffer"></span>
             </div>
           </div>
 
-
           <div class="row">
             <div class="col-25">
-              <label>Email</label>
+              <label>Status</label>
             </div>
             <div class="col-75 white">
-              contact@tom.com
+              <span id="status"> </span>
             </div>
           </div>
           <div class="row">
             <div class="col-25">
-              <label>Phone</label>
+              <label>Date</label>
             </div>
             <div class="col-75 white">
-              <span>
-                <input type="text" name="phone" value="080902939384">
-              </span>
+              <span id="date"> </span>
             </div>
           </div>
           <div class="row">
             <div class="col-25">
-              <label>Address</label>
+              <label>Updated At</label>
             </div>
             <div class="col-75 white">
-              <input type="text" value="No 13 Okoire Street, Ikeja Lagos">
+              <span id="updated"> </span>
             </div>
           </div>
           <div class="row">
-            <div class="col-25">
-              <label for="oldpassword">Old Password</label>
-            </div>
-            <div class="col-75 white">
-              <input type="password" name="oldpassword">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-25">
-              <label for="npassword">New Password</label>
-            </div>
-            <div class="col-75 white">
-              <input type="password" name="npassword">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-25">
-              <label for="confirm_password">Confirm Password</label>
-            </div>
-            <div class="col-75 white">
-              <input type="password" name="confirm_password">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-25">
-              <label for="passport">New Passport</label>
-            </div>
-            <div class="col-75 white">
-              <input type="file" name="passport">
-            </div>
-          </div>
-          <div class="row">
-            <input type="submit" value="Update" class="btn">
+            <!-- <input type="submit" value="Mark as Treated" class="btn"> -->
           </div>
         </form>
       </div>
 
     </div>
     <div class="clear"> </div>
-
   </div>
-
+  <script src="./js/orderdetail.js"></script>
 
   <!---- footer---->
   <div class="bottom-cols">
@@ -193,9 +190,5 @@
       <div class="clear"></div>
     </div>
   </footer>
-  <script>
-    const welcome = document.querySelector('.top-header-right span');
-    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
-  </script>
 
 </html>

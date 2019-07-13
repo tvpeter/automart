@@ -45,7 +45,7 @@ const generateTable = (data) => {
 window.addEventListener('DOMContentLoaded', async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch('http://localhost:5000/api/v1/ads/me', {
+    const response = await fetch('https://tvpautomart.herokuapp.com/api/v1/ads/me', {
       method: 'get',
       headers: {
         'Content-Type': 'application/Json',

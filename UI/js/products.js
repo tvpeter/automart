@@ -1,13 +1,14 @@
 const errorDisplay = document.querySelector('#errorDisplay');
 const displayArea = document.querySelector('.product-grids');
 
+const ids = [];
 window.addEventListener('DOMContentLoaded', async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch('http://localhost:5000/api/v1/car?status=available', {
+    const response = await fetch('https://tvpautomart.herokuapp.com/api/v1/car?status=available', {
       method: 'get',
       headers: {
-        'Content-Type': 'application/Json',
+        'Content-Type': 'application/json',
       },
     });
     const responseToJson = await response.json();
@@ -16,16 +17,18 @@ window.addEventListener('DOMContentLoaded', async (event) => {
       data.forEach((car) => {
         const manufacturer = car.manufacturer.toUpperCase();
         const state = car.state.charAt(0).toUpperCase() + car.state.slice(1);
+        const { id } = car;
+        ids.push(id);
         const ad = `<div class='product-grid'>
         <div class='product-pic'>
-          <a href='details.html'><img src='${car.img}' title='${car.model}' /></a>
+          <a href='./details.html?pid=${id}'><img src='${car.img}' title='${car.model}' /></a>
           <p>
-            <a href="#"><small>${manufacturer} </small> ${car.model}</a>
+            <a href="./details.html?pid=${id}"><small>${manufacturer} </small> ${car.model}</a>
             <span>${state}</span> </p>
         </div>
         <div class="product-info">
           <div class="product-info-cust">
-            <a href="details.html">Details</a>
+            <a href='./details.html?pid=${id}'>Details</a>
           </div>
           <div class="product-info-price">
             N${car.price}

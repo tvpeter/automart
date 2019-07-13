@@ -25,9 +25,9 @@
 
         <div class="top-header-right">
           <ul>
-            <li><a href="products.html">Products</a><span> </span></li>
-            <li><a href="login.html">Login</a><span> </span></li>
-            <li><a href="register.html">Register</a></li>
+            <li><a href="./products.html">Products</a><span> </span></li>
+            <li><a href="./login.html">Login</a><span> </span></li>
+            <li><a href="./register.html">Register</a></li>
           </ul>
         </div>
         <div class="clear"></div>
@@ -38,7 +38,7 @@
     <div class="mid-header">
       <div class="wrap">
         <div class="mid-grid-left">
-          <a class="logo" href="index.html"></a>
+          <a class="logo" href="./index.html"></a>
         </div>
         <div class="mid-grid-right">
           <form>
@@ -66,7 +66,7 @@
       <div class="row">
         <div id="errorDisplay"></div>
         <div class="col-45">
-          <img src="images/products/bmwx6d.jpg" class="imgslide current" alt="" />
+          <img src="" class="imgslide current" alt="" />
           <!-- <img src="images/products/bmwx6.jpg" alt="" class="imgslide"> -->
 
           <!-- <div class="product-images">
@@ -78,20 +78,18 @@
             </div>
             <div class="clear"></div>
           </div> -->
-          <div class="txt-center"><a href="order.html">
+          <div class="txt-center"><a href=''>
               <button class="btn">Buy Now</button></a></div>
         </div>
         <div class="col-55">
-          <h1>Manufacturer, model name</h1>
+          <h1></h1>
           <div class="vehicle-info">
-            <p>N14,560,000.00</p>
-            <p>State: <span>New</span></p>
+            <p></p>
+            <p>State: <span></span></p>
           </div>
-          <p class="vehicle-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat. </p>
+          <p class="vehicle-detail-info"></p>
           <div class="vehicle-more-details">
-            <p>Production Year:<span class="float-rt"> 2019</span></p>
+            <!-- <p>Production Year:<span class="float-rt"> 2019</span></p> -->
             <p>Seller Details <span class="float-rt"><a href="">Seller</a></span></p>
             <p>Report this Vehicle <span id="flag" class="float-rt"><a href="">&#9872;</a></span></p>
             <div class="share">
@@ -116,38 +114,9 @@
       //   switchImage("img1");
       // });
 
-      const productId = window.location.href.split('=')[1];
-      const errorDisplay = document.querySelector('#errorDisplay');
 
-      window.addEventListener('DOMContentLoaded', async (e, id) => {
-        e.preventDefault();
-
-        try {
-          const adDetail = await fetch(`http://localhost:5000/api/v1/car/${productId}`, {
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          const responseToJson = await adDetail.json();
-          if (responseToJson.status === 200) {
-            const { data } = responseToJson;
-            document.querySelector('.imgslide').src = data.img;
-            document.querySelector('.col-55 h1').textContent = `${data.manufacturer, data.model}`;
-            document.querySelector('.vehicle-detail-info').textContent = data.description;
-            document.querySelector('.vehicle-info p').textContent = data.price;
-            document.querySelector('.vehicle-info span').textContent = data.state;
-
-
-          }
-
-        } catch (error) {
-          const message = 'There\'s an error loading your data, please retry';
-          errorDisplay.textContent = message;
-          return errorDisplay;
-        }
-      });
     </script>
+    <script src="./js/details.js"></script>
     <script src="./js/script.js"></script>
 
     <div class="wrap">

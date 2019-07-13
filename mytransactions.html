@@ -1,172 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>AutoMart | User Transactions</title>
-    <link href="./css/styles.css" rel="stylesheet" type="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    <div class="header">
-		<!-- start of top header-->
-      <div class="top-header">
-        <div class="wrap">
-          <div class="top-header-center">
-            <div class="top-header-center-alert-right">
-              <div class="txt-center">
-                    <span id="info">Your #1 Automobile Market Place.</span>
-              </div>
+
+<head>
+  <title>AutoMart | User Transactions</title>
+  <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <div class="header">
+    <!-- start of top header-->
+    <div class="top-header">
+      <div class="wrap">
+        <div class="top-header-center">
+          <div class="top-header-center-alert-right">
+            <div class="txt-center">
+              <span id="info">Your #1 Automobile Market Place.</span>
             </div>
-            <div class="clear"></div>
-		  </div>
-		  
-      <div class="top-header-right">
-          <span>Hello Peter</span>
-          <li class="dropdown">
-              <div class="links">
-                <a href="index.html">Logout</a>
-                <a href="userprofile.html">Profile</a>
-              </div>
-          </li>
-      </div>
+          </div>
           <div class="clear"></div>
         </div>
-      </div>
-      <!----start-mid-head---->
-      <div class="mid-header">
-          <div class="wrap">
-            <div class="mid-grid-left">
-              <a class="logo" href="index.html"></a>
-            </div>
-            <div class="mid-grid-right">
-                <form>
-                    <label for="search"></label>
-                    <input type="text" placeholder="Search..."  class="search"/>
-                  </form>
-            </div>
-            <div class="clear"></div>
-          </div>
-        </div>
 
-         <div class="header-bottom">
-        <div class="wrap">
-          <nav>
-            <ul>
-                <li><a href="createad.html">Create Ad</a></li>
-                <li><a href="userads.html">My Ads</a></li>
-                <li><a href="mytransactions.html" class="active">Transactions</a></li>
-          </ul>
-          </nav>
-        </div>
-      </div> 
-	</div>
-	
-  <div class="content">
-			<div class="wrap">
-        <div class="resize-table">
-              <h3 class="txt-center caption">My Transactions</h3>
-                  <input
-                  type="text"
-                  name="search"
-                  placeholder="Search table"
-                  class="search"
-                  id="search"
-                />
-                    <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>SN</th>
-                                    <th>Transaction ID</th>
-                                    <th>Transaction Type</th>
-                                    <th >Amount</th>
-                                    <th>Date</th>
-                                    <th >Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr >
-                                    <td>6</td>
-                                    <td><a href="invoice.html">7X6XY7637E</a></td>
-                                    <td>Bought</td>
-                                    <td> N2.4m</td>
-                                    <td>12/03/2019</td>
-                                    <td>Delivered</td>
-                                </tr>
-                                <tr >
-                                        <td>5</td>
-                                    <td><a href="">83734A7D4</a></td>
-                                    <td>Sold</td>
-                                    <td> N2.4m</td>
-                                    <td>12/03/2019</td>
-                                    <td>Pending</td>
-                                </tr>
-                                <tr >
-                                        <td>4</td>
-                                        <td><a href="">9039D83HD</a></td>
-                                        <td>Sold</td>
-                                        <td> N2.4m</td>
-                                        <td>12/03/2019</td>
-                                        <td>Delivered</td>
-    
-    
-                                    </tr>
-                                    <tr >
-                                    <td>6</td>
-                                    <td><a href="">3749D738D</a></td>
-                                    <td>Bought</td>
-                                    <td> N2.4m</td>
-                                    <td>12/03/2019</td>
-                                    <td>Delivered</td>
-    
-                                    </tr>
-    
-                        </table>
-                 </div>
-                    </div>
-				<div class="clear"> </div>
-      
-        </div>
-    
-
-        <script src="./js/script.js"></script>
-        <script>
-        const search = document.querySelector("#search");
-        const table = document.querySelector(".table");
-        search.addEventListener('keyup', ()=> {
-          filterTable(table);
-        });
-        </script>
-        
-   
-     <!---- footer---->
-     <div class="bottom-cols">
-      <div class="wrap">
-        <div class="bottom-col">
-          <h6>Terms of Use</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Return Policy</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Contact Support Team</h6>
-          <a href="#">Contact us here</a>
+        <div class="top-header-right">
+          <span>Hello Peter</span>
+          <li class="dropdown">
+            <div class="links">
+              <a href="index.html">Logout</a>
+              <a href="userprofile.html">Profile</a>
+            </div>
+          </li>
         </div>
         <div class="clear"></div>
       </div>
     </div>
-    <!--End of upper footer -->
-
-    <footer class="footer">
+    <!----start-mid-head---->
+    <div class="mid-header">
       <div class="wrap">
-        <div class="footer-left">
-          <ul>
-            <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
-            <li><a href="#">Cookie Settings</a></li>
-          </ul>
+        <div class="mid-grid-left">
+          <a class="logo" href="index.html"></a>
+        </div>
+        <div class="mid-grid-right">
+          <form>
+            <label for="search"></label>
+            <input type="text" placeholder="Search..." class="search" />
+          </form>
         </div>
         <div class="clear"></div>
       </div>
-    </footer>
+    </div>
+
+    <div class="header-bottom">
+      <div class="wrap">
+        <nav>
+          <ul>
+            <li><a href="createad.html">Create Ad</a></li>
+            <li><a href="userads.html">My Ads</a></li>
+            <li><a href="mytransactions.html" class="active">Transactions</a></li>
+            <li><a href="./products.html">Ads</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="wrap">
+      <div class="resize-table">
+        <h3 class="txt-center caption">My Transactions</h3>
+        <input type="text" name="search" placeholder="Search table" class="search" id="search" />
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Transaction ID</th>
+              <th>Transaction Type</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>6</td>
+              <td><a href="invoice.html">7X6XY7637E</a></td>
+              <td>Bought</td>
+              <td> N2.4m</td>
+              <td>12/03/2019</td>
+              <td>Delivered</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><a href="">83734A7D4</a></td>
+              <td>Sold</td>
+              <td> N2.4m</td>
+              <td>12/03/2019</td>
+              <td>Pending</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><a href="">9039D83HD</a></td>
+              <td>Sold</td>
+              <td> N2.4m</td>
+              <td>12/03/2019</td>
+              <td>Delivered</td>
+
+
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><a href="">3749D738D</a></td>
+              <td>Bought</td>
+              <td> N2.4m</td>
+              <td>12/03/2019</td>
+              <td>Delivered</td>
+
+            </tr>
+
+        </table>
+      </div>
+    </div>
+    <div class="clear"> </div>
+
+  </div>
+
+
+  <script src="./js/script.js"></script>
+  <script>
+    const search = document.querySelector("#search");
+    const table = document.querySelector(".table");
+    search.addEventListener('keyup', () => {
+      filterTable(table);
+    });
+  </script>
+
+
+  <!---- footer---->
+  <div class="bottom-cols">
+    <div class="wrap">
+      <div class="bottom-col">
+        <h6>Terms of Use</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Return Policy</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Contact Support Team</h6>
+        <a href="#">Contact us here</a>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--End of upper footer -->
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-left">
+        <ul>
+          <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
+          <li><a href="#">Cookie Settings</a></li>
+        </ul>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </footer>
 
 </html>

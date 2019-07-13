@@ -1,213 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>AutoMart | Product Details</title>
-    <link href="./css/styles.css" rel="stylesheet" type="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Automart Product details ">
-  </head>
-  <body>
-    <div class="header">
-		<!-- start of top header-->
-      <div class="top-header">
-        <div class="wrap">
-          <div class="top-header-center">
-            <div class="top-header-center-alert-right">
-              <div class="txt-center">
-                    <span id="info">Your #1 Automobile Market Place.</span>
-              </div>
+
+<head>
+  <title>AutoMart | Product Details</title>
+  <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Automart Product details ">
+</head>
+
+<body>
+  <div class="header">
+    <!-- start of top header-->
+    <div class="top-header">
+      <div class="wrap">
+        <div class="top-header-center">
+          <div class="top-header-center-alert-right">
+            <div class="txt-center">
+              <span id="info">Your #1 Automobile Market Place.</span>
             </div>
-            <div class="clear"></div>
-		  </div>
-		  
-          <div class="top-header-right">
-            <ul>
-								<li><a href="products.html">Products</a><span> </span></li>
-              <li><a href="login.html">Login</a><span> </span></li>
-              <li><a href="register.html">Register</a></li>
-            </ul>
           </div>
           <div class="clear"></div>
         </div>
-			</div>
-			
-      <!----start-mid-head---->
-      <div class="mid-header">
-        <div class="wrap">
-          <div class="mid-grid-left">
-							<a class="logo" href="index.html"></a>
-          </div>
-          <div class="mid-grid-right">
-							<form>
-                  <label for="search"></label>
-									<input type="text" placeholder="Search..."  class="search"/>
-								</form>
-          </div>
-          <div class="clear"></div>
-        </div>
-      </div>
-    </div>
-    
-  	<div class="wrap"  >
-        <div class="product-box-head">
-            <div class="product-box-head-left">
-              <h3>Home:: <span>Product Details</span></h3>
-            </div>
-            
-            <div class="clear"> </div>
-                  </div>
-      </div>
 
-    <div class="content">
-    <div class="wrap">
-      <div class="row">
-  <div class="col-45">
-      <img src="images/products/bmwx6d.jpg" class="imgslide current" alt=""/>
-      <img src="images/products/bmwx6.jpg" alt="" class="imgslide">
-
-      <div class="product-images">
-        <div class="col-45">
-          <img src="images/products/bmwx6d.jpg" alt="" class="thumbnail" id="img1">
-        </div>
-        <div class="col-45">
-            <img src="images/products/bmwx6.jpg" alt="" class="thumbnail" id="img2">
+        <div class="top-header-right">
+          <ul>
+            <li><a href="products.html">Products</a><span> </span></li>
+            <li><a href="login.html">Login</a><span> </span></li>
+            <li><a href="register.html">Register</a></li>
+          </ul>
         </div>
         <div class="clear"></div>
       </div>
-      <div class="txt-center"><a href="order.html">
-        <button class="btn">Buy Now</button></a></div>
-  </div>
-  <div class="col-55">
-      <h1>Manufacturer, model name</h1>
-      <div class="vehicle-info">
-      <p>N14,560,000.00</p>
-      <p>State: <span>New</span></p>
-      </div>
-      <p class="vehicle-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-      <div class="vehicle-more-details">
-        <p>Production Year:<span class="float-rt"> 2019</span></p>
-        <p>Seller Details <span class="float-rt"><a href="">Seller</a></span></p>
-        <p>Report this Vehicle <span id="flag" class="float-rt"><a href="">&#9872;</a></span></p>
-        <div class="share">
-          <h3>Share On</h3>
-          <ul>
-            <li><a class="share-face" href="#"><span> </span> </a></li>
-            <li><a class="share-twitter" href="#"><span> </span> </a></li>
-          </ul>
+    </div>
+
+    <!----start-mid-head---->
+    <div class="mid-header">
+      <div class="wrap">
+        <div class="mid-grid-left">
+          <a class="logo" href="index.html"></a>
         </div>
+        <div class="mid-grid-right">
+          <form>
+            <label for="search"></label>
+            <input type="text" placeholder="Search..." class="search" />
+          </form>
+        </div>
+        <div class="clear"></div>
       </div>
+    </div>
   </div>
-</div>
-  </div>
-
-<script>
-  const  img1 = document.getElementById("img1");
-  const img2 = document.getElementById("img2");
-
-  img2.addEventListener("click", ()=> {
-    switchImage("img2");
-});
-  img1.addEventListener("click", ()=>{
-    switchImage("img1");
-  });
-</script>
-<script src="./js/script.js"></script>
 
   <div class="wrap">
-    <h3>Related Products</h3>
-  <div class="product-grids">
-						
-            <div class="product-grid">
-              <div class="product-pic">
-                <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
-                <p>
-                <a href="#"><small>Volvo</small> 2018 V90</a>
-                <span>New</span>
-                </p>
-              </div>
-              <div class="product-info">
-                <div class="product-info-cust">
-                  <a href="details.html">Details</a>
-                </div>
-                <div class="product-info-price">
-                    N2.1m											</div>
-                <div class="clear"> </div>
-              </div>
-            
-              </div>
-
-              <div class="product-grid">
-                <div class="product-pic">
-                  <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
-                  <p>
-                    <a href="#"><small>BMW</small> 3 Series Sedan</a>
-                    <span>Used</span>
-                  </p>
-                </div>
-                <div class="product-info">
-                  <div class="product-info-cust">
-                    <a href="details.html">Details</a>
-                  </div>
-                  <div class="product-info-price">
-                      N2.1m												</div>
-                  <div class="clear"> </div>
-                </div>
-              
-                </div>
-
-                <div class="product-grid">
-                  <div class="product-pic">
-                    <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
-                    <p>
-                      <a href="#"><small>BMW</small> 3 Series Sedan</a>
-                      <span>New</span>
-                    </p>
-                  </div>
-                  <div class="product-info">
-                    <div class="product-info-cust">
-                      <a href="details.html">Details</a>
-                    </div>
-                    <div class="product-info-price">
-                        N2.1m													</div>
-                    <div class="clear"> </div>
-                  </div>
-                  </div>
+    <div class="product-box-head">
+      <div class="product-box-head-left">
+        <h3>Home:: <span>Product Details</span></h3>
+      </div>
 
       <div class="clear"> </div>
-              </div>
     </div>
-    </div>
-   
-     <!---- footer---->
-     <div class="bottom-cols">
-      <div class="wrap">
-        <div class="bottom-col">
-          <h6>Terms of Use</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Return Policy</h6>
-          <a href="#">Read here</a>
-        </div>
-        <div class="bottom-col">
-          <h6>Contact Support Team</h6>
-          <a href="contact.html">Contact us here</a>
-        </div>
-        <div class="clear"></div>
-      </div>
-    </div>
-    <!--End of upper footer -->
+  </div>
 
-    <footer class="footer">
-      <div class="wrap">
-        <div class="footer-left">
-          <ul>
-            <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
-            <li><a href="#">Cookie Settings</a></li>
-          </ul>
+  <div class="content">
+    <div class="wrap">
+      <div class="row">
+        <div id="errorDisplay"></div>
+        <div class="col-45">
+          <img src="images/products/bmwx6d.jpg" class="imgslide current" alt="" />
+          <!-- <img src="images/products/bmwx6.jpg" alt="" class="imgslide"> -->
+
+          <!-- <div class="product-images">
+            <div class="col-45">
+              <img src="images/products/bmwx6d.jpg" alt="" class="thumbnail" id="img1">
+            </div>
+            <div class="col-45">
+              <img src="images/products/bmwx6.jpg" alt="" class="thumbnail" id="img2">
+            </div>
+            <div class="clear"></div>
+          </div> -->
+          <div class="txt-center"><a href="order.html">
+              <button class="btn">Buy Now</button></a></div>
         </div>
-        <div class="clear"></div>
+        <div class="col-55">
+          <h1>Manufacturer, model name</h1>
+          <div class="vehicle-info">
+            <p>N14,560,000.00</p>
+            <p>State: <span>New</span></p>
+          </div>
+          <p class="vehicle-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. </p>
+          <div class="vehicle-more-details">
+            <p>Production Year:<span class="float-rt"> 2019</span></p>
+            <p>Seller Details <span class="float-rt"><a href="">Seller</a></span></p>
+            <p>Report this Vehicle <span id="flag" class="float-rt"><a href="">&#9872;</a></span></p>
+            <div class="share">
+              <h3>Share On</h3>
+              <ul>
+                <li><a class="share-face" href="#"><span> </span> </a></li>
+                <li><a class="share-twitter" href="#"><span> </span> </a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
-	  </html>
-	  
+    </div>
+    <script>
+      // const img1 = document.getElementById("img1");
+      // const img2 = document.getElementById("img2");
+
+      // img2.addEventListener("click", () => {
+      //   switchImage("img2");
+      // });
+      // img1.addEventListener("click", () => {
+      //   switchImage("img1");
+      // });
+
+      const productId = window.location.href.split('=')[1];
+      const errorDisplay = document.querySelector('#errorDisplay');
+
+      window.addEventListener('DOMContentLoaded', async (e, id) => {
+        e.preventDefault();
+
+        try {
+          const adDetail = await fetch(`http://localhost:5000/api/v1/car/${productId}`, {
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const responseToJson = await adDetail.json();
+          if (responseToJson.status === 200) {
+            const { data } = responseToJson;
+            document.querySelector('.imgslide').src = data.img;
+            document.querySelector('.col-55 h1').textContent = `${data.manufacturer, data.model}`;
+            document.querySelector('.vehicle-detail-info').textContent = data.description;
+            document.querySelector('.vehicle-info p').textContent = data.price;
+            document.querySelector('.vehicle-info span').textContent = data.state;
+
+
+          }
+
+        } catch (error) {
+          const message = 'There\'s an error loading your data, please retry';
+          errorDisplay.textContent = message;
+          return errorDisplay;
+        }
+      });
+    </script>
+    <script src="./js/script.js"></script>
+
+    <div class="wrap">
+      <h3>Related Products</h3>
+      <div class="product-grids">
+
+        <div class="product-grid">
+          <div class="product-pic">
+            <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
+            <p>
+              <a href="#"><small>Volvo</small> 2018 V90</a>
+              <span>New</span>
+            </p>
+          </div>
+          <div class="product-info">
+            <div class="product-info-cust">
+              <a href="details.html">Details</a>
+            </div>
+            <div class="product-info-price">
+              N2.1m </div>
+            <div class="clear"> </div>
+          </div>
+
+        </div>
+
+        <div class="product-grid">
+          <div class="product-pic">
+            <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
+            <p>
+              <a href="#"><small>BMW</small> 3 Series Sedan</a>
+              <span>Used</span>
+            </p>
+          </div>
+          <div class="product-info">
+            <div class="product-info-cust">
+              <a href="details.html">Details</a>
+            </div>
+            <div class="product-info-price">
+              N2.1m </div>
+            <div class="clear"> </div>
+          </div>
+
+        </div>
+
+        <div class="product-grid">
+          <div class="product-pic">
+            <a href="details.html"><img src="./images/products/bmwx6.jpg" title="product-name" /></a>
+            <p>
+              <a href="#"><small>BMW</small> 3 Series Sedan</a>
+              <span>New</span>
+            </p>
+          </div>
+          <div class="product-info">
+            <div class="product-info-cust">
+              <a href="details.html">Details</a>
+            </div>
+            <div class="product-info-price">
+              N2.1m </div>
+            <div class="clear"> </div>
+          </div>
+        </div>
+
+        <div class="clear"> </div>
+      </div>
+    </div>
+  </div>
+
+  <!---- footer---->
+  <div class="bottom-cols">
+    <div class="wrap">
+      <div class="bottom-col">
+        <h6>Terms of Use</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Return Policy</h6>
+        <a href="#">Read here</a>
+      </div>
+      <div class="bottom-col">
+        <h6>Contact Support Team</h6>
+        <a href="contact.html">Contact us here</a>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--End of upper footer -->
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-left">
+        <ul>
+          <li> <a href="#">Privacy & Cookie Policy</a> <span></span> </li>
+          <li><a href="#">Cookie Settings</a></li>
+        </ul>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </footer>
+
+</html>

@@ -18,6 +18,7 @@ window.addEventListener('DOMContentLoaded', async (e) => {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
+        'x-auth': `${localStorage.getItem('auth')}`,
       },
     });
     const responseToJson = await adDetail.json();
@@ -74,7 +75,7 @@ createOrder.addEventListener('click', async (event) => {
       return errorDisplay.textContent = newOrder.message;
     }
     // eslint-disable-next-line no-return-assign
-    return window.location.href = `./orderdetail.html?${newOrder.data.id}`;
+    return window.location.href = `./orderdetail.html?orderid=${newOrder.data.id}`;
   } catch (error) {
     // eslint-disable-next-line no-return-assign
     return errorDisplay.textContent = error.message;

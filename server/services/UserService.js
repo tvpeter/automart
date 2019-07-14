@@ -31,7 +31,7 @@ class UserService {
   }
 
   static createUser(data) {
-    const text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone, account_number, bank) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
+    const text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
     return db.query(text, data);
   }
 }

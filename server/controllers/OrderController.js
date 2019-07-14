@@ -2,9 +2,9 @@ import validateData from '../lib/validateData';
 import OrderService from '../services/OrderService';
 import Util from '../lib/Util';
 
-
 const Order = {
   async create(req, res) {
+    console.log(req.body);
     req.body.buyerId = req.userId;
     const requiredParams = ['carId', 'priceOffered', 'buyerId'];
     if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {

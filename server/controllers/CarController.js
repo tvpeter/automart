@@ -13,7 +13,6 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
-    console.log('request body', req);
     // eslint-disable-next-line max-len
     const requiredFields = ['state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
@@ -34,7 +33,6 @@ const Car = {
 
       const carPpties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
       const newCar = await CarService.createCar(carPpties);
-      console.log('response here', res);
       return util.sendSuccess(res, 201, newCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);

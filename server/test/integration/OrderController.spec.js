@@ -81,7 +81,6 @@ describe('Order transaction', () => {
       orderData.carId = rows[0].id;
 
       const res = await chai.request(server).post('/api/v1/order').set('x-auth', token).send(orderData);
-      console.log(res);
       expect(res.status).to.eq(201);
       expect(res.body.data).to.have.property('id');
       expect(res.body.data).to.have.property('carid').eq(orderData.carId);

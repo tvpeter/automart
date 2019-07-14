@@ -2,12 +2,12 @@ import db from './db';
 
 class OrderService {
   static getOrderPrice(data) {
-    const text = 'SELECT price FROM orders WHERE id=$1 AND buyer_id=$2 AND status NOT IN (\'pending\', \'cancelled\')';
+    const text = 'SELECT price_offered FROM orders WHERE id=$1 AND buyer_id=$2 AND status NOT IN (\'accepted\', \'cancelled\')';
     return db.query(text, data);
   }
 
   static updateOrder(data) {
-    const query = 'UPDATE orders SET price_offered=$1, updated_at=$2 WHERE id=$3 AND buyerid=$4 returning *';
+    const query = 'UPDATE orders SET new_price_offered=$1, updated_at=$2 WHERE id=$3 AND buyer_id=$4 returning *';
     return db.query(query, data);
   }
 

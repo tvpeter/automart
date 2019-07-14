@@ -13,14 +13,14 @@ const User = {
    * @returns {object}
    */
   async create(req, res) {
-    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'account_number', 'bank', 'password_confirmation', 'address'];
+    const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'address'];
 
     if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
       return util.sendError(res, 400, 'Fill all required fields with a valid email address');
     }
-    if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-      return util.sendError(res, 400, 'Password and confirmation does not match');
-    }
+    // if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
+    //   return util.sendError(res, 400, 'Password and confirmation does not match');
+    // }
 
     if (req.body.password.length < 6 || req.body.email.length >= 30
       || req.body.first_name.length >= 30 || req.body.last_name.length >= 30) {
@@ -37,8 +37,6 @@ const User = {
       req.body.password,
       req.body.address,
       req.body.phone,
-      req.body.account_number,
-      req.body.bank,
     ];
     try {
       const { rows } = await UserService.createUser(values);

@@ -14,7 +14,7 @@ cloudinary.v2.config({
 const Car = {
   async  create(req, res) {
     // eslint-disable-next-line max-len
-    const requiredFields = ['owner', 'state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
+    const requiredFields = ['state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
     if (validatenewCar(requiredFields, req.body) || !req.file) {
       return util.sendError(res, 400, 'Fill all required fields');

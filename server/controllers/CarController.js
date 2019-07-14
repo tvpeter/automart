@@ -13,8 +13,8 @@ cloudinary.v2.config({
 
 const Car = {
   async  create(req, res) {
+    console.log('request body', req);
     // eslint-disable-next-line max-len
-    console.log('i got here');
     const requiredFields = ['state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
     req.body.owner = req.userId;
     if (validatenewCar(requiredFields, req.body)) {
@@ -29,11 +29,12 @@ const Car = {
         return util.sendError(res, 400, 'You have a similar unsold car');
       }
 
-      const image = await cloudinary.uploader.upload(req.file.path, { folder: 'automart/', format: 'png' });
+      const image = req.file ? await cloudinary.uploader.upload(req.file.path, { folder: 'automart/', format: 'png' })
+        : { url: req.img_url };
 
       const carPpties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
       const newCar = await CarService.createCar(carPpties);
-
+      console.log('response here', res);
       return util.sendSuccess(res, 201, newCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);

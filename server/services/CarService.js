@@ -6,22 +6,22 @@ class CarService {
   }
 
   static getCarsInRange(status, min, max) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status=$1 AND price BETWEEN $2 AND $3';
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars where status=$1 AND price BETWEEN $2 AND $3';
     return db.query(query, [status, min, max]);
   }
 
   static getCarsByProperty(status, reqParam, ppty) {
-    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status=$1 AND ${reqParam}=$2 LIMIT 100`;
+    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars where status=$1 AND ${reqParam}=$2 LIMIT 100`;
     return db.query(query, [status, ppty]);
   }
 
   static getAllUnsoldCars(status) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status=$1';
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url, owner FROM cars WHERE status=$1';
     return db.query(query, [status]);
   }
 
   static getSingleCar(id) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE id=$1';
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars WHERE id=$1';
     return db.query(query, [id]);
   }
 
@@ -36,7 +36,7 @@ class CarService {
   }
 
   static createCar(data) {
-    const createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+    const createQuery = 'INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
     return db.query(createQuery, data);
   }
 

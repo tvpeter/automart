@@ -16,7 +16,7 @@ class FlagService {
   }
 
   static getReportByUser(data) {
-    const query = 'SELECT id FROM flags WHERE carid=$1 AND reportedby=$2';
+    const query = 'SELECT id FROM flags WHERE car_id=$1 AND reportedby=$2';
     return db.query(query, data);
   }
 
@@ -26,7 +26,7 @@ class FlagService {
   }
 
   static createNewFlag(data) {
-    const text = 'INSERT INTO flags(id, carid, reason, description, reportedby, severity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    const text = 'INSERT INTO flags(id, car_id, reason, description, reportedby, severity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     return db.query(text, data);
   }
 }

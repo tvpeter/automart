@@ -20,8 +20,6 @@ describe('User', () => {
     password_confirmation: 'password',
     address: 'my address',
     phone: `${Math.floor(Math.random() * 10000000000)}`,
-    account_number: 20903928394,
-    bank: 'UBA',
   });
 
   const userEmail = async () => {
@@ -59,20 +57,12 @@ describe('User', () => {
       expect(res.body.data.status).to.eq('active');
     });
 
-    it('should return error if password and its confirmation does not match', async () => {
-      const data = dataValues();
-      data.password_confirmation = 'password1';
-      const res = await chai.request(server).post(signupUrl).send(data);
-      expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Password and confirmation does not match');
-    });
-
     it('should return error if all required fields are not supplied', async () => {
       const data = dataValues();
       data.first_name = '';
       const res = await chai.request(server).post(signupUrl).send(data);
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Fill all required fields with a valid email address');
+      expect(res.body.error).to.eq('Fill all required fields with a valid email address');
     });
 
     it('should return error if invalid email address is supplied', async () => {
@@ -80,7 +70,7 @@ describe('User', () => {
       data.email = `${Math.random().toString(36).substring(2, 15)}gmail.com`;
       const res = await chai.request(server).post(signupUrl).send(data);
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Fill all required fields with a valid email address');
+      expect(res.body.error).to.eq('Fill all required fields with a valid email address');
     });
 
     it('should return error if length of password is less than 6 characters', async () => {
@@ -89,7 +79,7 @@ describe('User', () => {
       data.password_confirmation = 'passw';
       const res = await chai.request(server).post(signupUrl).send(data);
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
+      expect(res.body.error).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
     });
 
     it('should return error if last name or first name or email is more than 30 characters', (done) => {
@@ -97,7 +87,7 @@ describe('User', () => {
       data.last_name = 'Lastnameofsomeonewithalonganmethatis';
       chai.request(server).post(signupUrl).send(data).end((err, res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
+        expect(res.body.error).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
         done();
       });
     });
@@ -108,18 +98,8 @@ describe('User', () => {
       data.email = `${rows[0].email}`;
       chai.request(server).post(signupUrl).send(data).then((res) => {
         expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('User with given email or phone already exist');
+        expect(res.body.error).to.eq('User with given email or phone already exist');
       });
-    });
-
-    it('should return error if given phone has been used', async () => {
-      const { rows } = await db.query('SELECT phone from users limit 1');
-      const data = dataValues();
-      data.phone = `${rows[0].phone}`;
-
-      const res = await chai.request(server).post(signupUrl).send(data);
-      expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('User with given email or phone already exist');
     });
   });
 
@@ -142,7 +122,7 @@ describe('User', () => {
 
       const res = await chai.request(server).post(loginUrl).send({ email });
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Invalid login credentials');
+      expect(res.body.error).to.eq('Invalid login credentials');
     });
 
     it('should return error 404 if user email is not found', async () => {
@@ -152,7 +132,7 @@ describe('User', () => {
       };
       const res = await chai.request(server).post(loginUrl).send(data);
       expect(res.status).to.eq(404);
-      expect(res.body.message).to.eq('Wrong username/password');
+      expect(res.body.error).to.eq('Wrong username/password');
     });
 
     it('should return error 401 if password is incorrect for given username', async () => {
@@ -164,7 +144,7 @@ describe('User', () => {
 
       const res = await chai.request(server).post(loginUrl).send(data);
       expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('Wrong username/password');
+      expect(res.body.error).to.eq('Wrong username/password');
     });
   });
 
@@ -185,7 +165,7 @@ describe('User', () => {
       const res = await chai.request(server).patch('/api/v1/user').set('x-auth', token)
         .send({ currentPassword: 'password1', newPassword: 'anotherpassword' });
       expect(res.body.status).to.eq(400);
-      expect(res.body.message).to.eq('Wrong current password, use password reset link');
+      expect(res.body.error).to.eq('Wrong current password, use password reset link');
     });
 
     it('should return 400 if current password is not supplied', async () => {
@@ -194,13 +174,13 @@ describe('User', () => {
       const res = await chai.request(server).patch('/api/v1/user').set('x-auth', token)
         .send({ newPassword: 'newpassword' });
       expect(res.status).to.eq(400);
-      expect(res.body.message).to.eq('Fill the required fields');
+      expect(res.body.error).to.eq('Fill the required fields');
     });
 
     it('should return error 401 if user is not logged in', async () => {
       const res = await chai.request(server).patch('/api/v1/user').send({ currentPassword: 'password', newPassword: 'newpassword' });
       expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.body.error).to.eq('No authorization token provided');
     });
   });
 
@@ -220,12 +200,12 @@ describe('User', () => {
 
       const res = await chai.request(server).get(allUsersUrl).set('x-auth', token);
       expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('You dont have the permission to access this resource');
+      expect(res.body.error).to.eq('You dont have the permission to access this resource');
     });
     it('should return error 401 if user is not logged in', async () => {
       const res = await chai.request(server).get('/api/v1/users');
       expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.body.error).to.eq('No authorization token provided');
     });
   });
 
@@ -249,14 +229,14 @@ describe('User', () => {
 
       const res = await chai.request(server).patch(`/api/v1/user/${id}`);
       expect(res.status).to.eq(401);
-      expect(res.body.message).to.eq('No authorization token provided');
+      expect(res.body.error).to.eq('No authorization token provided');
     });
 
     it('Should return error 404 if user is not found', async () => {
       const token = await adminToken();
       const res = await chai.request(server).patch('/api/v1/user/1212121212121').set('x-auth', token);
       expect(res.status).to.eq(404);
-      expect(res.body.message).to.eq('User not found or inactive');
+      expect(res.body.error).to.eq('User not found or inactive');
     });
   });
 
@@ -284,7 +264,7 @@ describe('User', () => {
       const token = await adminToken();
       const res = await chai.request(server).patch('/api/v1/users/1212121212121').set('x-auth', token);
       expect(res.status).to.eq(404);
-      expect(res.body.message).to.eq('User not found or inactive');
+      expect(res.body.error).to.eq('User not found or inactive');
     });
   });
 });

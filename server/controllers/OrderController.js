@@ -4,14 +4,13 @@ import Util from '../lib/Util';
 
 const Order = {
   async create(req, res) {
-    console.log(req.body);
-    req.body.buyerId = req.userId;
-    const requiredParams = ['carId', 'priceOffered', 'buyerId'];
-    if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+    req.body.buyer_id = req.userId;
+    const requiredParams = ['car_id', 'amount', 'buyer_id'];
+    if (validateData(requiredParams, req.body) || req.body.car_id.toString().length !== 13) {
       return Util.sendError(res, 400, 'Select car and state amount you want to pay');
     }
     try {
-      const { rows } = await OrderService.getCarAndUsersDetails(req.body.carId);
+      const { rows } = await OrderService.getCarAndUsersDetails(req.body.car_id);
       // eslint-disable-next-line max-len
       // if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
       if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active') {
@@ -19,13 +18,13 @@ const Order = {
       }
 
       // check that the buyer doesn't have the order in pending, accepted or completed state
-      const noInDb = await OrderService.checkOrderInDb([req.body.carId, req.body.buyerId]);
+      const noInDb = await OrderService.checkOrderInDb([req.body.car_id, req.body.buyer_id]);
       if (noInDb.rows.length > 0) {
         return Util.sendError(res, 400, 'You have a similar uncompleted/completed order ');
       }
 
       // eslint-disable-next-line max-len
-      const values = [Date.now(), req.userId, req.body.carId, rows[0].owner, rows[0].price, req.body.priceOffered];
+      const values = [Date.now(), req.userId, req.body.car_id, rows[0].owner, rows[0].price, req.body.amount];
 
       const result = await OrderService.createOrder(values);
       return Util.sendSuccess(res, 201, result.rows[0]);

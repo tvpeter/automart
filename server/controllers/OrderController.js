@@ -12,7 +12,9 @@ const Order = {
     }
     try {
       const { rows } = await OrderService.getCarAndUsersDetails(req.body.carId);
-      if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
+      // eslint-disable-next-line max-len
+      // if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
+      if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active') {
         return Util.sendError(res, 400, 'The car is not available or the seller is not active. Check back');
       }
 

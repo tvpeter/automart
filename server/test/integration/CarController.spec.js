@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import path from 'path';
@@ -73,31 +74,31 @@ describe('Cars', () => {
   });
 
   describe('Create Ad', () => {
-    // it('should create a new ad', async () => {
-    //   const data = await userId();
-    //   const newAd = await newAdValues();
-    //   const token = await generateToken(data.id, false);
+    it('should create a new ad', async () => {
+      const data = await userId();
+      const newAd = await newAdValues();
+      const token = await generateToken(data.id, false);
 
-    //   chai.request(server)
-    //     .post(adUrl)
-    //     .set('x-auth', token)
-    //     .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
-    //     .set('Content-Type', 'Multipart/form-data')
-    //     .field('id', Date.now())
-    //     .field('price', 8000000)
-    //     .field('owner', data.id)
-    //     .field('state', newAd.state)
-    //     .field('model', newAd.model)
-    //     .field('manufacturer', newAd.manufacturer)
-    //     .field('body_type', newAd.body_type)
-    //     .field('description', newAd.description)
-    //     .then((res) => {
-    //       expect(res.status).to.eq(201);
-    //       expect(res.body.data).to.have.property('id');
-    //       expect(res.body.data.price).to.eq(8000000);
-    //       expect(res.body.data.state).to.eq(newAd.state);
-    //     });
-    // });
+      chai.request(server)
+        .post(adUrl)
+        .set('x-auth', token)
+        .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
+        .set('Content-Type', 'Multipart/form-data')
+        .field('id', Date.now())
+        .field('price', 8000000)
+        .field('owner', data.id)
+        .field('state', newAd.state)
+        .field('model', newAd.model)
+        .field('manufacturer', newAd.manufacturer)
+        .field('body_type', newAd.body_type)
+        .field('description', newAd.description)
+        .then((res) => {
+          expect(res.status).to.eq(201);
+          expect(res.body.data).to.have.property('id');
+          expect(res.body.data.price).to.eq(8000000);
+          expect(res.body.data.state).to.eq(newAd.state);
+        });
+    });
     it('should return error 400 if request does not contain all required fields', async () => {
       const token = await genToken();
       chai.request(server)
@@ -191,7 +192,7 @@ describe('Cars', () => {
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
       '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
 
-      const res = await chai.request(server).get(`/api/v1/car/bodytype/${newAd.body_type}`);
+      const res = await chai.request(server).get(`/api/v1/car/body_type/${newAd.body_type}`);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('Array');
     });
@@ -202,7 +203,7 @@ describe('Cars', () => {
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
       '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
 
-      const res = await chai.request(server).get('/api/v1/car/bodytype/SEMI');
+      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI');
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('There are no cars for the selected body_type');
     });
@@ -235,7 +236,7 @@ describe('Cars', () => {
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
       '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car');
+      const res = await chai.request(server).get('/api/v1/car?status=available');
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
     });
@@ -243,7 +244,7 @@ describe('Cars', () => {
     it('should return 404 when there are no unsold cars', async () => {
       await db.query('UPDATE cars SET status=\'sold\'');
 
-      const res = await chai.request(server).get('/api/v1/car');
+      const res = await chai.request(server).get('/api/v1/car?status=available');
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('There are no cars available now. Check back');
     });
@@ -387,32 +388,38 @@ describe('Cars', () => {
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
     '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car/price/?min=5000000&max=8000000');
+      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=3000000&max_price=9000000');
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('ARRAY');
     });
 
-    it('Minimum should default to 0 if not supplied', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car/price/?max=8000000');
-      expect(res.status).to.eq(200);
-      expect(res.body.data).to.be.an('ARRAY');
-    });
+    // it('Minimum should default to 0 if not supplied', async () => {
+    //   const data = await userId();
+    //   const newAd = await newAdValues();
+    // eslint-disable-next-line max-len
+    //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    // eslint-disable-next-line max-len
+    // '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+    // eslint-disable-next-line max-len
+    //   const res = await chai.request(server).get('/api/v1/car?status=available&max_price=8000000');
+    //   expect(res.status).to.eq(200);
+    //   expect(res.body.data).to.be.an('ARRAY');
+    // });
 
-    it('Maximum should default to 30000000 if not supplied', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car/price/?min=2000000');
-      expect(res.status).to.eq(200);
-      expect(res.body.data).to.be.an('ARRAY');
-    });
+    // it('Maximum should default to 30000000 if not supplied', async () => {
+    //   const data = await userId();
+    //   const newAd = await newAdValues();
+    // eslint-disable-next-line max-len
+    //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    // eslint-disable-next-line max-len
+    // '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+    // eslint-disable-next-line max-len
+    //   const res = await chai.request(server).get('/api/v1/car?status=available&min_price=2000000');
+    //   expect(res.status).to.eq(200);
+    //   expect(res.body.data).to.be.an('ARRAY');
+    // });
     it('Should return error 404 if no ads are found in the given range', async () => {
-      const res = await chai.request(server).get('/api/v1/car/price/?min=12000000&max=24000000');
+      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=18000000&max_price=24000000');
       expect(res.status).to.eq(404);
       expect(res.body.message).to.eq('There are no cars within the selected range');
     });

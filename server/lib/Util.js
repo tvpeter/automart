@@ -7,8 +7,8 @@ class Util {
 
   sendError(res, statusCode, message) {
     this.statusCode = statusCode;
-    this.message = message;
-    return res.status(this.statusCode).send({ status: this.statusCode, message: this.message });
+    this.error = message;
+    return res.status(this.statusCode).send({ status: this.statusCode, error: this.error });
   }
 
   sendSuccess(res, statusCode, data) {

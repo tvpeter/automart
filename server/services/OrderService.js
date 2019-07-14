@@ -56,7 +56,7 @@ class OrderService {
   }
 
   static async createOrder(data) {
-    const text = 'INSERT INTO orders (id, buyer_id, carid, seller_id, price, price_offered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    const text = 'INSERT INTO orders (id, buyer_id, car_id, seller_id, price, price_offered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     return db.query(text, data);
   }
 }

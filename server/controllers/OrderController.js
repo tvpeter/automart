@@ -33,9 +33,9 @@ const Order = {
     }
   },
   async updatePrice(req, res) {
-    const requiredParams = ['orderId', 'newPrice'];
-    const newPrice = parseFloat(req.body.newPrice);
-    if (validateData(requiredParams, req.body) || req.body.orderId.trim().length !== 13) {
+    console.log(req);
+    const newPrice = req.body.new_price_offered;
+    if (!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13) {
       return Util.sendError(res, 400, 'Ensure to send the order id and new price');
     }
 
@@ -43,14 +43,13 @@ const Order = {
     // and the order is still pending
     const buyer = req.userId;
     try {
-      const { rows } = await OrderService.getOrderPrice([req.body.orderId, buyer]);
-
-      if (rows.length !== 1 || parseFloat(rows[0].price) === parseFloat(newPrice)) {
+      const { rows } = await OrderService.getOrderPrice([req.params.order_id, buyer]);
+      if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)) {
         return Util.sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
       }
 
       const tm = new Date().toLocaleString();
-      const result = await OrderService.updateOrder([newPrice, tm, req.body.orderId, buyer]);
+      const result = await OrderService.updateOrder([newPrice, tm, req.params.order_id, buyer]);
       return Util.sendSuccess(res, 200, result.rows[0]);
     } catch (error) {
       return Util.sendError(res, 500, error.message);

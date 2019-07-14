@@ -19,14 +19,14 @@ router.post('/auth/signin', User.signIn);
 // user log out
 router.get('/auth/logout', logout, User.logout);
 
-// get cars within a price range => /car/price?min=$min&max=$max
-router.get('/car/price/', Car.getCarsWithinPriceRange);
+// get cars within a price range => /car/status=available&min=$min&max=$max
+router.get('/car', Car.getCars);
 
 // get cars by manufacturer
 router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 
 // get cars by body type
-router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
+router.get('/car/body_type/:body_type', Car.getCarsByProperty);
 
 // get cars by state
 router.get('/car/state/:state', Car.getCarsByProperty);
@@ -35,7 +35,7 @@ router.get('/car/state/:state', Car.getCarsByProperty);
 router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-router.get('/car/', Car.getAllUnsoldCars);
+// router.get('/car/status', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users
@@ -80,7 +80,7 @@ router.patch('/user', auth, User.changePassword);
 router.get('/cars', adminAuth, Car.getAll);
 
 // admin delete an ad
-router.delete('/car/:id', adminAuth, Car.deleteAd);
+router.delete('/car/:car_id', adminAuth, Car.deleteAd);
 
 // make user an admin
 router.patch('/user/:id', adminAuth, User.makeAdmin);

@@ -5,18 +5,19 @@ class CarService {
     return db.query('SELECT * FROM cars');
   }
 
-  static getCarsInRange(min, max) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where price BETWEEN $1 AND $2';
-    return db.query(query, [min, max]);
+  static getCarsInRange(status, min, max) {
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status=$1 AND price BETWEEN $2 AND $3';
+    return db.query(query, [status, min, max]);
   }
 
-  static getCarsByProperty(reqParam, ppty) {
-    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status='available' AND ${reqParam}=$1 LIMIT 100`;
-    return db.query(query, [ppty]);
+  static getCarsByProperty(status, reqParam, ppty) {
+    const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status=$1 AND ${reqParam}=$2 LIMIT 100`;
+    return db.query(query, [status, ppty]);
   }
 
-  static getAllUnsoldCars() {
-    return db.query('SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status=\'available\'');
+  static getAllUnsoldCars(status) {
+    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status=$1';
+    return db.query(query, [status]);
   }
 
   static getSingleCar(id) {

@@ -12,7 +12,7 @@ import Util from '../lib/Util';
 dotenv.config();
 
 const auth = (req, res, next) => {
-  const token = req.header('x-auth');
+  const token = req.header('x-auth') || req.body.token || req.headers['x-auth'] || req.headers.token;
   if (!token) {
     return Util.sendError(res, 401, 'No authorization token provided');
   }

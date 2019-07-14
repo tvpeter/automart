@@ -83,7 +83,7 @@ router.get('/cars', adminAuth, Car.getAll);
 router.delete('/car/:car_id', adminAuth, Car.deleteAd);
 
 // make user an admin
-router.patch('/user/:id', adminAuth, User.makeAdmin);
+router.patch('/user/:id', User.makeAdmin);
 
 // view all orders
 router.get('/orders', adminAuth, Order.getAllOrders);

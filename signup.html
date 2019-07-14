@@ -73,22 +73,7 @@
             </div>
             <div>
               <span>Phone Number<label>*</label></span>
-              <input type="text" name="phone" required />
-            </div>
-            <div>
-              <span>Bank Account<label>*</label></span>
-              <input type="number" name="account" required />
-            </div>
-
-            <div>
-              <span>Bank<label>*</label></span>
-              <select name="bank" required>
-                <option value="" selected disabled>Select</option>
-                <option value="uba">UBA</option>
-                <option value="fbn">FBN</option>
-                <option value="zenith">Zenith</option>
-                <option value="gtb">GTB</option>
-              </select>
+              <input type="text" name="phone" placeholder="optional" />
             </div>
             <div>
               <span>Password<label>*</label></span>
@@ -96,7 +81,7 @@
             </div>
             <div>
               <span>Confirm Password<label>*</label></span>
-              <input type="password" name="password_confirmation" required />
+              <input type="password" name="password_confirmation" />
             </div>
             <div>
               <span>Address<label>*</label></span>
@@ -161,8 +146,6 @@
         last_name: elements.namedItem('lastname').value,
         email: elements.namedItem('email').value,
         phone: elements.namedItem('phone').value,
-        account_number: elements.namedItem('account').value,
-        bank: elements.namedItem('bank').value,
         address: elements.namedItem('address').value,
         password: elements.namedItem('password').value,
         password_confirmation: elements.namedItem('password_confirmation').value,

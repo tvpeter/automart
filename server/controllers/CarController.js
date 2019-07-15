@@ -177,7 +177,6 @@ const Car = {
       if (paramsLength === 3 && JSON.stringify(paramsArray) === JSON.stringify(['status', 'min_price', 'max_price'])) {
         const min = req.query.min_price ? req.query.min_price : 0;
         const max = req.query.max_price ? req.query.max_price : 30000000;
-        console.log(min);
         const { rows } = await CarService.getCarsInRange(req.query.status, min, max);
 
         return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range')
@@ -204,23 +203,13 @@ const Car = {
         return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
           : util.sendSuccess(res, 200, rows);
       }
-      return util.sendError(res, 400, 'Invalid query parameters');
+      const { rows } = await CarService.getAllCars();
+      return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
+        : util.sendSuccess(res, 200, rows);
     } catch (error) {
       return util.sendError(res, 500, error.message);
     }
   },
-  // async getCarsWithinPriceRange(req, res) {
-  //   const min = req.query.min_price ? req.query.min_price : 0;
-  //   const max = req.query.max_price ? req.query.max_price : 30000000;
-  //   try {
-  //     const { rows } = await CarService.getCarsInRange(min, max);
-  // eslint-disable-next-line max-len
-  //     return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range')
-  //       : util.sendSuccess(res, 200, rows);
-  //   } catch (error) {
-  //     return util.sendError(res, 500, error.message);
-  //   }
-  // },
 
   async deleteAd(req, res) {
     if (req.params.car_id.trim().length !== 13) {

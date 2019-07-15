@@ -33,6 +33,7 @@ const Order = {
     }
   },
   async updatePrice(req, res) {
+    console.log(req);
     const newPrice = req.body.price;
     if (!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13 || typeof newPrice !== 'number') {
       return Util.sendError(res, 400, 'Ensure to send the order id and new price');

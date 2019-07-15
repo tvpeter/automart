@@ -33,7 +33,9 @@ const Order = {
     }
   },
   async updatePrice(req, res) {
+    console.log(req);
     const newPrice = req.body.price;
+    console.log('type of price', typeof newPrice);
     if (!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13) {
       return Util.sendError(res, 400, 'Ensure to send the order id and new price');
     }
@@ -42,12 +44,11 @@ const Order = {
     // and the order is still pending
     const buyer = req.userId;
     try {
-      // const { rows } = await OrderService.getOrderPrice([req.params.order_id]);
-      // if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
-      // ) {
-      // eslint-disable-next-line max-len
-      //   return Util.sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
-      // }
+      const { rows } = await OrderService.getOrderPrice([req.params.order_id]);
+      if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
+      ) {
+        return Util.sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
+      }
 
       const tm = new Date().toLocaleString();
       const result = await OrderService.updateOrder([newPrice, tm, req.params.order_id, buyer]);

@@ -108,12 +108,11 @@ const Car = {
     try {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
 
-      if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
+      if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId) || rows[0].status.toLowerCase() === 'sold') {
         util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
 
       const updatedCar = await CarService.updateStatus(car_id);
-      console.log(res);
       return util.sendSuccess(res, 200, updatedCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);

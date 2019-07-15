@@ -60,6 +60,11 @@ class CarService {
     return db.query(query, [status, id]);
   }
 
+  static updatePrice(price, id) {
+    const query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
+    return db.query(query, [price, id]);
+  }
+
   static gerUserAds(userId) {
     const query = 'SELECT * FROM cars WHERE owner=$1';
     return db.query(query, [userId]);

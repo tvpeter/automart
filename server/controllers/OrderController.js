@@ -43,8 +43,9 @@ const Order = {
     // and the order is still pending
     const buyer = req.userId;
     try {
-      const { rows } = await OrderService.getOrderPrice([req.params.order_id, buyer]);
-      if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)) {
+      const { rows } = await OrderService.getOrderPrice([req.params.order_id]);
+      if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
+      ) {
         return Util.sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
       }
 

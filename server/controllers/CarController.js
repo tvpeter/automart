@@ -120,6 +120,7 @@ const Car = {
   },
 
   async updateAdPrice(req, res) {
+    console.log(req);
     const { car_id } = req.params;
     const { price } = req.body;
     const { userId } = req;

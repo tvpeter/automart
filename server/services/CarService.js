@@ -55,6 +55,11 @@ class CarService {
     return db.query(query, data);
   }
 
+  static updateStatus(id) {
+    const query = 'UPDATE cars SET status=\'sold\' WHERE id=$1 RETURNING *';
+    return db.query(query, [id]);
+  }
+
   static gerUserAds(userId) {
     const query = 'SELECT * FROM cars WHERE owner=$1';
     return db.query(query, [userId]);

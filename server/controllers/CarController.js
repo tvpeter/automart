@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import validatenewCar from '../lib/validateData';
@@ -96,6 +97,27 @@ const Car = {
     }
   },
 
+  async updateAdStatus(req, res) {
+    const { car_id } = req.params;
+    const { userId } = req;
+    if (!car_id || car_id.trim().length !== 13) {
+      util.sendError(res, 400, 'Supply a valid ad id');
+    }
+
+    try {
+      const { rows } = await CarService.getSingleCarAllPpties(car_id);
+
+      if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
+        util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+      }
+
+      const updatedCar = await CarService.updateStatus(car_id);
+
+      return util.sendSuccess(res, 200, updatedCar.rows[0]);
+    } catch (error) {
+      return util.sendError(res, 500, error.message);
+    }
+  },
   async updateAdvert(req, res) {
     const reqFields = ['status', 'price', 'description'];
     if (validatenewCar(reqFields, req.body)) {

@@ -70,6 +70,8 @@ router.post('/flag', auth, Flag.createFlag);
 // router.patch('/car/:id', auth, Car.updateAdvert);
 router.patch('/car/:car_id/status', auth, Car.updateAdStatus);
 
+router.patch('/car/:car_id/price', auth, Car.updateAdPrice);
+
 // change password
 router.patch('/user', auth, User.changePassword);
 

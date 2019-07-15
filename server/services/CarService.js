@@ -21,7 +21,7 @@ class CarService {
   }
 
   static getSingleCar(id) {
-    const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars WHERE id=$1';
+    const query = 'SELECT * FROM cars WHERE id=$1';
     return db.query(query, [id]);
   }
 

@@ -98,9 +98,10 @@ const Car = {
   },
 
   async updateAdStatus(req, res) {
+    console.log(req);
     const { car_id } = req.params;
     const { userId } = req;
-    if (!car_id || car_id.trim().length !== 13) {
+    if (!car_id || car_id.trim().length !== 13 || typeof car_id !== 'number') {
       util.sendError(res, 400, 'Supply a valid ad id');
     }
 
@@ -112,7 +113,7 @@ const Car = {
       }
 
       const updatedCar = await CarService.updateStatus(car_id);
-
+      console.log(res);
       return util.sendSuccess(res, 200, updatedCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);

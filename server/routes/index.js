@@ -20,7 +20,7 @@ router.post('/auth/signin', User.signIn);
 router.get('/auth/logout', logout, User.logout);
 
 // get cars within a price range => /car/status=available&min=$min&max=$max
-router.get('/car', Car.getCars);
+router.get('/car', auth, Car.getCars);
 
 // get cars by manufacturer
 router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
@@ -83,7 +83,7 @@ router.patch('/user', auth, User.changePassword);
 router.get('/cars', adminAuth, Car.getAll);
 
 // admin delete an ad
-router.delete('/car/:car_id', adminAuth, Car.deleteAd);
+router.delete('/car/:car_id', auth, Car.deleteAd);
 
 // make user an admin
 router.patch('/user/:id', adminAuth, User.makeAdmin);

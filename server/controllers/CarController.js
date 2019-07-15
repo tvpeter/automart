@@ -170,6 +170,7 @@ const Car = {
   },
 
   async getCars(req, res) {
+    console.log(req);
     const params = req.query;
     const paramsArray = Object.keys(params);
     const paramsLength = Object.keys(params).length;

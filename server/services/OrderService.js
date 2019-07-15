@@ -2,7 +2,7 @@ import db from './db';
 
 class OrderService {
   static getOrderPrice(data) {
-    const text = 'SELECT price_offered FROM orders WHERE id=$1 AND buyer_id=$2 AND status NOT IN (\'accepted\', \'cancelled\')';
+    const text = 'SELECT price_offered FROM orders WHERE id=$1 AND status NOT IN (\'accepted\', \'cancelled\')';
     return db.query(text, data);
   }
 

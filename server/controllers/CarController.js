@@ -120,7 +120,6 @@ const Car = {
   },
 
   async updateAdPrice(req, res) {
-    console.log(req);
     const { car_id } = req.params;
     const { price } = req.body;
     const { userId } = req;
@@ -170,7 +169,6 @@ const Car = {
   },
 
   async getCars(req, res) {
-    console.log(req);
     const params = req.query;
     const paramsArray = Object.keys(params);
     const paramsLength = Object.keys(params).length;

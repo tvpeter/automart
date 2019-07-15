@@ -102,14 +102,14 @@ const Car = {
     const { status } = req.body;
     const { userId } = req;
     if (!car_id || car_id.trim().length !== 13 || !status) {
-      util.sendError(res, 400, 'Supply a valid ad id and status');
+      return util.sendError(res, 400, 'Supply a valid ad id and status');
     }
 
     try {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
 
       if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
-        util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+        return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
 
       const updatedCar = await CarService.updateStatus(status, car_id);
@@ -124,14 +124,13 @@ const Car = {
     const { price } = req.body;
     const { userId } = req;
     if (!car_id || car_id.trim().length !== 13 || !price) {
-      util.sendError(res, 400, 'Supply a valid ad id and status');
+      return util.sendError(res, 400, 'Supply a valid ad id and status');
     }
-
     try {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
 
       if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
-        util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+        return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
 
       const updatedCar = await CarService.updatePrice(price, car_id);
@@ -143,7 +142,7 @@ const Car = {
   async updateAdvert(req, res) {
     const reqFields = ['status', 'price', 'description'];
     if (validatenewCar(reqFields, req.body)) {
-      util.sendError(res, 400, 'Fill all fields');
+      return util.sendError(res, 400, 'Fill all fields');
     }
     try {
       const { rows } = await CarService.getSingleCarAllPpties(req.params.id);

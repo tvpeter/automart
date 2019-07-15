@@ -43,9 +43,9 @@ const Order = {
     const buyer = req.userId;
     try {
       const { rows } = await OrderService.getOrderPrice([req.params.order_id]);
-      if (rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
+      if (rows.length !== 1 // || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
       ) {
-        return Util.sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different');
+        return Util.sendError(res, 400, 'Check that the order id is valid and your new price is different');
       }
 
       const tm = new Date().toLocaleString();

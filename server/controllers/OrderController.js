@@ -34,10 +34,9 @@ const Order = {
   },
   async updatePrice(req, res) {
     const newPrice = req.body.price;
-    console.log('req param and body', req.body);
-    if (!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13) {
-      return Util.sendError(res, 400, 'Ensure to send the order id and new price');
-    }
+    // if (!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13) {
+    //   return Util.sendError(res, 400, 'Ensure to send the order id and new price');
+    // }
 
     // check that the request is coming from the buyer with a different price
     // and the order is still pending

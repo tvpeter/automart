@@ -25,8 +25,6 @@ router.get('/car', auth, Car.getCars);
 // get a single ad
 router.get('/car/:id', auth, Car.getSingleAd);
 
-// get all unsold cars
-// router.get('/car/status', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users
@@ -58,7 +56,6 @@ router.patch('/order/:orderId/status', auth, Order.updateOrderStatus);
 router.post('/flag', auth, Flag.createFlag);
 
 // update ad. Possible status include [ available, suspended, sold]
-// router.patch('/car/:id', auth, Car.updateAdvert);
 router.patch('/car/:car_id/status', auth, Car.updateAdStatus);
 
 router.patch('/car/:car_id/price', auth, Car.updateAdPrice);
@@ -97,6 +94,6 @@ router.get('/users', adminAuth, User.getAll);
 router.get('/flags', adminAuth, Flag.getAllFlags);
 
 
-router.get('/', (req, res) => res.status(200).send('Hello world'));
+router.get('/', (req, res) => res.status(200).send('Hello and welcome to Automart API Version 1'));
 
 export default router;

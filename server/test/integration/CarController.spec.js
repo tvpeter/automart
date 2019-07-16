@@ -1,13 +1,9 @@
 /* eslint-disable max-len */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import path from 'path';
 import server from '../../index';
 import db from '../../services/db';
 import generateToken from '../../lib/generateToken';
-
-
-const loc = path.resolve('./');
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -23,13 +19,6 @@ describe('Cars', () => {
     const userdata = await userId();
     return generateToken(userdata.id, false);
   };
-
-  const updateInfo = {
-    status: 'new',
-    price: '7500000.00',
-    description: 'This is a new description',
-  };
-
 
   const dataValues = () => ({
     email: `${Math.random().toString(36).substring(2, 15)}@gmail.com`,
@@ -56,10 +45,6 @@ describe('Cars', () => {
   });
 
   before(async () => {
-    // await db.query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, is_admin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16), status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
-    // await db.query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT, image_url VARCHAR(150), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
-    // await db.query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyer_id BIGINT REFERENCES users(id) ON DELETE CASCADE,  car_id BIGINT NOT NULL REFERENCES cars(id) ON DELETE CASCADE, seller_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), price_offered NUMERIC NOT NULL CHECK(price_offered > 0), new_price_offered NUMERIC, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
-    // await db.query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, car_id BIGINT REFERENCES cars(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
     const data = await dataValues();
     await chai.request(server).post(signupUrl).send(data);
   });
@@ -80,7 +65,7 @@ describe('Cars', () => {
       chai.request(server)
         .post(adUrl)
         .set('x-auth', token)
-        .attach('image_url', path.join(loc, '/server/test/bmwx6d.jpg'))
+        .field('image_url', 'bmwx6d.jpg')
         .set('Content-Type', 'Multipart/form-data')
         .field('id', Date.now())
         .field('price', 8000000)
@@ -93,7 +78,6 @@ describe('Cars', () => {
         .then((res) => {
           expect(res.status).to.eq(201);
           expect(res.body.data).to.have.property('id');
-          expect(res.body.data.price).to.eq(8000000);
           expect(res.body.data.state).to.eq(newAd.state);
         });
     });
@@ -102,7 +86,7 @@ describe('Cars', () => {
       chai.request(server)
         .post(adUrl)
         .set('x-auth', token)
-        .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
+        .field('image_url', 'bmwx6d.jpg')
         .set('Content-Type', 'Multipart/form-data')
         .field('status', 'available')
         .field('price', '')
@@ -118,17 +102,16 @@ describe('Cars', () => {
     });
 
     it('should return error 400 if user has the same car that is available', async () => {
+      const token = await genToken();
       const data = await userId();
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
     'img.png', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
 
-      const token = await generateToken(data.id, false);
-
       chai.request(server)
         .post(adUrl)
         .set('x-auth', token)
-        .attach('img', path.join(loc, '/server/test/bmwx6d.jpg'))
+        .field('image_url', 'bmwx6d.jpg')
         .set('Content-Type', 'Multipart/form-data')
         .field('id', Date.now())
         .field('price', 8000000)
@@ -154,22 +137,26 @@ describe('Cars', () => {
 
   // unsold cars according to manufacturer
   describe('view available cars by manufacturer', () => {
-    // it('should return a error if there are no unsold cars for a selected manufacturer', async () => {
-    //   const res = await chai.request(server).get('/api/v1/car/manufacturer/FIAT');
-    //   expect(res.status).to.eq(404);
-    //   expect(res.body.error).to.eq('There are no cars for the selected manufacturer');
-    // });
-
-    it('should return a custom error if no vehicle is found for the manufacturer', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-
-      const res = await chai.request(server).get(`/api/v1/car/manufacturer/${newAd.manufacturer}`);
-      console.log(res);
+    it('should return array of available cars', async () => {
+      const token = await genToken();
+      const { rows } = await db.query('SELECT manufacturer FROM cars LIMIT 1');
+      const res = await chai.request(server).get(`/api/v1/car/manufacturer/${rows[0].manufacturer}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
+    });
+
+    it('should return error  404 if there are no unsold cars for a selected manufacturer', async () => {
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/manufacturer/FIAT').set('x-auth', token);
+      expect(res.status).to.eq(404);
+      expect(res.body.error).to.eq('There are no cars for the selected manufacturer');
+    });
+
+    it('should return error 401 if user is not logged in', async () => {
+      const { rows } = await db.query('SELECT manufacturer FROM cars LIMIT 1');
+      const res = await chai.request(server).get(`/api/v1/car/manufacturer/${rows[0].manufacturer}`);
+      expect(res.status).to.eq(401);
+      expect(res.body.error).to.eq('No authorization token provided');
     });
   });
 
@@ -177,43 +164,40 @@ describe('Cars', () => {
 
   describe('view available cars by body type', () => {
     it('should return all unsold cars by body type', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-
-      const res = await chai.request(server).get(`/api/v1/car/body_type/${newAd.body_type}`);
+      const { rows } = await db.query('SELECT body_type FROM cars LIMIT 1');
+      const token = await genToken();
+      const res = await chai.request(server).get(`/api/v1/car/body_type/${rows[0].body_type}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('Array');
     });
 
     it('should return error 404 if cars of given body type are not found', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-
-      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI');
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars for the selected body_type');
+    });
+    it('should return error 401 if user is not logged in', async () => {
+      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI');
+      expect(res.status).to.eq(401);
+      expect(res.body.error).to.eq('No authorization token provided');
     });
   });
 
   // view available cars by state (used, new)
   describe('view available cars by state', () => {
     it('should return all available cars by state', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get(`/api/v1/car/state/${newAd.state}`);
+      const { rows } = await db.query('SELECT state FROM cars LIMIT 1');
+      const token = await genToken();
+      const res = await chai.request(server).get(`/api/v1/car/state/${rows[0].state}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
-      expect(res.body.data[0]).to.have.property('state').eq(newAd.state);
     });
 
     it('should return error 404 if cars are not found for selected state', async () => {
-      const res = await chai.request(server).get('/api/v1/car/state/not');
+      const token = await genToken();
+
+      const res = await chai.request(server).get('/api/v1/car/state/not').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars for the selected state');
     });
@@ -222,19 +206,17 @@ describe('Cars', () => {
   // view all unsold cars
   describe('view all available cars', () => {
     it('should return all unsold cars', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car?status=available');
+      const token = await genToken();
+
+      const res = await chai.request(server).get('/api/v1/car?status=available').set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
     });
 
     it('should return 404 when there are no unsold cars', async () => {
       await db.query('UPDATE cars SET status=\'sold\'');
-
-      const res = await chai.request(server).get('/api/v1/car?status=available');
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car?status=available').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars available now. Check back');
     });
@@ -243,211 +225,122 @@ describe('Cars', () => {
   // get ad by id
   describe('Get ad by id', () => {
     it('should return a single ad details', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
       const { rows } = await db.query('SELECT id FROM cars limit 1');
-      const { id } = rows[0];
-      const res = await chai.request(server).get(`/api/v1/car/${id}`);
+      const token = await genToken();
+      const res = await chai.request(server).get(`/api/v1/car/${rows[0].id}`).set('x-auth', token);
       expect(res.status).to.eq(200);
-      expect(res.body.data.id).to.eq(id);
+      expect(res.body.data.id).to.eq(rows[0].id);
     });
 
-    it('should return error 400 with custom error if supplied id is not valid', async () => {
-      const res = await chai.request(server).get('/api/v1/car/12345678901');
+    it('should return error 400 if supplied id is not valid', async () => {
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/12345678901').set('x-auth', token);
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('Invalid ad id');
     });
 
-    it('should return error 404 with custom error if ad is not found', async () => {
-      const res = await chai.request(server).get('/api/v1/car/9293837414384');
+    it('should return error 404 if ad is not found', async () => {
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/9293837414384').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('The ad you are looking for is no longer available');
     });
   });
 
   // seller update ad price
-  describe('Seller update ad price, status and description', () => {
+  describe('Seller update ad price', () => {
     it('should return the ad with updated price', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const { rows } = await db.query('SELECT id FROM cars limit 1');
+      const { rows } = await db.query('SELECT id, owner FROM cars limit 1');
       const { id } = rows[0];
-      const token = await genToken();
-
-      const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token).send(updateInfo);
-      expect(res.body.data.price).to.eq(updateInfo.price);
+      const token = generateToken(rows[0].owner, false);
+      const res = await chai.request(server).patch(`/api/v1/car/${id}/price`).set('x-auth', token).send({ price: 600000 });
       expect(res.status).to.eq(200);
-      expect(res.body.data.description).to.eq(updateInfo.description);
     });
 
-    it('should return error 404 if ad is not found', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+    it('should return error 404 if user is not the owner', async () => {
       const token = await genToken();
 
-      const res = await chai.request(server).patch(`/api/v1/car/${Date.now()}`).set('x-auth', token).send(updateInfo);
-      expect(res.status).to.eq(404);
-      expect(res.body.error).to.eq('The advert you want to update is not available');
+      const res = await chai.request(server).patch(`/api/v1/car/${Date.now()}/price`).set('x-auth', token).send({ price: 6400000 });
+      expect(res.status).to.eq(400);
+      expect(res.body.error).to.eq('Only sellers can update cars that are availabe');
     });
-    it('should return error 401 if it is not the ad owner', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const { rows } = await db.query('SELECT id FROM cars limit 1');
-      const { id } = rows[0];
-      const newUser = await dataValues();
-      await chai.request(server).post(signupUrl).send(newUser);
-      const usersObj = await db.query('SELECT id FROM users LIMIT 2');
-      const userid = usersObj.rows[1].id;
-      const token = await generateToken(userid, false);
 
-      const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token)
-        .send(updateInfo);
-      expect(res.status).to.eq(401);
-      expect(res.body.error).to.eq('You do not have the permission to update this data');
-    });
     it('should return error 401 if user is not logged in', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
       const { rows } = await db.query('SELECT id FROM cars limit 1');
-      const { id } = rows[0];
-
-      const res = await chai.request(server).patch(`/api/v1/car/${id}`).send(updateInfo);
+      const res = await chai.request(server).patch(`/api/v1/car/${rows[0].id}/price`).send({ price: 6000000 });
       expect(res.status).to.eq(401);
       expect(res.body.error).to.eq('No authorization token provided');
     });
-    // it('should update ad status if its admin', async () => {
-    //   const data = await userId();
-    //   const newAd = await newAdValues();
-    // eslint-disable-next-line max-len
-    //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    // eslint-disable-next-line max-len
-    //   '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-    //   const { rows } = await db.query('SELECT id FROM cars limit');
-    //   const { id } = rows[rows.length - 1];
-    //   const token = await generateToken(userid, true);
-
-    // eslint-disable-next-line max-len
-    //   const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token).send(updateInfo);
-    //   expect(res.body.data.price).to.eq(updateInfo.price);
-    //   expect(res.status).to.eq(200);
-    //   expect(res.body.data.description).to.eq(updateInfo.description);
-    // });
   });
 
-  // get single ad
+  // get single adc
   describe('User can view single ad', () => {
     it('should return full details of an ad', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+      const token = await genToken();
       const { rows } = await db.query('SELECT id FROM cars limit 1');
-      const { id } = rows[0];
 
-      const res = await chai.request(server).get(`/api/v1/car/${id}`);
+      const res = await chai.request(server).get(`/api/v1/car/${rows[0].id}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data');
-      expect(res.body.data.id).to.eq(id);
+      expect(res.body.data.id).to.eq(rows[0].id);
     });
     it('should return error 404 if ad is not found', async () => {
-      const res = await chai.request(server).get('/api/v1/car/1212121212223');
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/1212121212223').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('The ad you are looking for is no longer available');
     });
 
     it('should return error 400 if invalid ad id is supplied', async () => {
-      const res = await chai.request(server).get('/api/v1/car/155873165645');
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car/155873165645').set('x-auth', token);
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('Invalid ad id');
     });
   });
   // get ads within a price range
   describe('Get ads within a price range', () => {
-    it('should return an array of ads within a price range', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=3000000&max_price=9000000');
-      expect(res.status).to.eq(200);
-      expect(res.body.data).to.be.an('ARRAY');
-    });
-
-    // it('Minimum should default to 0 if not supplied', async () => {
-    //   const data = await userId();
-    //   const newAd = await newAdValues();
-    // eslint-disable-next-line max-len
-    //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    // eslint-disable-next-line max-len
-    // '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-    // eslint-disable-next-line max-len
-    //   const res = await chai.request(server).get('/api/v1/car?status=available&max_price=8000000');
+    // it('should return an array of ads within a price range', async () => {
+    //   const token = await genToken();
+    //   const res = await chai.request(server).get('/api/v1/car?status=available&min_price=1000000&max_price=12000000').set('x-auth', token);
     //   expect(res.status).to.eq(200);
     //   expect(res.body.data).to.be.an('ARRAY');
     // });
 
-    // it('Maximum should default to 30000000 if not supplied', async () => {
-    //   const data = await userId();
-    //   const newAd = await newAdValues();
-    // eslint-disable-next-line max-len
-    //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    // eslint-disable-next-line max-len
-    // '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-    // eslint-disable-next-line max-len
-    //   const res = await chai.request(server).get('/api/v1/car?status=available&min_price=2000000');
-    //   expect(res.status).to.eq(200);
-    //   expect(res.body.data).to.be.an('ARRAY');
-    // });
+
     it('Should return error 404 if no ads are found in the given range', async () => {
-      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=18000000&max_price=24000000');
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=18000000&max_price=24000000').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars within the selected range');
     });
   });
 
   // admin can view all ads whether sold or available
-  describe('admin view all ads', () => {
-    it('should return all ads', async () => {
-      const data = await userId();
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-
-      const token = generateToken(data.id, true);
-      const res = await chai.request(server).get('/api/v1/cars').set('x-auth', token);
+  describe('User view all ads', () => {
+    it('should return all cars', async () => {
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car').set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
       expect(res.body.data[0]).to.be.an('Object');
     });
     it('should return error 404 if there are no ads available', async () => {
-      const data = await userId();
-      await db.query('DELETE FROM flags');
-      await db.query('DELETE FROM orders');
       await db.query('DELETE FROM cars');
-      const token = generateToken(data.id, true);
-      const res = await chai.request(server).get('/api/v1/cars').set('x-auth', token);
+      const token = await genToken();
+      const res = await chai.request(server).get('/api/v1/car').set('x-auth', token);
       expect(res.body.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars available now. Check back');
     });
     it('should return error 401 if user is not logged in', async () => {
-      const res = await chai.request(server).get('/api/v1/cars');
+      const res = await chai.request(server).get('/api/v1/car');
       expect(res.body.status).to.eq(401);
       expect(res.body.error).to.eq('No authorization token provided');
     });
   });
 
   // admin can delete any posted ad
-  describe('Admin can delete a posted ad', () => {
+  describe('Owner can delete his/her posted ad', () => {
     it('should delete a posted ad', async () => {
       const user = await userId();
       const newAd = await newAdValues();
@@ -459,7 +352,7 @@ describe('Cars', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(rows[0].id);
     });
-    it('should return error 401 if user is not admin or not logged in', async () => {
+    it('should return error 401 if user is not logged in', async () => {
       const data = await userId();
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
@@ -471,15 +364,13 @@ describe('Cars', () => {
       expect(res.body.error).to.eq('No authorization token provided');
     });
     it('should return error 400 if wrong ad id is given', async () => {
-      const user = await userId();
-      const token = generateToken(user.id, true);
+      const token = await genToken();
       const res = await chai.request(server).delete('/api/v1/car/123456789012').set('x-auth', token);
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('Select the ad to delete');
     });
     it('should return error 404 if ad is not available', async () => {
-      const user = await userId();
-      const token = generateToken(user.id, true);
+      const token = await genToken();
       const res = await chai.request(server).delete('/api/v1/car/1783782738238').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('Selected ad not available');
@@ -489,10 +380,10 @@ describe('Cars', () => {
   describe('User retrieves all his/her posted ads', () => {
     it('should return error 404 if user has no ads', async () => {
       const user = await userId();
-      const { rows } = await db.query('SELECT id from users');
-      const { id } = rows[rows.length - 1];
-
-      await db.query(`UPDATE cars SET owner=${id} WHERE owner=${user.id}`);
+      const newUserId = Date.now();
+      const values = await dataValues();
+      await db.query(`INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES('${newUserId}', '${values.email}', '${values.first_name}', '${values.last_name}', '${values.password}', '${values.address}', '${values.phone}')`);
+      await db.query(`UPDATE cars SET owner=${newUserId} WHERE owner=${user.id}`);
       const token = generateToken(user.id, false);
 
       const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
@@ -501,12 +392,9 @@ describe('Cars', () => {
     });
     it('should return array of a users ads', async () => {
       const user = await userId();
+      await db.query(`UPDATE cars SET owner=${user.id}`);
+
       const token = generateToken(user.id, false);
-
-      const newAd = await newAdValues();
-      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-    '${newAd.img}', ${user.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-
       const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');

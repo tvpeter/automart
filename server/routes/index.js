@@ -23,16 +23,16 @@ router.get('/auth/logout', logout, User.logout);
 router.get('/car', auth, Car.getCars);
 
 // get cars by manufacturer
-router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
+router.get('/car/manufacturer/:manufacturer', auth, Car.getCarsByProperty);
 
 // get cars by body type
-router.get('/car/body_type/:body_type', Car.getCarsByProperty);
+router.get('/car/body_type/:body_type', auth, Car.getCarsByProperty);
 
 // get cars by state
-router.get('/car/state/:state', Car.getCarsByProperty);
+router.get('/car/state/:state', auth, Car.getCarsByProperty);
 
 // get a single ad
-router.get('/car/:id', Car.getSingleAd);
+router.get('/car/:id', auth, Car.getSingleAd);
 
 // get all unsold cars
 // router.get('/car/status', Car.getAllUnsoldCars);
@@ -62,7 +62,7 @@ router.delete('/orders/:orderId', auth, Order.deleteAnOrder);
 // seller update offer price
 router.patch('/order/:order_id/price', auth, Order.updatePrice);
 
-router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
+router.patch('/order/:orderId/status', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
 

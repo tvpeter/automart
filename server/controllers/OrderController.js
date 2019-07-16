@@ -94,8 +94,8 @@ const Order = {
       if (rows.length !== 1) {
         return Util.sendError(res, 404, 'The order is not available');
       }
-      const buyer = rows[0].buyerid;
-      const seller = rows[0].sellerid;
+      const buyer = rows[0].buyer_id;
+      const seller = rows[0].seller_id;
       const statusInDb = rows[0].status.toLowerCase();
       if (reqPerson !== buyer && reqPerson !== seller) {
         return Util.sendError(res, 403, 'You dont have the permission to modify this resource');
@@ -135,7 +135,7 @@ const Order = {
     const { userId, role } = req;
     try {
       const { rows } = await OrderService.getBuyerAndSeller(req.params.orderId);
-      if (!role && rows[0].buyerid !== userId && rows[0].sellerid !== userId) {
+      if (!role && rows[0].buyer_id !== userId && rows[0].seller_id !== userId) {
         return Util.sendError(res, 403, 'You dont have the permission to view this resource');
       }
 

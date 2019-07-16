@@ -176,7 +176,6 @@ const Car = {
         const min = req.query.min_price ? req.query.min_price : 0;
         const max = req.query.max_price ? req.query.max_price : 30000000;
         const { rows } = await CarService.getCarsInRange(req.query.status, min, max);
-
         return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range')
           : util.sendSuccess(res, 200, rows);
       } if (paramsLength === 2) {

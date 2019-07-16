@@ -77,7 +77,6 @@ describe('Flags controller', () => {
       };
 
       const res = await chai.request(server).post('/api/v1/flag').set('x-auth', token).send(newFlag);
-      console.log(res);
       expect(res.status).to.eq(201);
       expect(res.body.data).to.have.property('id');
       expect(res.body.data.reason).to.eq(newFlag.reason);

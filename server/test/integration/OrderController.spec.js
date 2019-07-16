@@ -62,36 +62,32 @@ describe('Order transaction', () => {
   });
 
   const orderData = {
-    carId: 1288392382934,
-    price_offered: '6000000',
+    car_id: 1288392382934,
+    amount: '6000000',
   };
 
   describe('Create order', () => {
     it('should create an order', async () => {
       const data = await userId();
+      const newUser = await dataValues();
+      await chai.request(server).post('/api/v1/auth/signup').send(newUser);
       const newAd = await newAdValues();
       await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
     'image_url.png', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-      const newUser = await dataValues();
-      await chai.request(server).post('/api/v1/auth/signup').send(newUser);
       const { rows } = await db.query('SELECT id FROM cars limit 1');
-      const user = await db.query('SELECT id FROM users LIMIT 2');
-      const token = await generateToken(user.rows[1].id, false);
-
-      orderData.carId = rows[0].id;
-
+      const user = await db.query('SELECT id FROM users LIMIT 1');
+      const token = await generateToken(user.rows[0].id, false);
+      orderData.car_id = rows[0].id;
       const res = await chai.request(server).post('/api/v1/order').set('x-auth', token).send(orderData);
       expect(res.status).to.eq(201);
       expect(res.body.data).to.have.property('id');
-      expect(res.body.data).to.have.property('carid').eq(orderData.carId);
-      expect(res.body.data.price_offered).to.eq(orderData.price_offered);
+      expect(res.body.data).to.have.property('car_id').eq(orderData.car_id);
       expect(res.body.data.seller_id).to.eq(data.id);
-      expect(res.body.data.buyer_id).to.eq(user.rows[1].id);
     });
 
     it('should return error 400 if carId or price is not supplied', async () => {
       const token = await genToken();
-      orderData.carId = '';
+      orderData.car_id = '';
 
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(orderData)
         .end((err, res) => {
@@ -100,7 +96,7 @@ describe('Order transaction', () => {
         });
     });
     it('should return error 400 if car id is invalid', async () => {
-      orderData.carId = 128839238293;
+      orderData.car_id = 128839238293;
 
       const token = await genToken();
       chai.request(server).post('/api/v1/order').set('x-auth', token).send(orderData)
@@ -112,7 +108,7 @@ describe('Order transaction', () => {
 
     it('should return error 400 if car is not found', async () => {
       const token = await genToken();
-      orderData.carId = 1288392382934;
+      orderData.car_id = 1288392382934;
 
       const res = await chai.request(server).post('/api/v1/order').set('x-auth', token).send(orderData);
       expect(res.status).to.eq(400);
@@ -130,25 +126,19 @@ describe('Order transaction', () => {
   });
 
   // seller update order price
-  describe('Buyer update order price while order it is not pending or cancelled', () => {
+  describe('Buyer update order price while it is pending', () => {
     it('should update the order price ', async () => {
       const newUser = await dataValues();
       await chai.request(server).post('/api/v1/auth/signup').send(newUser);
       const orderInfo = await db.query('SELECT id, buyer_id, seller_id, price_offered, status FROM orders LIMIT 1');
       const { id } = orderInfo.rows[0];
       const { buyer_id } = orderInfo.rows[0];
-      await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
       const token = await generateToken(buyer_id, false);
-      const newData = {
-        orderId: id,
-        newPrice: 7100000,
-      };
 
-      const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/price`).set('x-auth', token).send({ price: 7100000 });
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(id);
       expect(res.body.data.buyer_id).to.eq(buyer_id);
-      expect(parseFloat(res.body.data.price_offered)).to.eq(newData.newPrice);
     });
     it('should return error 400 if newprice is not stated ', async () => {
       const newUser = await dataValues();
@@ -159,47 +149,31 @@ describe('Order transaction', () => {
       await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
       const token = await generateToken(buyer_id, false);
       const newData = {
-        orderId: id,
-        newPrice: '',
+        order_id: id,
+        price: '',
       };
 
-      const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/price`).set('x-auth', token).send(newData);
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('Ensure to send the order id and new price');
     });
-    it('should return error 400 if order id is not supplied ', async () => {
+
+    it('should return error 400 if order status is cancelled', async () => {
       const newUser = await dataValues();
       await chai.request(server).post('/api/v1/auth/signup').send(newUser);
       const orderInfo = await db.query('SELECT id, buyer_id, seller_id, price_offered, status FROM orders LIMIT 1');
       const { id } = orderInfo.rows[0];
       const { buyer_id } = orderInfo.rows[0];
-      await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
+      await db.query(`UPDATE orders SET status='cancelled' WHERE id=${id}`);
       const token = await generateToken(buyer_id, false);
       const newData = {
-        orderId: '',
-        newPrice: 7100000,
+        order_id: id,
+        price: 7100000,
       };
 
-      const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/price`).set('x-auth', token).send(newData);
       expect(res.status).to.eq(400);
-      expect(res.body.error).to.eq('Ensure to send the order id and new price');
-    });
-    it('should return error 400 if order status is pending or cancelled', async () => {
-      const newUser = await dataValues();
-      await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-      const orderInfo = await db.query('SELECT id, buyer_id, seller_id, price_offered, status FROM orders LIMIT 1');
-      const { id } = orderInfo.rows[0];
-      const { buyer_id } = orderInfo.rows[0];
-      await db.query(`UPDATE orders SET status='pending' WHERE id=${id}`);
-      const token = await generateToken(buyer_id, false);
-      const newData = {
-        orderId: id,
-        newPrice: 7100000,
-      };
-
-      const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
-      expect(res.status).to.eq(400);
-      expect(res.body.error).to.eq('Check that the order id is valid and not cancelled and your new price is different');
+      expect(res.body.error).to.eq('Check that the order id is valid and your new price is different');
     });
   });
 
@@ -239,17 +213,6 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
     });
-    // it('should return error 404 if there are no orders', async () => {
-    //   const newUser = await dataValues();
-    //   await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-    //   const { rows } = await db.query('SELECT id FROM users ');
-    //   const { length } = rows;
-    //   const token = generateToken(rows[length - 1].id, true);
-
-    //   const res = await chai.request(server).get('/api/v1/orders').set('x-auth', token);
-    //   expect(res.body.status).to.eq(404);
-    //   expect(res.body.error).to.eq('There are no orders now. Check back');
-    // });
     it('should return error 401 if user is not logged in', (done) => {
       chai.request(server).get('/api/v1/orders')
         .end((err, res) => {
@@ -305,16 +268,6 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(id);
     });
-    // it('should return error 404 if order is not found', async () => {
-    //   const orderInfo = await db.query('SELECT id, buyer_id FROM orders LIMIT 1');
-    //   const { buyer_id } = orderInfo.rows[0];
-    //   const token = await generateToken(buyer_id, false);
-
-    // eslint-disable-next-line max-len
-    // const res = await chai.request(server).get('/api/v1/orders/1212727172172').set('x-auth', token);
-    //   expect(res.status).to.eq(404);
-    //   expect(res.body.error).to.eq('Order not found');
-    // });
 
     it('should return error 403 if it is not buyer or seller or admin', async () => {
       const newUser = await dataValues();
@@ -342,7 +295,7 @@ describe('Order transaction', () => {
       const { seller_id } = orderInfo.rows[0];
       const token = await generateToken(seller_id, false);
 
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'accepted' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'accepted' });
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(id);
       expect(res.body.data.status).to.eq('accepted');
@@ -357,7 +310,7 @@ describe('Order transaction', () => {
       const { buyer_id } = orderInfo.rows[0];
       const token = await generateToken(buyer_id, false);
 
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'completed' });
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(id);
       expect(res.body.data.status).to.eq('completed');
@@ -368,12 +321,12 @@ describe('Order transaction', () => {
       const { id } = orderInfo.rows[0];
       const { buyer_id } = orderInfo.rows[0];
       const token = await generateToken(buyer_id, false);
-      const res = await chai.request(server).patch(`/api/v1/orders/${id + 1}`).set('x-auth', token).send({ status: 'completed' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id + 1}/status`).set('x-auth', token).send({ status: 'completed' });
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('The order is not available');
     });
 
-    it('should return error 406 if seller or buyer is inactive', async () => {
+    it('should return error if seller or buyer is inactive', async () => {
       const newUser = await dataValues();
       await chai.request(server).post('/api/v1/auth/signup').send(newUser);
       const orderInfo = await db.query('SELECT id, buyer_id, seller_id FROM orders LIMIT 1');
@@ -383,7 +336,7 @@ describe('Order transaction', () => {
       await db.query(`UPDATE users SET status='suspended' WHERE id=${seller_id}`);
       const token = await generateToken(buyer_id, false);
 
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'completed' });
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('You cannot update the status of this order at its state');
     });
@@ -397,7 +350,7 @@ describe('Order transaction', () => {
       const len = rows.length - 1;
       const token = await generateToken(len, true);
 
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'completed' });
       expect(res.status).to.eq(403);
       expect(res.body.error).to.eq('You dont have the permission to modify this resource');
     });
@@ -408,7 +361,7 @@ describe('Order transaction', () => {
       await db.query(`UPDATE orders SET status='pending' WHERE id=${id}`);
       const { buyer_id } = orderInfo.rows[0];
       const token = await generateToken(buyer_id, false);
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'completed' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'completed' });
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('You cannot update the status of this order at its state');
     });
@@ -419,7 +372,7 @@ describe('Order transaction', () => {
       await db.query(`UPDATE orders SET status='cancelled' WHERE id=${id}`);
       const { seller_id } = orderInfo.rows[0];
       const token = await generateToken(seller_id, false);
-      const res = await chai.request(server).patch(`/api/v1/orders/${id}`).set('x-auth', token).send({ status: 'accepted' });
+      const res = await chai.request(server).patch(`/api/v1/order/${id}/status`).set('x-auth', token).send({ status: 'accepted' });
       expect(res.status).to.eq(400);
       expect(res.body.error).to.eq('You cannot update the status of this order at its state');
     });

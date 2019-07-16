@@ -213,17 +213,6 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
     });
-    // it('should return error 404 if there are no orders', async () => {
-    //   const newUser = await dataValues();
-    //   await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-    //   const { rows } = await db.query('SELECT id FROM users ');
-    //   const { length } = rows;
-    //   const token = generateToken(rows[length - 1].id, true);
-
-    //   const res = await chai.request(server).get('/api/v1/orders').set('x-auth', token);
-    //   expect(res.body.status).to.eq(404);
-    //   expect(res.body.error).to.eq('There are no orders now. Check back');
-    // });
     it('should return error 401 if user is not logged in', (done) => {
       chai.request(server).get('/api/v1/orders')
         .end((err, res) => {
@@ -279,16 +268,6 @@ describe('Order transaction', () => {
       expect(res.status).to.eq(200);
       expect(res.body.data.id).to.eq(id);
     });
-    // it('should return error 404 if order is not found', async () => {
-    //   const orderInfo = await db.query('SELECT id, buyer_id FROM orders LIMIT 1');
-    //   const { buyer_id } = orderInfo.rows[0];
-    //   const token = await generateToken(buyer_id, false);
-
-    // eslint-disable-next-line max-len
-    // const res = await chai.request(server).get('/api/v1/orders/1212727172172').set('x-auth', token);
-    //   expect(res.status).to.eq(404);
-    //   expect(res.body.error).to.eq('Order not found');
-    // });
 
     it('should return error 403 if it is not buyer or seller or admin', async () => {
       const newUser = await dataValues();

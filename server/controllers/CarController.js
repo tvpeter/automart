@@ -77,6 +77,7 @@ const Car = {
     const { car_id } = req.params;
     const { status } = req.body;
     const { userId } = req;
+
     if (!car_id || car_id.trim().length !== 13 || !status) {
       return util.sendError(res, 400, 'Supply a valid ad id and status');
     }
@@ -85,7 +86,7 @@ const Car = {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
 
       if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
-        util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+        return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
       const updatedCar = await CarService.updateStatus(status, car_id);
       return util.sendSuccess(res, 200, updatedCar.rows[0]);
@@ -99,7 +100,7 @@ const Car = {
     const { price } = req.body;
     const { userId } = req;
     if (!car_id || car_id.trim().length !== 13 || !price) {
-      return util.sendError(res, 400, 'Supply a valid ad id and status');
+      return util.sendError(res, 400, 'Supply a valid ad id and price');
     }
     try {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);

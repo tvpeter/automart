@@ -261,7 +261,7 @@ describe('Cars', () => {
       expect(res.status).to.eq(200);
     });
 
-    it('should return error 404 if user is not the owner', async () => {
+    it('should return error if user is not the owner', async () => {
       const token = await genToken();
 
       const res = await chai.request(server).patch(`/api/v1/car/${Date.now()}/price`).set('x-auth', token).send({ price: 6400000 });
@@ -276,7 +276,36 @@ describe('Cars', () => {
       expect(res.body.error).to.eq('No authorization token provided');
     });
   });
+  // seller update ad status
+  describe('Seller update ad status', () => {
+    it('should return the ad with updated status', async () => {
+      const { rows } = await db.query('SELECT id, owner FROM cars limit 1');
+      const { id } = rows[0];
+      await db.query(`UPDATE cars SET status='available' WHERE id=${id}`);
+      const token = generateToken(rows[0].owner, false);
+      const res = await chai.request(server).patch(`/api/v1/car/${id}/status`).set('x-auth', token).send({ status: 'sold' });
+      expect(res.status).to.eq(200);
+    });
 
+    it('should return error if ad is not found', async () => {
+      const token = await genToken();
+
+      const res = await chai.request(server).patch(`/api/v1/car/${Date.now()}/status`).set('x-auth', token).send({ price: 6400000 });
+      expect(res.status).to.eq(400);
+      expect(res.body.error).to.eq('Supply a valid ad id and status');
+    });
+
+    it('should return error if user is not owner or admin', async () => {
+      const { rows } = await db.query('SELECT id FROM cars limit 1');
+      const newUser = await dataValues();
+      const newUserId = Date.now();
+      await db.query(`INSERT INTO users (id, email, first_name, last_name, address, password, phone) VALUES (${newUserId}, '${newUser.email}', '${newUser.first_name}', '${newUser.last_name}', '${newUser.address}', '${newUser.password}', '${newUser.phone}')`);
+      const token = await generateToken(newUserId, false);
+      const res = await chai.request(server).patch(`/api/v1/car/${rows[0].id}/status`).set('x-auth', token).send({ status: 'sold' });
+      expect(res.status).to.eq(400);
+      expect(res.body.error).to.eq('Only sellers can update cars that are availabe');
+    });
+  });
   // get single adc
   describe('User can view single ad', () => {
     it('should return full details of an ad', async () => {

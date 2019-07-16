@@ -22,15 +22,6 @@ router.get('/auth/logout', logout, User.logout);
 // get cars within a price range => /car/status=available&min=$min&max=$max
 router.get('/car', auth, Car.getCars);
 
-// get cars by manufacturer
-router.get('/car/manufacturer/:manufacturer', auth, Car.getCarsByProperty);
-
-// get cars by body type
-router.get('/car/body_type/:body_type', auth, Car.getCarsByProperty);
-
-// get cars by state
-router.get('/car/state/:state', auth, Car.getCarsByProperty);
-
 // get a single ad
 router.get('/car/:id', auth, Car.getSingleAd);
 

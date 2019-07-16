@@ -45,21 +45,6 @@ class CarService {
     return db.query(query, [id]);
   }
 
-  static updateBySeller(data) {
-    const query = 'UPDATE cars SET price=$1, description=$2, status=$3 WHERE id=$4 RETURNING *';
-    return db.query(query, data);
-  }
-
-  static updateByAdmin(data) {
-    const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
-    return db.query(query, data);
-  }
-
-  static updateStatus(status, id) {
-    const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
-    return db.query(query, [status, id]);
-  }
-
   static updatePrice(price, id) {
     const query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
     return db.query(query, [price, id]);

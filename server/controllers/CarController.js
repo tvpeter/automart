@@ -50,30 +50,6 @@ const Car = {
     }
   },
 
-  async getCarsByProperty(req, res) {
-    const reqParam = Object.keys(req.params)[0];
-    let ppty;
-
-    switch (reqParam.toLowerCase()) {
-      case 'manufacturer':
-        ppty = req.params.manufacturer;
-        break;
-      case 'body_type':
-        ppty = req.params.body_type;
-        break;
-      default:
-        ppty = req.params.state;
-        break;
-    }
-    try {
-      const { rows } = await CarService.getCarsByProperty('available', reqParam, ppty);
-      return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`)
-        : util.sendSuccess(res, 200, rows);
-    } catch (error) {
-      return util.sendError(res, 500, error.message);
-    }
-  },
-
   async getAllUnsoldCars(req, res) {
     try {
       const { rows } = await CarService.getAllUnsoldCars();
@@ -109,9 +85,8 @@ const Car = {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
 
       if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
-        return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+        util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
-
       const updatedCar = await CarService.updateStatus(status, car_id);
       return util.sendSuccess(res, 200, updatedCar.rows[0]);
     } catch (error) {
@@ -139,67 +114,21 @@ const Car = {
       return util.sendError(res, 500, error.message);
     }
   },
-  async updateAdvert(req, res) {
-    const reqFields = ['status', 'price', 'description'];
-    if (validatenewCar(reqFields, req.body)) {
-      return util.sendError(res, 400, 'Fill all fields');
-    }
-    try {
-      const { rows } = await CarService.getSingleCarAllPpties(req.params.id);
-      if (rows.length < 1) {
-        return util.sendError(res, 404, 'The advert you want to update is not available');
-      }
-
-      const { userId, role } = req;
-      if (parseInt(userId, 10) !== parseInt(rows[0].owner, 10) && !role) {
-        return util.sendError(res, 401, 'You do not have the permission to update this data');
-      }
-
-      const adminQ = [req.body.status, req.params.id];
-      const data = [req.body.price, req.body.description, ...adminQ];
-      const result = (parseInt(userId, 10) === parseInt(rows[0].owner, 10))
-        ? await CarService.updateBySeller(data)
-        : await CarService.updateByAdmin(adminQ);
-
-      return util.sendSuccess(res, 200, result.rows[0]);
-    } catch (error) {
-      return util.sendError(res, 500, error.message);
-    }
-  },
 
   async getCars(req, res) {
-    const params = req.query;
-    const paramsArray = Object.keys(params);
-    const paramsLength = Object.keys(params).length;
+    const paramsArray = Object.keys(req.query);
+    const { length } = paramsArray;
     try {
-      if (paramsLength === 3 && JSON.stringify(paramsArray) === JSON.stringify(['status', 'min_price', 'max_price'])) {
-        const min = req.query.min_price ? req.query.min_price : 0;
-        const max = req.query.max_price ? req.query.max_price : 30000000;
-        const { rows } = await CarService.getCarsInRange(req.query.status, min, max);
-        return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range')
-          : util.sendSuccess(res, 200, rows);
-      } if (paramsLength === 2) {
+      if (length === 3 && JSON.stringify(paramsArray) === JSON.stringify(['status', 'min_price', 'max_price'])) {
+        return Car.getCarsWithinRange(req, res);
+      } if (length === 2) {
         const reqParam = Object.keys(req.query)[1];
-        let ppty;
-        switch (reqParam.toLowerCase()) {
-          case 'manufacturer':
-            ppty = req.query.manufacturer;
-            break;
-          case 'body_type':
-            ppty = req.query.body_type;
-            break;
-          default:
-            ppty = req.query.state;
-            break;
-        }
-        const { rows } = await CarService.getCarsByProperty(req.query.status, reqParam, ppty);
-        return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`)
-          : util.sendSuccess(res, 200, rows);
-      } if (paramsLength === 1) {
-        const { rows } = await CarService.getAllUnsoldCars(req.query.status);
-        return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
-          : util.sendSuccess(res, 200, rows);
+
+        return Car.reqProperty(req, res, reqParam);
+      } if (length === 1) {
+        return Car.allAvailableCars(req, res);
       }
+
       const { rows } = await CarService.getAllCars();
       return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
         : util.sendSuccess(res, 200, rows);
@@ -230,6 +159,40 @@ const Car = {
     } catch (error) {
       return util.sendError(res, 500, error.message);
     }
+  },
+
+  async reqProperty(req, res, reqParam) {
+    let ppty;
+    switch (reqParam.toLowerCase()) {
+      case 'manufacturer':
+        ppty = req.query.manufacturer;
+        break;
+      case 'body_type':
+        ppty = req.query.body_type;
+        break;
+      default:
+        ppty = req.query.state;
+        break;
+    }
+    const { rows } = await CarService.getCarsByProperty(req.query.status, reqParam, ppty);
+
+    return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`)
+      : util.sendSuccess(res, 200, rows);
+  },
+
+  async getCarsWithinRange(req, res) {
+    const min = req.query.min_price ? req.query.min_price : 0;
+    const max = req.query.max_price ? req.query.max_price : 30000000;
+    const { rows } = await CarService.getCarsInRange(req.query.status, min, max);
+
+    return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range')
+      : util.sendSuccess(res, 200, rows);
+  },
+
+  async allAvailableCars(req, res) {
+    const { rows } = await CarService.getAllUnsoldCars(req.query.status);
+    return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
+      : util.sendSuccess(res, 200, rows);
   },
 };
 

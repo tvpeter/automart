@@ -73,43 +73,25 @@ const Car = {
     }
   },
 
-  async updateAdStatus(req, res) {
-    const { car_id } = req.params;
-    const { status } = req.body;
+  async updateAdStatusOrPrice(req, res) {
     const { userId } = req;
+    const { car_id } = req.params;
 
-    if (!car_id || car_id.trim().length !== 13 || !status) {
-      return util.sendError(res, 400, 'Supply a valid ad id and status');
+    if (!car_id || car_id.trim().length !== 13) {
+      return util.sendError(res, 400, 'Supply a valid ad id');
+    }
+    if (!req.body.status && !req.body.price) {
+      return util.sendError(res, 400, 'Supply price or status to update ad');
     }
 
     try {
       const { rows } = await CarService.getSingleCarAllPpties(car_id);
-
       if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
         return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
       }
-      const updatedCar = await CarService.updateStatus(status, car_id);
-      return util.sendSuccess(res, 200, updatedCar.rows[0]);
-    } catch (error) {
-      return util.sendError(res, 500, error.message);
-    }
-  },
+      const updatedCar = (req.body.status) ? await CarService.updateProperty('status', req.body.status, car_id)
+        : await CarService.updateProperty('price', req.body.price, car_id);
 
-  async updateAdPrice(req, res) {
-    const { car_id } = req.params;
-    const { price } = req.body;
-    const { userId } = req;
-    if (!car_id || car_id.trim().length !== 13 || !price) {
-      return util.sendError(res, 400, 'Supply a valid ad id and price');
-    }
-    try {
-      const { rows } = await CarService.getSingleCarAllPpties(car_id);
-
-      if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
-        return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
-      }
-
-      const updatedCar = await CarService.updatePrice(price, car_id);
       return util.sendSuccess(res, 200, updatedCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);

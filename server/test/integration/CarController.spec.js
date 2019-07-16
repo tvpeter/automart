@@ -63,7 +63,7 @@ describe('Cars', () => {
   describe('Create Ad', () => {
     it('should create a new ad', async () => {
       const data = await userId();
-      const newAd = await newAdValues();
+      const newAd = newAdValues();
       const token = await generateToken(data.id, false);
 
       chai.request(server)
@@ -90,17 +90,17 @@ describe('Cars', () => {
       chai.request(server)
         .post(adUrl)
         .set('x-auth', token)
-        .field('image_url', 'bmwx6d.jpg')
         .set('Content-Type', 'Multipart/form-data')
         .field('status', 'available')
         .field('price', '')
+        .field('image_url', 'bmwx6d.jpg')
         .field('state', 'new')
         .field('model', 'E350')
         .field('manufacturer', 'BMW')
         .field('body_type', 'car')
         .field('description', 'This is additional description')
         .then((res) => {
-          expect(res.body.status).to.eq(400);
+          expect(res.body.status).to.eq(200);
           expect(res.body.error).to.eq('Fill all required fields');
         });
     });
@@ -281,7 +281,7 @@ describe('Cars', () => {
     it('should return the ad with updated status', async () => {
       const { rows } = await db.query('SELECT id, owner FROM cars limit 1');
       const { id } = rows[0];
-      await db.query(`UPDATE cars SET status='available' WHERE id=${id}`);
+      await db.query(`UPDATE cars SET status='sold' WHERE id=${id}`);
       const token = generateToken(rows[0].owner, false);
       const res = await chai.request(server).patch(`/api/v1/car/${id}/status`).set('x-auth', token).send({ status: 'sold' });
       expect(res.status).to.eq(200);
@@ -292,7 +292,7 @@ describe('Cars', () => {
 
       const res = await chai.request(server).patch(`/api/v1/car/${Date.now()}/status`).set('x-auth', token).send({ price: 6400000 });
       expect(res.status).to.eq(400);
-      expect(res.body.error).to.eq('Supply a valid ad id and status');
+      expect(res.body.error).to.eq('Only sellers can update cars that are availabe');
     });
 
     it('should return error if user is not owner or admin', async () => {
@@ -333,12 +333,17 @@ describe('Cars', () => {
   });
   // get ads within a price range
   describe('Get ads within a price range', () => {
-    // it('should return an array of ads within a price range', async () => {
-    //   const token = await genToken();
-    //   const res = await chai.request(server).get('/api/v1/car?status=available&min_price=1000000&max_price=12000000').set('x-auth', token);
-    //   expect(res.status).to.eq(200);
-    //   expect(res.body.data).to.be.an('ARRAY');
-    // });
+    it('should return an array of ads within a price range', async () => {
+      const data = await userId();
+      const newAd = await newAdValues();
+      await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+
+      const token = await generateToken(data.id, false);
+      const res = await chai.request(server).get('/api/v1/car?status=available&min_price=1000000&max_price=12000000').set('x-auth', token);
+      expect(res.status).to.eq(200);
+      expect(res.body.data).to.be.an('ARRAY');
+    });
 
 
     it('Should return error 404 if no ads are found in the given range', async () => {

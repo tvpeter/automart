@@ -80,8 +80,7 @@ const Order = {
  * completed(buyer), cancelled(buyer)
  */
   async updateOrderStatus(req, res) {
-    let newStatus = req.body.status;
-    newStatus = newStatus.toLowerCase();
+    const newStatus = req.body.status.toLowerCase();
 
     // get orderid
     const { orderId } = req.params;

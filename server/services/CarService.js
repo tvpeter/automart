@@ -45,14 +45,19 @@ class CarService {
     return db.query(query, [id]);
   }
 
-  static updatePrice(price, id) {
-    const query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
-    return db.query(query, [price, id]);
-  }
+  // static updatePrice(price, id) {
+  //   const query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
+  //   return db.query(query, [price, id]);
+  // }
 
-  static updateStatus(status, id) {
-    const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
-    return db.query(query, [status, id]);
+  // static updateStatus(status, id) {
+  //   const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
+  //   return db.query(query, [status, id]);
+  // }
+
+  static updateProperty(ppty, pptyValue, id) {
+    const query = `UPDATE cars SET ${ppty}=$1 WHERE id=$2 RETURNING *`;
+    return db.query(query, [pptyValue, id]);
   }
 
   static gerUserAds(userId) {

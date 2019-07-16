@@ -400,34 +400,6 @@ describe('Order transaction', () => {
       expect(res.body.error).to.eq('The order does not exist');
     });
 
-    // it('should return error 404 if a logged in user attempts to delete the order', async () => {
-    //   const orderInfo = await db.query('SELECT id, seller_id FROM orders LIMIT 1');
-    //   const { id } = orderInfo.rows[0];
-    //   const { rows } = await db.query('SELECT id from users');
-    //   const len = rows.length - 1;
-    //   const token = await generateToken(rows[len].id, true);
-    //   const res = await chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', token);
-    //   expect(res.status).to.eq(404);
-    //   expect(res.body.error).to.eq('You dont have permission to delete this resource');
-    // });
-    // it('seller should delete an order that is cancelled', async () => {
-    //   const token = genToken();
-    //   const cars = await db.query('SELECT id FROM cars');
-    //   const newOrderData = {
-    //     carId: cars.rows[0].id,
-    //     price_offered: 45000000,
-    //   };
-    //   await chai.request(server).post('/api/v1/order').set('x-auth', token).send(newOrderData);
-
-    //   const orderInfo = await db.query('SELECT id, seller_id FROM orders LIMIT 1');
-    //   const { id } = orderInfo.rows[0];
-    //   await db.query(`UPDATE orders SET status='cancelled' WHERE id=${id}`);
-    //   const { seller_id } = orderInfo.rows[0];
-    //   const tk = await generateToken(seller_id, false);
-    //   const res = await chai.request(server).delete(`/api/v1/orders/${id}`).set('x-auth', tk);
-    //   expect(res.status).to.eq(200);
-    //   expect(res.body.data.id).to.eq(id);
-    // });
     it('admin should delete any order', async () => {
       const token = genToken();
       const cars = await db.query('SELECT id FROM cars');
@@ -445,16 +417,29 @@ describe('Order transaction', () => {
       expect(res.body.data.id).to.eq(id);
     });
   });
-  // describe('User retrieves his/her ads', () => {
-  //   it('should return error 404 if user has not sold on the platform', async () => {
-  //     const newUser = await dataValues();
-  //     await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-  //     const { rows } = await db.query('SELECT id FROM users LIMIT 2');
-  //     const token = await generateToken(rows[0].id, false);
-  //     await db.query('DELETE FROM orders');
-  //     const res = await chai.request(server).get('/api/v1/orders/me').set('x-auth', token);
-  //     expect(res.status).to.eq(404);
-  //     expect(res.body.error).to.eq('You do not have any transaction yet');
-  //   });
-  // });
+  describe('User retrieves his/her sold ads', () => {
+    // it('should return user sold ads on the platform', async () => {
+    //   const newUser = await dataValues();
+    //   await chai.request(server).post('/api/v1/auth/signup').send(newUser);
+    //   const { rows } = await db.query('SELECT id FROM users LIMIT 1');
+
+    //   const token = await generateToken(rows[0].id, false);
+    //   await db.query(`UPDATE orders SET seller_id=${rows[0].id}`);
+    //   const res = await chai.request(server).get('/api/v1/orders/me').set('x-auth', token);
+
+    //   expect(res.status).to.eq(200);
+    //   expect(res.body.data).to.be.an('ARRAY');
+    // });
+    it('should return error 404 if user has not sold on the platform', async () => {
+      const newUser = await dataValues();
+      await chai.request(server).post('/api/v1/auth/signup').send(newUser);
+      const { rows } = await db.query('SELECT id FROM users LIMIT 1');
+
+      const token = await generateToken(rows[0].id, false);
+      await db.query(`DELETE FROM orders WHERE seller_id=${rows[0].id}`);
+      const res = await chai.request(server).get('/api/v1/orders/me').set('x-auth', token);
+      expect(res.status).to.eq(404);
+      expect(res.body.error).to.eq('You do not have any transaction yet');
+    });
+  });
 });

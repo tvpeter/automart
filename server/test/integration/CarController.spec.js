@@ -144,21 +144,21 @@ describe('Cars', () => {
     it('should return array of available cars', async () => {
       const token = await genToken();
       const { rows } = await db.query('SELECT manufacturer FROM cars LIMIT 1');
-      const res = await chai.request(server).get(`/api/v1/car/manufacturer/${rows[0].manufacturer}`).set('x-auth', token);
+      const res = await chai.request(server).get(`/api/v1/car?status=available&manufacturer=${rows[0].manufacturer}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body.data).to.be.an('Array');
     });
 
     it('should return error  404 if there are no unsold cars for a selected manufacturer', async () => {
       const token = await genToken();
-      const res = await chai.request(server).get('/api/v1/car/manufacturer/FIAT').set('x-auth', token);
+      const res = await chai.request(server).get('/api/v1/car?status=available&manufacturer=FIAT').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars for the selected manufacturer');
     });
 
     it('should return error 401 if user is not logged in', async () => {
       const { rows } = await db.query('SELECT manufacturer FROM cars LIMIT 1');
-      const res = await chai.request(server).get(`/api/v1/car/manufacturer/${rows[0].manufacturer}`);
+      const res = await chai.request(server).get(`/api/v1/car?status=available&manufacturer=${rows[0].manufacturer}`);
       expect(res.status).to.eq(401);
       expect(res.body.error).to.eq('No authorization token provided');
     });
@@ -170,19 +170,19 @@ describe('Cars', () => {
     it('should return all unsold cars by body type', async () => {
       const { rows } = await db.query('SELECT body_type FROM cars LIMIT 1');
       const token = await genToken();
-      const res = await chai.request(server).get(`/api/v1/car/body_type/${rows[0].body_type}`).set('x-auth', token);
+      const res = await chai.request(server).get(`/api/v1/car?status=available&body_type=${rows[0].body_type}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('Array');
     });
 
     it('should return error 404 if cars of given body type are not found', async () => {
       const token = await genToken();
-      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI').set('x-auth', token);
+      const res = await chai.request(server).get('/api/v1/car?status=available&body_type=SEMI').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars for the selected body_type');
     });
     it('should return error 401 if user is not logged in', async () => {
-      const res = await chai.request(server).get('/api/v1/car/body_type/SEMI');
+      const res = await chai.request(server).get('/api/v1/car?status=available&body_type=SEMI');
       expect(res.status).to.eq(401);
       expect(res.body.error).to.eq('No authorization token provided');
     });
@@ -193,7 +193,7 @@ describe('Cars', () => {
     it('should return all available cars by state', async () => {
       const { rows } = await db.query('SELECT state FROM cars LIMIT 1');
       const token = await genToken();
-      const res = await chai.request(server).get(`/api/v1/car/state/${rows[0].state}`).set('x-auth', token);
+      const res = await chai.request(server).get(`/api/v1/car?status=available&state=${rows[0].state}`).set('x-auth', token);
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
     });
@@ -201,7 +201,7 @@ describe('Cars', () => {
     it('should return error 404 if cars are not found for selected state', async () => {
       const token = await genToken();
 
-      const res = await chai.request(server).get('/api/v1/car/state/not').set('x-auth', token);
+      const res = await chai.request(server).get('/api/v1/car?status=available&state=not').set('x-auth', token);
       expect(res.status).to.eq(404);
       expect(res.body.error).to.eq('There are no cars for the selected state');
     });

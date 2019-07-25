@@ -53,12 +53,13 @@ window.addEventListener('DOMContentLoaded', async (event) => {
       },
     });
     const responseToJson = await response.json();
-    if (responseToJson.status === 200) {
+    if (responseToJson.data.length > 0) {
       const { data } = responseToJson;
       return generateTable(data);
     }
+
     // eslint-disable-next-line no-return-assign
-    return errorDisplay.textContent = responseToJson.message;
+    return errorDisplay.textContent = responseToJson.error;
   } catch (error) {
     const message = 'There\'s an error loading your data, please retry';
     errorDisplay.textContent = message;

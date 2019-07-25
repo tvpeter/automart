@@ -160,7 +160,7 @@ const Car = {
     }
     const { rows } = await CarService.getCarsByProperty(req.query.status, reqParam, ppty);
 
-    return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`)
+    return (rows.length < 1) ? util.sendError(res, 200, `There are no cars for the selected ${reqParam}`)
       : util.sendSuccess(res, 200, rows);
   },
 

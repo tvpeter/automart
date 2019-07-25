@@ -2,14 +2,14 @@ import jwt from 'jsonwebtoken';
 import Util from '../lib/Util';
 
 /**
- * @description - middleware to check and verify tokens
+ * @description - middleware to check and verify admin tokens
  * @param {object} req - HTTP Request
  * @param {object} res - HTTP Response
  * @param {function} next - callback function
  * @returns {object}
  */
 const adminAuth = (req, res, next) => {
-  const token = req.header('x-auth');
+  const token = req.header('x-auth') || req.body.token || req.headers['x-auth'] || req.headers.token;
   if (!token) {
     return Util.sendError(res, 401, 'No authorization token provided');
   }

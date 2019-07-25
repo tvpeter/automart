@@ -4,12 +4,13 @@ import jwt from 'jsonwebtoken';
 /**
  * @description - generate auth token for users
  * @param {string} id
- * @param {boolean} userRole
+ * @param {boolean} is_admin
  * @return {string} token
  */
-const generateToken = (id, userRole, fn) => {
+// eslint-disable-next-line camelcase
+const generateToken = (id, is_admin, fn) => {
   const token = jwt.sign({
-    id, role: userRole, fn,
+    id, is_admin, fn,
   }, process.env.JWT_SECRET, { expiresIn: '12h' });
   return token;
 };

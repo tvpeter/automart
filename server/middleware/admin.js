@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import Util from '../lib/Util';
 
 /**
@@ -9,8 +8,6 @@ import Util from '../lib/Util';
  * @param {function} next - callback function
  * @returns {object}
  */
-dotenv.config();
-
 const adminAuth = (req, res, next) => {
   const token = req.header('x-auth');
   if (!token) {
@@ -19,8 +16,8 @@ const adminAuth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
-    req.role = decoded.role;
-    if (!decoded.role) {
+    req.is_admin = decoded.is_admin;
+    if (!decoded.is_admin) {
       return Util.sendError(res, 401, 'You dont have the permission to access this resource');
     }
     return next();

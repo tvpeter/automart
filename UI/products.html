@@ -8,6 +8,13 @@
 	<link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
 	<meta name="description" content="Products on Automart Automobile marketplace">
 </head>
+<script>
+	if (localStorage.length < 1 || localStorage.getItem('uid') === null || localStorage.getItem('name') === null || localStorage.getItem('auth') === null) {
+		localStorage.clear();
+		window.location.href = './login.html';
+	}
+
+</script>
 
 <body>
 	<div class="header">
@@ -22,22 +29,24 @@
 					</div>
 					<div class="clear"></div>
 				</div>
+
 				<div class="top-header-right">
-					<ul>
-						<li><a href="./products.html">Products</a><span></span></li>
-						<li><a href="./login.html">Login</a><span> </span></li>
-						<li><a href="./signup.html">Register</a></li>
-					</ul>
+					<span></span>
+					<li class="dropdown">
+						<div class="links">
+							<a href="./logout.html">Logout</a>
+							<a href="./profile.html">Profile</a>
+						</div>
+					</li>
 				</div>
 				<div class="clear"></div>
 			</div>
 		</div>
-
 		<!----start-mid-head---->
 		<div class="mid-header">
 			<div class="wrap">
 				<div class="mid-grid-left">
-					<a class="logo" href="./index.html"><span> </span></a>
+					<a class="logo" href="./index.html" alt="logo"></a>
 				</div>
 				<div class="mid-grid-right">
 					<form>
@@ -48,7 +57,19 @@
 				<div class="clear"></div>
 			</div>
 		</div>
+
+		<div class="wrap">
+			<nav>
+				<ul>
+					<li><a href="./createad.html">Create Ad</a></li>
+					<li><a href="./userads.html">My Ads</a></li>
+					<li><a href="./mytransactions.html">Transactions</a></li>
+					<li><a href="./products.html" class="active">Ads</a></li>
+				</ul>
+			</nav>
+		</div>
 	</div>
+
 
 	<!--- start-content---->
 	<div class="content product-box-main">
@@ -56,18 +77,30 @@
 			<div class="content-right product-box">
 				<div class="product-box-head">
 					<div class="product-box-head-left">
-						<h3>Products <span>Products</span></h3>
+						<h3>Products</h3>
 					</div>
 					<div class="product-box-head-right">
 						<ul>
 							<li><span>Sort ::</span><a href="#"> </a></li>
-							<li><label> </label> <a href="#"> New</a></li>
+							<li><a href="#"> New</a></li>
 							<li><label> </label> <a href="#"> Used</a></li>
 							<li><label></label><span>Make::</span>
-								<select name="make" id="make">
-									<option value="BMW">BMW</option>
+								<select name="manufacturer" id="">
+									<option value="" selected disabled>select</option>
+									<option value="tesla">Tesla</option>
 									<option value="audi">Audi</option>
-									<option value="Honda">Honda</option>
+									<option value="bmw">BMW</option>
+									<option value="ford">Ford</option>
+									<option value="honda">Honda</option>
+									<option value="kia">Kia</option>
+									<option value="lexus">Lexus</option>
+									<option value="mercedes">Mercedes</option>
+									<option value="mazda">Mazda</option>
+									<option value="peugeot">Peugeot</option>
+									<option value="nissan">Nissan</option>
+									<option value="volvo">Volvo</option>
+									<option value="volkswagon">Volkswagon</option>
+									<option value="toyota">Toyota</option>
 								</select>
 							</li>
 							<li><span>Price ::</span><a href="#">Low</a> <label></label><a href="#">High</a></li>
@@ -96,6 +129,12 @@
 			<div class="clear"> </div>
 		</div>
 	</div>
+
+	<script>
+
+		const welcome = document.querySelector('.top-header-right span');
+		welcome.textContent = `Hello ${localStorage.getItem('name')}`;
+	</script>
 
 	<script src="./js/products.js"></script>
 

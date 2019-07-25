@@ -10,13 +10,14 @@ window.addEventListener('DOMContentLoaded', async (e) => {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
+        'x-auth': `${localStorage.getItem('auth')}`,
       },
     });
     const responseToJson = await adDetail.json();
     if (responseToJson.status === 200) {
       const { data } = responseToJson;
       const manufacturer = data.manufacturer.toUpperCase();
-      document.querySelector('.imgslide').src = data.img;
+      document.querySelector('.imgslide').src = data.image_url;
       document.querySelector('.col-55 h1').textContent = `${manufacturer}  ${data.model}`;
       document.querySelector('.vehicle-detail-info').textContent = data.description;
       document.querySelector('.vehicle-info p').textContent = `Price: N${data.price}`;

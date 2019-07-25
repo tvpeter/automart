@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
  * @param {string} password
  * @returns {Promise}
  */
-
 export const hashPassword = async (password) => {
   try {
     const salt = await bcrypt.genSalt(10);

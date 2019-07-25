@@ -21,7 +21,7 @@ const auth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
-    req.role = decoded.role;
+    req.is_admin = decoded.is_admin;
     return next();
   } catch (err) {
     return Util.sendError(res, 401, 'Unauthorized, invalid token or session have expired');

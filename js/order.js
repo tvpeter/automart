@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', async (e) => {
       const snCell = row.insertCell();
       snCell.textContent = '1';
       const idCell = row.insertCell();
-      idCell.innerHTML = `<img src='${data.img}'/>`;
+      idCell.innerHTML = `<img src='${data.image_url}'/>`;
       const modelCell = row.insertCell();
       modelCell.textContent = `${data.manufacturer + data.model}`;
       const stateCell = row.insertCell();

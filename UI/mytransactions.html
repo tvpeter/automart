@@ -4,6 +4,7 @@
 <head>
   <title>AutoMart | User Transactions</title>
   <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="./images/caricon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
@@ -48,7 +49,12 @@
         <div class="clear"></div>
       </div>
     </div>
-
+    <script>
+      if (localStorage.length < 1 || localStorage.getItem('uid') === null || localStorage.getItem('name') === null || localStorage.getItem('auth') === null) {
+        localStorage.clear();
+        window.location.href = './login.html';
+      }
+    </script>
     <div class="header-bottom">
       <div class="wrap">
         <nav>
@@ -67,55 +73,9 @@
     <div class="wrap">
       <div class="resize-table">
         <h3 class="txt-center caption">My Transactions</h3>
+        <div id="errorDisplay"></div>
         <input type="text" name="search" placeholder="Search table" class="search" id="search" />
         <table class="table">
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>Transaction ID</th>
-              <th>Transaction Type</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>6</td>
-              <td><a href="invoice.html">7X6XY7637E</a></td>
-              <td>Bought</td>
-              <td> N2.4m</td>
-              <td>12/03/2019</td>
-              <td>Delivered</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td><a href="">83734A7D4</a></td>
-              <td>Sold</td>
-              <td> N2.4m</td>
-              <td>12/03/2019</td>
-              <td>Pending</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td><a href="">9039D83HD</a></td>
-              <td>Sold</td>
-              <td> N2.4m</td>
-              <td>12/03/2019</td>
-              <td>Delivered</td>
-
-
-            </tr>
-            <tr>
-              <td>6</td>
-              <td><a href="">3749D738D</a></td>
-              <td>Bought</td>
-              <td> N2.4m</td>
-              <td>12/03/2019</td>
-              <td>Delivered</td>
-
-            </tr>
-
         </table>
       </div>
     </div>
@@ -125,12 +85,15 @@
 
 
   <script src="./js/script.js"></script>
+  <script src="./js/mytransactions.js"></script>
   <script>
     const search = document.querySelector("#search");
     const table = document.querySelector(".table");
     search.addEventListener('keyup', () => {
       filterTable(table);
     });
+
+
   </script>
 
 

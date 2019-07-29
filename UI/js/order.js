@@ -51,12 +51,12 @@ window.addEventListener('DOMContentLoaded', async (e) => {
 const createOrderUrl = 'https://tvpautomart.herokuapp.com/api/v1/order';
 const createOrder = document.getElementById('createOrderForm');
 
-createOrder.addEventListener('click', async (event) => {
+createOrder.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const data = {
-    carId: productId,
-    priceOffered: document.getElementById('price').value,
+    car_id: productId,
+    amount: document.getElementById('price').value,
   };
 
   try {
@@ -72,12 +72,12 @@ createOrder.addEventListener('click', async (event) => {
     const newOrder = await response.json();
     if (newOrder.status !== 201) {
       // eslint-disable-next-line no-return-assign
-      return errorDisplay.textContent = newOrder.message;
+      return errorDisplay.textContent = newOrder.error;
     }
     // eslint-disable-next-line no-return-assign
     return window.location.href = `./orderdetail.html?orderid=${newOrder.data.id}`;
   } catch (error) {
     // eslint-disable-next-line no-return-assign
-    return errorDisplay.textContent = error.message;
+    return errorDisplay.textContent = error.error;
   }
 });

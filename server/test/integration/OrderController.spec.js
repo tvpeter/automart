@@ -276,7 +276,7 @@ describe('Order transaction', () => {
       const { id } = orderInfo.rows[0];
       const { rows } = await db.query('SELECT id from users');
       const len = rows.length - 1;
-      const token = await generateToken(rows[len].id, false);
+      const token = await generateToken(rows[len].id, false, 'peter');
 
       const res = await chai.request(server).get(`/api/v1/orders/${id}`).set('x-auth', token);
       expect(res.status).to.eq(403);

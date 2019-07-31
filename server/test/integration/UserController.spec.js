@@ -35,7 +35,7 @@ describe('User', () => {
   const adminToken = async () => {
     const { rows } = await db.query('SELECT id FROM users limit 1');
     const { id } = rows[0];
-    return generateToken(id, true);
+    return generateToken(id, true, 'peter');
   };
   before(async () => {
     await db.query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, is_admin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16), status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');

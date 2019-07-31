@@ -26,7 +26,7 @@ loginForm.addEventListener('submit', async (event) => {
     const responseToJson = await response.json();
     if (responseToJson.status !== 200) {
       // eslint-disable-next-line no-return-assign
-      return (`${displayError.textContent = responseToJson.message}`);
+      return (`${displayError.textContent = responseToJson.error}`);
     }
     localStorage.setItem('name', responseToJson.data.first_name);
     localStorage.setItem('uid', responseToJson.data.id);
@@ -34,7 +34,7 @@ loginForm.addEventListener('submit', async (event) => {
     return window.location.href = './userprofile.html';
   } catch (error) {
     // eslint-disable-next-line no-return-assign
-    return (`${displayError.textContent = error.message}`);
+    return (`${displayError.textContent = error.error}`);
   }
   // await postResource(signInUrl, data, '/profile', displayError, 200);
 });

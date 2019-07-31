@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
+        'x-auth': `${localStorage.getItem('auth')}`,
       },
     });
     const responseToJson = await response.json();
@@ -21,7 +22,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         ids.push(id);
         const ad = `<div class='product-grid'>
         <div class='product-pic'>
-          <a href='./details.html?pid=${id}'><img src='${car.img}' title='${car.model}' /></a>
+          <a href='./details.html?pid=${id}'><img src='${car.image_url}' title='${car.model}' /></a>
           <p>
             <a href="./details.html?pid=${id}"><small>${manufacturer} </small> ${car.model}</a>
             <span>${state}</span> </p>

@@ -93,7 +93,7 @@ const User = {
       if (!validPassword) {
         return util.sendError(res, 401, 'Wrong username/password');
       }
-      user.token = generateToken(user.id, user.is_admin);
+      user.token = generateToken(user.id, user.is_admin, user.first_name);
       const data = {
         id: user.id,
         email: user.email,
@@ -151,9 +151,11 @@ const User = {
     return util.sendSuccess(res, 200, 'Successfully logged out');
   },
   async disableUser(req, res) {
-    const { userId } = req.params;
+    if (!req.params.userId) {
+      return util.sendError(res, 400, 'Request does not contain required fields');
+    }
     try {
-      const { rows } = await UserService.disableUser(['disabled', userId, 'active']);
+      const { rows } = await UserService.disableUser(['disabled', req.params.userId, 'active']);
       return (rows.length < 1) ? util.sendError(res, 404, 'User not found or inactive')
         : util.sendSuccess(res, 200, rows[0]);
     } catch (error) {

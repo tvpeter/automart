@@ -11,7 +11,6 @@
 
 <body>
   <div class="header">
-    <!-- start of top header-->
     <div class="top-header">
       <div class="wrap">
         <div class="top-header-center">
@@ -24,21 +23,22 @@
         </div>
 
         <div class="top-header-right">
-          <ul>
-            <li><a href="./products.html">Products</a><span> </span></li>
-            <li><a href="./login.html">Login</a><span> </span></li>
-            <li><a href="./register.html">Register</a></li>
-          </ul>
+          <span></span>
+          <li class="dropdown">
+            <div class="links">
+              <a href="./logout.html">Logout</a>
+              <a href="./profile.html">Profile</a>
+            </div>
+          </li>
         </div>
         <div class="clear"></div>
       </div>
     </div>
 
-    <!----start-mid-head---->
     <div class="mid-header">
       <div class="wrap">
         <div class="mid-grid-left">
-          <a class="logo" href="./index.html"></a>
+          <a class="logo" href="/"></a>
         </div>
         <div class="mid-grid-right">
           <form>
@@ -47,6 +47,19 @@
           </form>
         </div>
         <div class="clear"></div>
+      </div>
+    </div>
+
+    <div class="header-bottom">
+      <div class="wrap">
+        <nav>
+          <ul>
+            <li><a href="./createad.html">Create Ad</a></li>
+            <li><a href="./userads.html">My Ads</a></li>
+            <li><a href="./mytransactions.html">Transactions</a></li>
+            <li><a href="./products.html" class="active">Ads</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -67,17 +80,6 @@
         <div id="errorDisplay"></div>
         <div class="col-45">
           <img src="" class="imgslide current" alt="" />
-          <!-- <img src="images/products/bmwx6.jpg" alt="" class="imgslide"> -->
-
-          <!-- <div class="product-images">
-            <div class="col-45">
-              <img src="images/products/bmwx6d.jpg" alt="" class="thumbnail" id="img1">
-            </div>
-            <div class="col-45">
-              <img src="images/products/bmwx6.jpg" alt="" class="thumbnail" id="img2">
-            </div>
-            <div class="clear"></div>
-          </div> -->
           <div class="txt-center"><a href=''>
               <button class="btn">Buy Now</button></a></div>
         </div>
@@ -103,21 +105,12 @@
         </div>
       </div>
     </div>
-    <script>
-      // const img1 = document.getElementById("img1");
-      // const img2 = document.getElementById("img2");
-
-      // img2.addEventListener("click", () => {
-      //   switchImage("img2");
-      // });
-      // img1.addEventListener("click", () => {
-      //   switchImage("img1");
-      // });
-
-
-    </script>
     <script src="./js/details.js"></script>
     <script src="./js/script.js"></script>
+    <script>
+      const welcome = document.querySelector('.top-header-right span');
+      welcome.textContent = `Hello ${localStorage.getItem('name')}`;
+    </script>
 
     <div class="wrap">
       <h3>Related Products</h3>

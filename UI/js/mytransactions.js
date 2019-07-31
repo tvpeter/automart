@@ -1,7 +1,5 @@
-const errorDisplay = document.getElementById('errorDisplay');
-
-
 const tableToCreate = document.querySelector('table');
+const errorDisplay = document.getElementById('errorDisplay');
 
 
 const generateTableCells = (data) => {
@@ -12,24 +10,18 @@ const generateTableCells = (data) => {
     const snCell = row.insertCell();
     snCell.textContent = sn;
     const idCell = row.insertCell();
-    idCell.innerHTML = `<a href='./updatead.html'>${element.id}</a>`;
-    const modelCell = row.insertCell();
-    modelCell.textContent = `${element.model}`.charAt(0).toUpperCase() + `${element.model}`.slice(1);
-    const stateCell = row.insertCell();
-    stateCell.textContent = `${element.state}`.charAt(0).toUpperCase() + `${element.state}`.slice(1);
-    const cState = row.insertCell();
-    cState.innerHTML = '<button><a href=\'./updatestatus.html\'>Change</a></button>';
-    const statusCell = row.insertCell();
-    statusCell.textContent = `${element.status}`.charAt(0).toUpperCase() + `${element.status}`.slice(1);
-    const priceCell = row.insertCell();
-    priceCell.textContent = `N${element.price}`;
-    const details = row.insertCell();
-    details.innerHTML = `<a href='./details.html?pid=${element.id}'>${element.id}</a>`;
+    idCell.innerHTML = `<a href='./orderdetail.html?orderid=${element.id}'>${element.id}</a>`;
+    const amountRow = row.insertCell();
+    amountRow.textContent = `${element.price_offered}`;
+    const dateRow = row.insertCell();
+    dateRow.textContent = `${element.updated_at}`;
+    const statusRow = row.insertCell();
+    statusRow.textContent = `${element.status}`;
   });
 };
 
 const generateTable = (data) => {
-  const tableHeaders = ['SN', 'Edit', 'NAME', 'STATE', 'CHANGE STATE', 'AD STATUS', 'PRICE', 'DETAILS'];
+  const tableHeaders = ['SN', 'Transaction ID', 'Amount', 'Date', 'Status'];
 
   const thead = tableToCreate.createTHead();
   const row = thead.insertRow();
@@ -44,10 +36,11 @@ const generateTable = (data) => {
   generateTableCells(data);
 };
 
+
 window.addEventListener('DOMContentLoaded', async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch('https://tvpautomart.herokuapp.com/api/v1/ads/me', {
+    const response = await fetch('https://tvpautomart.herokuapp.com/api/v1/orders/me', {
       method: 'get',
       headers: {
         'Content-Type': 'application/Json',

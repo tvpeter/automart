@@ -4,8 +4,7 @@ import util from '../lib/Util';
 
 const Flag = {
   async createFlag(req, res) {
-    req.body.reportedBy = req.userId;
-    const flagsReqs = ['carId', 'reason', 'reportedBy'];
+    const flagsReqs = ['carId', 'reason'];
     if (validateData(flagsReqs, req.body)) {
       return util.sendError(res, 400, 'Ensure to indicate the ad id and reason for the report');
     }
@@ -17,7 +16,7 @@ const Flag = {
       severity = 'extreme';
     }
     try {
-      const { rows } = await FlagService.getReportByUser([carId, req.body.reportedBy]);
+      const { rows } = await FlagService.getReportByUser([carId, req.userId]);
       if (rows.length > 0) {
         return util.sendError(res, 406, 'Your report on this ad is already recorded');
       }

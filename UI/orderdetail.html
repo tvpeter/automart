@@ -30,11 +30,11 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello, John</span>
+          <span></span>
           <li class="dropdown">
             <div class="links">
-              <a href="index.html">Logout</a>
-              <a href="profile.html">Profile</a>
+              <a href="./logout.html">Logout</a>
+              <a href="./profile.html">Profile</a>
             </div>
           </li>
         </div>
@@ -45,7 +45,7 @@
     <div class="mid-header">
       <div class="wrap">
         <div class="mid-grid-left">
-          <a class="logo" href="index.html"></a>
+          <a class="logo" href="./index.html"></a>
         </div>
         <div class="mid-grid-right">
           <form>
@@ -75,7 +75,7 @@
     <div class="wrap">
       <div class="container">
         <div id="errorDisplay"></div>
-        <form action="">
+        <form action="" id="orderDetail">
           <div class="row">
             <h3 class="txt-center">ORDER DETAILS</h3>
             <div class="col-25">
@@ -148,9 +148,6 @@
               <span id="updated"> </span>
             </div>
           </div>
-          <div class="row">
-            <!-- <input type="submit" value="Mark as Treated" class="btn"> -->
-          </div>
         </form>
       </div>
 
@@ -158,8 +155,11 @@
     <div class="clear"> </div>
   </div>
   <script src="./js/orderdetail.js"></script>
+  <script>
+    const welcome = document.querySelector('.top-header-right span');
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
+  </script>
 
-  <!---- footer---->
   <div class="bottom-cols">
     <div class="wrap">
       <div class="bottom-col">
@@ -177,7 +177,6 @@
       <div class="clear"></div>
     </div>
   </div>
-  <!--End of upper footer -->
 
   <footer class="footer">
     <div class="wrap">

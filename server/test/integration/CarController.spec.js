@@ -87,22 +87,19 @@ describe('Cars', () => {
     });
     it('should return error 400 if request does not contain all required fields', async () => {
       const token = await genToken();
-      chai.request(server)
-        .post(adUrl)
-        .set('x-auth', token)
-        .set('Content-Type', 'Multipart/form-data')
-        .field('status', 'available')
-        .field('price', '')
-        .field('image_url', 'bmwx6d.jpg')
-        .field('state', 'new')
-        .field('model', 'E350')
-        .field('manufacturer', 'BMW')
-        .field('body_type', 'car')
-        .field('description', 'This is additional description')
-        .then((res) => {
-          expect(res.body.status).to.eq(200);
-          expect(res.body.error).to.eq('Fill all required fields');
-        });
+
+      const data = {
+        status: 'available',
+        image_url: 'image',
+        state: 'new',
+        model: 'E350',
+        manufacturer: 'BMW',
+        body_type: 'Coupe',
+        description: 'This is the description',
+      };
+      const res = await chai.request(server).post(adUrl).set('x-auth', token).send(data);
+      expect(res.body.status).to.eq(400);
+      expect(res.body.error).to.eq('Fill all required fields');
     });
 
     it('should return error 400 if user has the same car that is available', async () => {
@@ -149,10 +146,10 @@ describe('Cars', () => {
       expect(res.body.data).to.be.an('Array');
     });
 
-    it('should return error  404 if there are no unsold cars for a selected manufacturer', async () => {
+    it('should return empty array if there are no unsold cars for a selected manufacturer', async () => {
       const token = await genToken();
       const res = await chai.request(server).get('/api/v1/car?status=available&manufacturer=FIAT').set('x-auth', token);
-      expect(res.status).to.eq(404);
+      expect(res.status).to.eq(200);
       expect(res.body.error).to.eq('There are no cars for the selected manufacturer');
     });
 
@@ -178,7 +175,7 @@ describe('Cars', () => {
     it('should return error 404 if cars of given body type are not found', async () => {
       const token = await genToken();
       const res = await chai.request(server).get('/api/v1/car?status=available&body_type=SEMI').set('x-auth', token);
-      expect(res.status).to.eq(404);
+      expect(res.status).to.eq(200);
       expect(res.body.error).to.eq('There are no cars for the selected body_type');
     });
     it('should return error 401 if user is not logged in', async () => {
@@ -198,11 +195,11 @@ describe('Cars', () => {
       expect(res.body).to.have.property('data').to.be.an('ARRAY');
     });
 
-    it('should return error 404 if cars are not found for selected state', async () => {
+    it('should return empty array if there no cars found for selected state', async () => {
       const token = await genToken();
 
       const res = await chai.request(server).get('/api/v1/car?status=available&state=not').set('x-auth', token);
-      expect(res.status).to.eq(404);
+      expect(res.status).to.eq(200);
       expect(res.body.error).to.eq('There are no cars for the selected state');
     });
   });
@@ -363,11 +360,11 @@ describe('Cars', () => {
       expect(res.body.data).to.be.an('Array');
       expect(res.body.data[0]).to.be.an('Object');
     });
-    it('should return error 404 if there are no ads available', async () => {
+    it('should return empty array if there are no ads available', async () => {
       await db.query('DELETE FROM cars');
       const token = await genToken();
       const res = await chai.request(server).get('/api/v1/car').set('x-auth', token);
-      expect(res.body.status).to.eq(404);
+      expect(res.body.status).to.eq(200);
       expect(res.body.error).to.eq('There are no cars available now. Check back');
     });
     it('should return error 401 if user is not logged in', async () => {
@@ -425,7 +422,7 @@ describe('Cars', () => {
       const token = generateToken(user.id, false);
 
       const res = await chai.request(server).get('/api/v1/ads/me').set('x-auth', token);
-      expect(res.status).to.eq(404);
+      expect(res.status).to.eq(200);
       expect(res.body.error).to.eq('You do not have ads yet');
     });
     it('should return array of a users ads', async () => {

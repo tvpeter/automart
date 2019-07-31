@@ -32,8 +32,9 @@ const Car = {
       const image = req.file ? await cloudinary.uploader.upload(req.file.path, { folder: 'automart/', format: 'png' })
         : { url: req.img_url };
 
-      const carPpties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
-      const newCar = await CarService.createCar(carPpties);
+      // eslint-disable-next-line max-len
+      const carProperties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
+      const newCar = await CarService.createCar(carProperties);
       return util.sendSuccess(res, 201, newCar.rows[0]);
     } catch (error) {
       return util.sendError(res, 500, error.message);
@@ -43,7 +44,7 @@ const Car = {
     try {
       const { rows } = await CarService.getAllCars();
 
-      return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
+      return (rows.length < 1) ? util.sendError(res, 200, 'There are no cars available now. Check back')
         : util.sendSuccess(res, 200, rows);
     } catch (error) {
       return util.sendError(res, 500, error.message);
@@ -53,7 +54,7 @@ const Car = {
   async getAllUnsoldCars(req, res) {
     try {
       const { rows } = await CarService.getAllUnsoldCars();
-      return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
+      return (rows.length < 1) ? util.sendError(res, 200, 'There are no cars available now. Check back')
         : util.sendSuccess(res, 200, rows);
     } catch (error) {
       return util.sendError(res, 500, error.message);
@@ -113,7 +114,7 @@ const Car = {
       }
 
       const { rows } = await CarService.getAllCars();
-      return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back')
+      return (rows.length < 1) ? util.sendError(res, 200, 'There are no cars available now. Check back')
         : util.sendSuccess(res, 200, rows);
     } catch (error) {
       return util.sendError(res, 500, error.message);
@@ -137,7 +138,7 @@ const Car = {
     const { userId } = req;
     try {
       const { rows } = await CarService.gerUserAds(userId);
-      return (rows.length < 1) ? util.sendError(res, 404, 'You do not have ads yet')
+      return (rows.length < 1) ? util.sendError(res, 200, 'You do not have ads yet')
         : util.sendSuccess(res, 200, rows);
     } catch (error) {
       return util.sendError(res, 500, error.message);
@@ -159,7 +160,7 @@ const Car = {
     }
     const { rows } = await CarService.getCarsByProperty(req.query.status, reqParam, ppty);
 
-    return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`)
+    return (rows.length < 1) ? util.sendError(res, 200, `There are no cars for the selected ${reqParam}`)
       : util.sendSuccess(res, 200, rows);
   },
 

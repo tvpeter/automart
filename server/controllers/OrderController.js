@@ -1,12 +1,12 @@
+/* eslint-disable camelcase */
 import validateData from '../lib/validateData';
 import OrderService from '../services/OrderService';
 import Util from '../lib/Util';
 
 const Order = {
   async create(req, res) {
-    req.body.buyer_id = req.userId;
-    const requiredParams = ['car_id', 'amount', 'buyer_id'];
-    if (validateData(requiredParams, req.body) || req.body.car_id.toString().length !== 13) {
+    const requiredParameters = ['car_id', 'amount'];
+    if (validateData(requiredParameters, req.body) || req.body.car_id.toString().length !== 13) {
       return Util.sendError(res, 400, 'Select car and state amount you want to pay');
     }
     try {
@@ -18,8 +18,9 @@ const Order = {
       }
 
       // check that the buyer doesn't have the order in pending, accepted or completed state
-      const noInDb = await OrderService.checkOrderInDb([req.body.car_id, req.body.buyer_id]);
-      if (noInDb.rows.length > 0) {
+      // eslint-disable-next-line max-len
+      const checkSameOrderInDb = await OrderService.checkOrderInDb([req.body.car_id, req.userId]);
+      if (checkSameOrderInDb.rows.length > 0) {
         return Util.sendError(res, 400, 'You have a similar uncompleted/completed order ');
       }
 
@@ -115,9 +116,9 @@ const Order = {
     if (req.params.orderId.toString().length !== 13) {
       return Util.sendError(res, 400, 'Wrong order id');
     }
-    const { userId, role } = req;
+    const { userId, is_admin } = req;
     try {
-      const { rows } = (role) ? await OrderService.adminDeleteOrder(req.params.orderId)
+      const { rows } = (is_admin) ? await OrderService.adminDeleteOrder(req.params.orderId)
         : await OrderService.sellerDeleteOrder([req.params.orderId, userId]);
 
       return (rows.length < 1) ? Util.sendError(res, 404, 'The order does not exist')
@@ -131,10 +132,10 @@ const Order = {
     if (req.params.orderId.toString().length !== 13) {
       return Util.sendError(res, 400, 'Invalid order id');
     }
-    const { userId, role } = req;
+    const { userId, is_admin } = req;
     try {
       const { rows } = await OrderService.getBuyerAndSeller(req.params.orderId);
-      if (!role && rows[0].buyer_id !== userId && rows[0].seller_id !== userId) {
+      if (!is_admin && rows[0].buyer_id !== userId && rows[0].seller_id !== userId) {
         return Util.sendError(res, 403, 'You dont have the permission to view this resource');
       }
 

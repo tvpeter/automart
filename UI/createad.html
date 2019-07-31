@@ -181,5 +181,9 @@
     </div>
   </footer>
   <script src="./js/createad.js"></script>
+  <script>
+    const welcome = document.querySelector('.top-header-right span');
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
+  </script>
 
 </html>

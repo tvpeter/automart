@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import Util from '../lib/Util';
 
 /**
@@ -10,8 +9,6 @@ import Util from '../lib/Util';
  * @param {function} next - callback function
  * @returns {object}
  */
-dotenv.config();
-
 
 const auth = (req, res, next) => {
   const token = req.header('x-auth') || req.body.token || req.headers['x-auth'] || req.headers.token;
@@ -21,7 +18,7 @@ const auth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
-    req.role = decoded.role;
+    req.is_admin = decoded.is_admin;
     return next();
   } catch (err) {
     return Util.sendError(res, 401, 'Unauthorized, invalid token or session have expired');

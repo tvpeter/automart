@@ -23,7 +23,7 @@
         </div>
 
         <div class="top-header-right">
-          <span>Hello Peter</span>
+          <span></span>
           <li class="dropdown">
             <div class="links">
               <a href="index.html">Logout</a>
@@ -93,6 +93,8 @@
       filterTable(table);
     });
 
+    const welcome = document.querySelector('.top-header-right span');
+    welcome.textContent = `Hello ${localStorage.getItem('name')}`;
 
   </script>
 

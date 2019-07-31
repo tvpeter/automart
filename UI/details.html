@@ -107,6 +107,10 @@
     </div>
     <script src="./js/details.js"></script>
     <script src="./js/script.js"></script>
+    <script>
+      const welcome = document.querySelector('.top-header-right span');
+      welcome.textContent = `Hello ${localStorage.getItem('name')}`;
+    </script>
 
     <div class="wrap">
       <h3>Related Products</h3>
